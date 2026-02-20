@@ -13,6 +13,7 @@ import Investidores from "./pages/Investidores";
 import Documentos from "./pages/Documentos";
 import Notificacoes from "./pages/Notificacoes";
 import Timeline from "./pages/Timeline";
+import Recados from "./pages/Recados";
 import Login from "./pages/Login";
 import { useAuth } from "./_core/hooks/useAuth";
 import { Loader2 } from "lucide-react";
@@ -29,6 +30,7 @@ function AuthenticatedRouter() {
         <Route path="/documentos" component={Documentos} />
         <Route path="/notificacoes" component={Notificacoes} />
         <Route path="/timeline" component={Timeline} />
+        <Route path="/recados" component={Recados} />
         <Route path="/404" component={NotFound} />
         <Route component={NotFound} />
       </Switch>

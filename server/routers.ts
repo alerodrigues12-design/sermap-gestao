@@ -26,6 +26,11 @@ import {
   getDb,
   insertMovimentacao,
   getSystemConfig,
+  getRecados,
+  getRecadosAbertos,
+  insertRecado,
+  updateRecadoStatus,
+  deleteRecado,
 } from "./db";
 import { createHash } from "crypto";
 import { processos, movimentacoes, notificacoes } from "../drizzle/schema";
@@ -190,6 +195,53 @@ export const appRouter = router({
       await marcarTodasMovimentacoesLidas();
       return { success: true };
     }),
+  }),
+
+  // Recados / Pendências
+  recados: router({
+    list: protectedProcedure
+      .input(z.object({ status: z.string().optional() }).optional())
+      .query(async ({ input }) => {
+        return getRecados(input?.status);
+      }),
+    abertos: protectedProcedure.query(async () => {
+      return getRecadosAbertos();
+    }),
+    create: adminProcedure
+      .input(z.object({
+        tipo: z.enum(["pendencia", "recado", "solicitacao", "atualizacao"]),
+        prioridade: z.enum(["alta", "media", "baixa"]),
+        titulo: z.string().min(1),
+        mensagem: z.string().min(1),
+        processoRelacionado: z.string().optional(),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        await insertRecado({
+          autorId: ctx.user.id,
+          autorNome: ctx.user.name || "Administrador",
+          tipo: input.tipo,
+          prioridade: input.prioridade,
+          titulo: input.titulo,
+          mensagem: input.mensagem,
+          processoRelacionado: input.processoRelacionado || null,
+        });
+        return { success: true };
+      }),
+    updateStatus: adminProcedure
+      .input(z.object({
+        id: z.number(),
+        status: z.enum(["aberto", "em_andamento", "concluido"]),
+      }))
+      .mutation(async ({ input }) => {
+        await updateRecadoStatus(input.id, input.status);
+        return { success: true };
+      }),
+    delete: adminProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ input }) => {
+        await deleteRecado(input.id);
+        return { success: true };
+      }),
   }),
 
   // Timeline

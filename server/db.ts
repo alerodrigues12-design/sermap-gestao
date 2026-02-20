@@ -1,6 +1,7 @@
 import { eq, desc, and, sql, like, or, asc } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, processos, movimentacoes, passivoTributario, simulacoes, documentos, notificacoes, timelineItems, systemConfig } from "../drizzle/schema";
+import { InsertUser, users, processos, movimentacoes, passivoTributario, simulacoes, documentos, notificacoes, timelineItems, systemConfig, recados } from "../drizzle/schema";
+import type { InsertRecado } from "../drizzle/schema";
 import type { InsertProcesso, InsertMovimentacao } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
@@ -230,6 +231,41 @@ export async function marcarTodasNotificacoesLidas() {
   const db = await getDb();
   if (!db) return;
   await db.update(notificacoes).set({ lida: true }).where(eq(notificacoes.lida, false));
+}
+
+// === RECADOS / PENDÊNCIAS ===
+export async function getRecados(status?: string) {
+  const db = await getDb();
+  if (!db) return [];
+  if (status && status !== 'todos') {
+    return db.select().from(recados).where(eq(recados.status, status as any)).orderBy(desc(recados.createdAt));
+  }
+  return db.select().from(recados).orderBy(desc(recados.createdAt));
+}
+
+export async function getRecadosAbertos() {
+  const db = await getDb();
+  if (!db) return 0;
+  const result = await db.select({ count: sql<number>`count(*)` }).from(recados).where(eq(recados.status, 'aberto'));
+  return result[0]?.count || 0;
+}
+
+export async function insertRecado(recado: InsertRecado) {
+  const db = await getDb();
+  if (!db) return;
+  await db.insert(recados).values(recado);
+}
+
+export async function updateRecadoStatus(id: number, status: 'aberto' | 'em_andamento' | 'concluido') {
+  const db = await getDb();
+  if (!db) return;
+  await db.update(recados).set({ status }).where(eq(recados.id, id));
+}
+
+export async function deleteRecado(id: number) {
+  const db = await getDb();
+  if (!db) return;
+  await db.delete(recados).where(eq(recados.id, id));
 }
 
 // === TIMELINE ===

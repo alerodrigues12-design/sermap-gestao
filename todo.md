@@ -70,3 +70,10 @@
 - [x] Criar credenciais padrão (admin para Sheila/Ale, conselheiro para demais)
 - [x] Senha adicional para acessar seção de Documentos Confidenciais
 - [x] Testes unitários do novo sistema de autenticação
+
+## Pendências e Recados
+- [x] Criar tabela de recados/pendências no banco de dados
+- [x] Criar endpoints tRPC para CRUD de recados
+- [x] Criar página de Pendências e Recados no frontend
+- [x] Adicionar navegação na sidebar para a nova seção
+- [x] Testes vitest para os novos endpoints

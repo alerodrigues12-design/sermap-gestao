@@ -145,6 +145,24 @@ export const timelineItems = mysqlTable("timelineItems", {
 
 export type TimelineItem = typeof timelineItems.$inferSelect;
 
+// Pendências e Recados
+export const recados = mysqlTable("recados", {
+  id: int("id").autoincrement().primaryKey(),
+  autorId: int("autorId").notNull(),
+  autorNome: varchar("autorNome", { length: 255 }),
+  tipo: mysqlEnum("tipo", ["pendencia", "recado", "solicitacao", "atualizacao"]).default("recado").notNull(),
+  prioridade: mysqlEnum("prioridade", ["alta", "media", "baixa"]).default("media").notNull(),
+  titulo: varchar("titulo", { length: 255 }).notNull(),
+  mensagem: text("mensagem").notNull(),
+  status: mysqlEnum("status", ["aberto", "em_andamento", "concluido"]).default("aberto").notNull(),
+  processoRelacionado: varchar("processoRelacionado", { length: 50 }),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Recado = typeof recados.$inferSelect;
+export type InsertRecado = typeof recados.$inferInsert;
+
 // Configurações do sistema
 export const systemConfig = mysqlTable("systemConfig", {
   id: int("id").autoincrement().primaryKey(),
