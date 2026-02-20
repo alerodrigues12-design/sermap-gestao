@@ -67,33 +67,7 @@ export default function DashboardLayout({
   }
 
   if (!user) {
-    return (
-      <div className="flex items-center justify-center min-h-screen" style={{ background: "linear-gradient(135deg, #2d2a1e 0%, #3d3929 50%, #2d2a1e 100%)" }}>
-        <div className="flex flex-col items-center gap-8 p-10 max-w-md w-full bg-white/95 rounded-2xl shadow-2xl backdrop-blur">
-          <img src={LOGO_URL} alt="Alessandra Hoffmann" className="h-16 object-contain" />
-          <div className="flex flex-col items-center gap-3">
-            <h1 className="text-2xl font-semibold tracking-tight text-center font-serif text-[#4a5a3a]">
-              SERMAP Engenharia
-            </h1>
-            <p className="text-lg text-[#4a5a3a]/70 text-center">
-              Gestão Estratégica de Passivo
-            </p>
-            <p className="text-sm text-muted-foreground text-center max-w-sm mt-2">
-              Acesse a plataforma para acompanhar processos, passivo tributário e o plano de ação estratégico.
-            </p>
-          </div>
-          <Button
-            onClick={() => {
-              window.location.href = getLoginUrl();
-            }}
-            size="lg"
-            className="w-full shadow-lg hover:shadow-xl transition-all bg-[#4a5a3a] hover:bg-[#3d4d2f] text-white"
-          >
-            Entrar na Plataforma
-          </Button>
-        </div>
-      </div>
-    );
+    return null;
   }
 
   return (
@@ -233,7 +207,7 @@ function DashboardLayoutContent({
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-48">
-                <DropdownMenuItem onClick={logout} className="cursor-pointer text-destructive focus:text-destructive">
+                <DropdownMenuItem onClick={async () => { await logout(); window.location.href = '/login'; }} className="cursor-pointer text-destructive focus:text-destructive">
                   <LogOut className="mr-2 h-4 w-4" />
                   <span>Sair</span>
                 </DropdownMenuItem>

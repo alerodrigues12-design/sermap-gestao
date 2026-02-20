@@ -1,10 +1,10 @@
 import { trpc } from "@/lib/trpc";
 import { useAuth } from "@/_core/hooks/useAuth";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Shield, FileText, Trash2, Download, Lock, Upload, Plus } from "lucide-react";
+import { Shield, FileText, Trash2, Download, Lock, Plus, Eye, EyeOff, KeyRound, AlertCircle } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter, DialogClose } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -15,7 +15,15 @@ import { toast } from "sonner";
 
 export default function Documentos() {
   const { user } = useAuth();
-  const { data: documentos, isLoading, refetch } = trpc.documentos.list.useQuery();
+  const [unlocked, setUnlocked] = useState(false);
+  const [docPassword, setDocPassword] = useState("");
+  const [showDocPassword, setShowDocPassword] = useState(false);
+  const [passwordError, setPasswordError] = useState("");
+  const [verifying, setVerifying] = useState(false);
+
+  const { data: documentos, isLoading, refetch } = trpc.documentos.list.useQuery(undefined, {
+    enabled: unlocked,
+  });
   const uploadMutation = trpc.documentos.upload.useMutation({
     onSuccess: () => {
       toast.success("Documento enviado com sucesso!");
@@ -33,6 +41,7 @@ export default function Documentos() {
       refetch();
     },
   });
+  const verifyPasswordMutation = trpc.documentos.verifyPassword.useMutation();
 
   const [dialogOpen, setDialogOpen] = useState(false);
   const [titulo, setTitulo] = useState("");
@@ -76,8 +85,25 @@ export default function Documentos() {
     reader.readAsDataURL(file);
   };
 
+  const handleVerifyPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setPasswordError("");
+    setVerifying(true);
+
+    try {
+      await verifyPasswordMutation.mutateAsync({ password: docPassword });
+      setUnlocked(true);
+      toast.success("Acesso liberado aos documentos confidenciais.");
+    } catch (err: any) {
+      setPasswordError("Senha incorreta. Tente novamente.");
+    } finally {
+      setVerifying(false);
+    }
+  };
+
   const isAdmin = user?.role === "admin";
 
+  // Non-admin users see restricted message
   if (!isAdmin) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
@@ -87,6 +113,81 @@ export default function Documentos() {
           <p className="text-sm text-muted-foreground mt-2">
             Esta seção contém documentos confidenciais e está disponível apenas para administradores autorizados.
           </p>
+        </Card>
+      </div>
+    );
+  }
+
+  // Password gate for admin users
+  if (!unlocked) {
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <Card className="max-w-md w-full shadow-lg border-0">
+          <CardContent className="p-8">
+            <div className="text-center mb-6">
+              <div className="w-16 h-16 rounded-full bg-[#4a5a3a]/10 flex items-center justify-center mx-auto mb-4">
+                <KeyRound className="h-8 w-8 text-[#4a5a3a]" />
+              </div>
+              <h2 className="text-xl font-semibold font-serif">Documentos Confidenciais</h2>
+              <p className="text-sm text-muted-foreground mt-2">
+                Esta área requer uma senha adicional para acesso.
+              </p>
+            </div>
+
+            <form onSubmit={handleVerifyPassword} className="space-y-4">
+              {passwordError && (
+                <div className="flex items-center gap-2 p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm">
+                  <AlertCircle className="h-4 w-4 shrink-0" />
+                  {passwordError}
+                </div>
+              )}
+
+              <div className="space-y-2">
+                <Label htmlFor="doc-password" className="text-sm font-medium">
+                  Senha dos Documentos
+                </Label>
+                <div className="relative">
+                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    id="doc-password"
+                    type={showDocPassword ? "text" : "password"}
+                    value={docPassword}
+                    onChange={(e) => setDocPassword(e.target.value)}
+                    placeholder="Digite a senha de acesso"
+                    className="pl-10 pr-10 h-11"
+                    required
+                    autoFocus
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowDocPassword(!showDocPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                    tabIndex={-1}
+                  >
+                    {showDocPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </button>
+                </div>
+              </div>
+
+              <Button
+                type="submit"
+                disabled={verifying}
+                className="w-full h-11 bg-[#4a5a3a] hover:bg-[#3d4d2f]"
+              >
+                {verifying ? (
+                  <div className="flex items-center gap-2">
+                    <div className="h-4 w-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    Verificando...
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-2">
+                    <Shield className="h-4 w-4" />
+                    Acessar Documentos
+                  </div>
+                )}
+              </Button>
+            </form>
+          </CardContent>
         </Card>
       </div>
     );
@@ -120,58 +221,64 @@ export default function Documentos() {
             Área restrita para contratos, honorários e documentos sensíveis
           </p>
         </div>
-        <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-          <DialogTrigger asChild>
-            <Button className="bg-[#4a5a3a] hover:bg-[#3d4d2f]">
-              <Plus className="h-4 w-4 mr-2" />
-              Enviar Documento
-            </Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle className="font-serif">Enviar Novo Documento</DialogTitle>
-            </DialogHeader>
-            <div className="space-y-4">
-              <div>
-                <Label>Título *</Label>
-                <Input value={titulo} onChange={(e) => setTitulo(e.target.value)} placeholder="Ex: Contrato de Honorários" />
-              </div>
-              <div>
-                <Label>Descrição</Label>
-                <Input value={descricao} onChange={(e) => setDescricao(e.target.value)} placeholder="Breve descrição do documento" />
-              </div>
-              <div>
-                <Label>Categoria</Label>
-                <Select value={categoria} onValueChange={(v: any) => setCategoria(v)}>
-                  <SelectTrigger><SelectValue /></SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="contrato">Contrato</SelectItem>
-                    <SelectItem value="honorarios">Honorários</SelectItem>
-                    <SelectItem value="procuracao">Procuração</SelectItem>
-                    <SelectItem value="outros">Outros</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="flex items-center gap-3">
-                <Switch checked={confidencial} onCheckedChange={setConfidencial} />
-                <Label className="text-sm">Documento confidencial (visível apenas para admin)</Label>
-              </div>
-              <div>
-                <Label>Arquivo *</Label>
-                <Input ref={fileRef} type="file" onChange={(e) => setFile(e.target.files?.[0] || null)} accept=".pdf,.doc,.docx,.jpg,.png" />
-                <p className="text-xs text-muted-foreground mt-1">Máximo 10MB. Formatos: PDF, DOC, DOCX, JPG, PNG</p>
-              </div>
-            </div>
-            <DialogFooter>
-              <DialogClose asChild>
-                <Button variant="outline">Cancelar</Button>
-              </DialogClose>
-              <Button onClick={handleUpload} disabled={uploadMutation.isPending} className="bg-[#4a5a3a] hover:bg-[#3d4d2f]">
-                {uploadMutation.isPending ? "Enviando..." : "Enviar"}
+        <div className="flex items-center gap-2">
+          <Button variant="outline" size="sm" onClick={() => setUnlocked(false)} className="text-muted-foreground">
+            <Lock className="h-3.5 w-3.5 mr-1.5" />
+            Bloquear
+          </Button>
+          <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+            <DialogTrigger asChild>
+              <Button className="bg-[#4a5a3a] hover:bg-[#3d4d2f]">
+                <Plus className="h-4 w-4 mr-2" />
+                Enviar Documento
               </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle className="font-serif">Enviar Novo Documento</DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4">
+                <div>
+                  <Label>Título *</Label>
+                  <Input value={titulo} onChange={(e) => setTitulo(e.target.value)} placeholder="Ex: Contrato de Honorários" />
+                </div>
+                <div>
+                  <Label>Descrição</Label>
+                  <Input value={descricao} onChange={(e) => setDescricao(e.target.value)} placeholder="Breve descrição do documento" />
+                </div>
+                <div>
+                  <Label>Categoria</Label>
+                  <Select value={categoria} onValueChange={(v: any) => setCategoria(v)}>
+                    <SelectTrigger><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="contrato">Contrato</SelectItem>
+                      <SelectItem value="honorarios">Honorários</SelectItem>
+                      <SelectItem value="procuracao">Procuração</SelectItem>
+                      <SelectItem value="outros">Outros</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="flex items-center gap-3">
+                  <Switch checked={confidencial} onCheckedChange={setConfidencial} />
+                  <Label className="text-sm">Documento confidencial (visível apenas para admin)</Label>
+                </div>
+                <div>
+                  <Label>Arquivo *</Label>
+                  <Input ref={fileRef} type="file" onChange={(e) => setFile(e.target.files?.[0] || null)} accept=".pdf,.doc,.docx,.jpg,.png" />
+                  <p className="text-xs text-muted-foreground mt-1">Máximo 10MB. Formatos: PDF, DOC, DOCX, JPG, PNG</p>
+                </div>
+              </div>
+              <DialogFooter>
+                <DialogClose asChild>
+                  <Button variant="outline">Cancelar</Button>
+                </DialogClose>
+                <Button onClick={handleUpload} disabled={uploadMutation.isPending} className="bg-[#4a5a3a] hover:bg-[#3d4d2f]">
+                  {uploadMutation.isPending ? "Enviando..." : "Enviar"}
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        </div>
       </div>
 
       <div className="p-4 rounded-lg bg-amber-50 border border-amber-200 flex items-start gap-3">

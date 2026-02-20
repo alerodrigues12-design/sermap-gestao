@@ -62,3 +62,11 @@
 
 ## Testes
 - [x] Testes unitários das rotas principais (20 testes passando)
+
+## Login com Usuário/Senha
+- [x] Substituir OAuth por login com usuário e senha próprio
+- [x] Criar tela de login com campos de usuário e senha
+- [x] Implementar autenticação no backend com JWT
+- [x] Criar credenciais padrão (admin para Sheila/Ale, conselheiro para demais)
+- [x] Senha adicional para acessar seção de Documentos Confidenciais
+- [x] Testes unitários do novo sistema de autenticação

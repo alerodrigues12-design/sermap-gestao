@@ -1,0 +1,31 @@
+{
+  "query": "SELECT id, openId, name, username, role FROM users;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3wxDEv3kxBHyGJz.fa19c0ca9e29 --database NW4am7ZA3rszie9rtuCceh --execute SELECT id, openId, name, username, role FROM users;",
+  "rows": [
+    {
+      "id": "1",
+      "openId": "9uahQveh3B9ewRWXoWAbxk",
+      "name": "Alessandra Hoffmann",
+      "username": "NULL",
+      "role": "admin"
+    },
+    {
+      "id": "54",
+      "openId": "local-admin",
+      "name": "Administrador",
+      "username": "admin",
+      "role": "admin"
+    },
+    {
+      "id": "55",
+      "openId": "local-conselheiro",
+      "name": "Conselheiro",
+      "username": "conselheiro",
+      "role": "user"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\topenId\tname\tusername\trole\n1\t9uahQveh3B9ewRWXoWAbxk\tAlessandra Hoffmann\tNULL\tadmin\n54\tlocal-admin\tAdministrador\tadmin\tadmin\n55\tlocal-conselheiro\tConselheiro\tconselheiro\tuser\n",
+  "stderr": "",
+  "execution_time_ms": 59
+}

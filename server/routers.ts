@@ -25,7 +25,9 @@ import {
   getTimeline,
   getDb,
   insertMovimentacao,
+  getSystemConfig,
 } from "./db";
+import { createHash } from "crypto";
 import { processos, movimentacoes, notificacoes } from "../drizzle/schema";
 import { eq, desc, sql } from "drizzle-orm";
 import { storagePut } from "./storage";
@@ -99,6 +101,19 @@ export const appRouter = router({
 
   // Documentos (admin-only for confidenciais)
   documentos: router({
+    verifyPassword: protectedProcedure
+      .input(z.object({ password: z.string() }))
+      .mutation(async ({ input }) => {
+        const storedHash = await getSystemConfig("senha_documentos");
+        if (!storedHash) {
+          throw new Error("Senha de documentos não configurada.");
+        }
+        const hashedInput = createHash("sha256").update(input.password).digest("hex");
+        if (storedHash !== hashedInput) {
+          throw new Error("Senha incorreta.");
+        }
+        return { success: true };
+      }),
     list: protectedProcedure.query(async ({ ctx }) => {
       if (ctx.user.role === "admin") {
         return getDocumentos();

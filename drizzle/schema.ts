@@ -6,6 +6,8 @@ export const users = mysqlTable("users", {
   name: text("name"),
   email: varchar("email", { length: 320 }),
   loginMethod: varchar("loginMethod", { length: 64 }),
+  username: varchar("username", { length: 100 }),
+  password: varchar("password", { length: 255 }),
   role: mysqlEnum("role", ["user", "admin"]).default("user").notNull(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
@@ -142,3 +144,14 @@ export const timelineItems = mysqlTable("timelineItems", {
 });
 
 export type TimelineItem = typeof timelineItems.$inferSelect;
+
+// Configurações do sistema
+export const systemConfig = mysqlTable("systemConfig", {
+  id: int("id").autoincrement().primaryKey(),
+  chave: varchar("chave", { length: 100 }).notNull().unique(),
+  valor: text("valor"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type SystemConfig = typeof systemConfig.$inferSelect;

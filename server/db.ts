@@ -1,6 +1,6 @@
 import { eq, desc, and, sql, like, or, asc } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, processos, movimentacoes, passivoTributario, simulacoes, documentos, notificacoes, timelineItems } from "../drizzle/schema";
+import { InsertUser, users, processos, movimentacoes, passivoTributario, simulacoes, documentos, notificacoes, timelineItems, systemConfig } from "../drizzle/schema";
 import type { InsertProcesso, InsertMovimentacao } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
@@ -48,6 +48,32 @@ export async function getUserByOpenId(openId: string) {
   if (!db) return undefined;
   const result = await db.select().from(users).where(eq(users.openId, openId)).limit(1);
   return result.length > 0 ? result[0] : undefined;
+}
+
+// === AUTH LOCAL ===
+export async function getUserByUsername(username: string) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db.select().from(users).where(eq(users.username, username)).limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function getSystemConfig(chave: string) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db.select().from(systemConfig).where(eq(systemConfig.chave, chave)).limit(1);
+  return result.length > 0 ? result[0]?.valor : undefined;
+}
+
+export async function setSystemConfig(chave: string, valor: string) {
+  const db = await getDb();
+  if (!db) return;
+  const existing = await db.select().from(systemConfig).where(eq(systemConfig.chave, chave)).limit(1);
+  if (existing.length > 0) {
+    await db.update(systemConfig).set({ valor }).where(eq(systemConfig.chave, chave));
+  } else {
+    await db.insert(systemConfig).values({ chave, valor });
+  }
 }
 
 // === PROCESSOS ===

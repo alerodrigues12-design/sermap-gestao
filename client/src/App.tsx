@@ -13,8 +13,11 @@ import Investidores from "./pages/Investidores";
 import Documentos from "./pages/Documentos";
 import Notificacoes from "./pages/Notificacoes";
 import Timeline from "./pages/Timeline";
+import Login from "./pages/Login";
+import { useAuth } from "./_core/hooks/useAuth";
+import { Loader2 } from "lucide-react";
 
-function Router() {
+function AuthenticatedRouter() {
   return (
     <DashboardLayout>
       <Switch>
@@ -33,13 +36,41 @@ function Router() {
   );
 }
 
+function AppRouter() {
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#f5f0eb] via-[#ede8e2] to-[#e8e0d8]">
+        <div className="flex flex-col items-center gap-3">
+          <Loader2 className="h-8 w-8 animate-spin text-[#4a5a3a]" />
+          <p className="text-sm text-muted-foreground">Carregando...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return (
+      <Switch>
+        <Route path="/login" component={Login} />
+        <Route>
+          <Login />
+        </Route>
+      </Switch>
+    );
+  }
+
+  return <AuthenticatedRouter />;
+}
+
 function App() {
   return (
     <ErrorBoundary>
       <ThemeProvider defaultTheme="light">
         <TooltipProvider>
           <Toaster />
-          <Router />
+          <AppRouter />
         </TooltipProvider>
       </ThemeProvider>
     </ErrorBoundary>
