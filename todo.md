@@ -77,3 +77,9 @@
 - [x] Criar página de Pendências e Recados no frontend
 - [x] Adicionar navegação na sidebar para a nova seção
 - [x] Testes vitest para os novos endpoints
+
+## Propostas Formais
+- [x] Redigir Proposta 1: Gestão de Processos Judiciais (acompanhamento + petições + contrapartida clientes)
+- [x] Redigir Proposta 2: Gestão do Passivo Tributário (10% do reduzido ou R$ 12 mil)
+- [x] Incluir propostas como documentos confidenciais no site (admin-only)
+- [x] Testar visualização das propostas na seção de documentos

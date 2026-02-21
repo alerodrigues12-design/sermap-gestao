@@ -111,6 +111,7 @@ export const documentos = mysqlTable("documentos", {
   categoria: mysqlEnum("categoria", ["contrato", "honorarios", "procuracao", "outros"]).default("outros"),
   fileUrl: text("fileUrl"),
   fileKey: varchar("fileKey", { length: 500 }),
+  htmlContent: text("htmlContent"),
   confidencial: boolean("confidencial").default(true),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
