@@ -92,3 +92,8 @@
 - [x] Sistema de notificações automáticas no site
 - [x] Página de status do DataJud com instruções
 - [ ] PENDENTE: Obter API Key correta do CNJ (https://datajud-wiki.cnj.jus.br/api-publica/acesso/) e ativar
+
+## Ajustes - Remoção de Duplicação de Passivo
+- [x] Remover 2 execuções fiscais (PGFN judicializadas) do total de cíveis
+- [x] Atualizar total de cíveis de R$ 3.913.342,36 para R$ 579.152,07
+- [x] Atualizar passivo total geral

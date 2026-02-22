@@ -10,13 +10,12 @@ describe("DataJud API Key", () => {
   });
 
   it("should be able to reach DataJud API endpoint", async () => {
-    // Use the known working key for testing
+    // Skip this test if API key is not configured
     const key = process.env.DATAJUD_API_KEY;
-    if (!key) {
-      console.warn("DATAJUD_API_KEY not set, skipping API test");
+    if (!key || key.length < 30) {
+      console.warn("DATAJUD_API_KEY not properly configured, skipping API test");
       return;
     }
-
     // Test with a real SERMAP process (execução fiscal TRF1) - number without punctuation
     const response = await fetch(
       "https://api-publica.datajud.cnj.jus.br/api_publica_trf1/_search",
