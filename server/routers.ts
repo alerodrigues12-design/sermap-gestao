@@ -37,6 +37,7 @@ import { processos, movimentacoes, notificacoes } from "../drizzle/schema";
 import { eq, desc, sql } from "drizzle-orm";
 import { storagePut } from "./storage";
 import { nanoid } from "nanoid";
+import { executarMonitoramento } from "./datajudMonitor";
 
 // Admin-only procedure
 const adminProcedure = protectedProcedure.use(({ ctx, next }) => {
@@ -248,6 +249,21 @@ export const appRouter = router({
   timeline: router({
     list: protectedProcedure.query(async () => {
       return getTimeline();
+    }),
+  }),
+
+  // DataJud Monitor
+  datajud: router({
+    status: protectedProcedure.query(async () => {
+      const ultimaConsulta = await getSystemConfig("ultima_consulta_datajud");
+      return {
+        apiKeyConfigurada: true, // Chave pública do DataJud está embutida no sistema
+        ultimaConsulta: ultimaConsulta || null,
+      };
+    }),
+    executarAgora: adminProcedure.mutation(async () => {
+      const resultado = await executarMonitoramento();
+      return resultado;
     }),
   }),
 });

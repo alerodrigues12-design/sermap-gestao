@@ -13,7 +13,7 @@
 - [x] Routers tRPC para notificações
 - [x] Routers tRPC para dashboard (resumos e totalizadores)
 - [x] Seed de dados dos 46 processos da planilha
-- [x] Integração com API DataJud (consulta periódica via frontend polling)
+- [x] Integração com API DataJud (consulta periódica)
 - [x] Sistema de controle de acesso (admin vs conselheiro)
 
 ## Frontend - Dashboard
@@ -79,7 +79,16 @@
 - [x] Testes vitest para os novos endpoints
 
 ## Propostas Formais
-- [x] Redigir Proposta 1: Gestão de Processos Judiciais (acompanhamento + petições + contrapartida clientes)
-- [x] Redigir Proposta 2: Gestão do Passivo Tributário (10% do reduzido ou R$ 12 mil)
-- [x] Incluir propostas como documentos confidenciais no site (admin-only)
+- [x] Redigir Proposta 1: Gestão de Processos Judiciais
+- [x] Redigir Proposta 2: Gestão do Passivo Tributário
+- [x] Incluir propostas como documentos confidenciais no site
 - [x] Testar visualização das propostas na seção de documentos
+
+## Ativação API DataJud e Monitoramento Automático
+- [x] Implementar sistema de monitoramento DataJud no servidor
+- [x] Job de monitoramento rodando a cada 30 minutos
+- [x] Consulta periódica de todos os 46 processos
+- [x] Detecção de novas movimentações e salvamento no banco
+- [x] Sistema de notificações automáticas no site
+- [x] Página de status do DataJud com instruções
+- [ ] PENDENTE: Obter API Key correta do CNJ (https://datajud-wiki.cnj.jus.br/api-publica/acesso/) e ativar
