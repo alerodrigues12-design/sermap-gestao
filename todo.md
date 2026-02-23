@@ -114,3 +114,7 @@
 - [x] Adicionar filtros por remetente, data e assunto
 - [x] Implementar visualização inline de e-mails
 - [x] Testes unitários para os novos endpoints (7 testes passando)
+
+
+## Processos Adicionados
+- [x] Processo urgente 0500008-92.2019.8.05.0080 (4ª Vara Cível de Feira de Santana - BA) - Risco Alto
