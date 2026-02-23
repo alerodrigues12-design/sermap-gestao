@@ -316,12 +316,12 @@ export default function Emails() {
         </div>
         <div>
           <Label className="text-sm">Filtrar por Categoria</Label>
-          <Select value={filtroCategoria || ""} onValueChange={(v) => setFiltroCategoria(v || undefined)}>
+          <Select value={filtroCategoria || "all"} onValueChange={(v) => setFiltroCategoria(v === "all" ? undefined : v as any)}>
             <SelectTrigger className="mt-1">
               <SelectValue placeholder="Todas as categorias" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">Todas as categorias</SelectItem>
+              <SelectItem value="all">Todas as categorias</SelectItem>
               <SelectItem value="proposta">Proposta</SelectItem>
               <SelectItem value="contrato">Contrato</SelectItem>
               <SelectItem value="comunicacao">Comunicação</SelectItem>
