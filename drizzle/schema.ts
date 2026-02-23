@@ -174,3 +174,22 @@ export const systemConfig = mysqlTable("systemConfig", {
 });
 
 export type SystemConfig = typeof systemConfig.$inferSelect;
+
+// E-mails Importantes
+export const emails = mysqlTable("emails", {
+  id: int("id").autoincrement().primaryKey(),
+  remetente: varchar("remetente", { length: 255 }).notNull(),
+  destinatario: varchar("destinatario", { length: 255 }).notNull(),
+  assunto: varchar("assunto", { length: 500 }).notNull(),
+  conteudo: text("conteudo").notNull(),
+  categoria: mysqlEnum("categoria", ["proposta", "contrato", "comunicacao", "importante", "outros"]).default("outros"),
+  dataEmail: varchar("dataEmail", { length: 20 }).notNull(),
+  arquivoUrl: text("arquivoUrl"),
+  arquivoKey: varchar("arquivoKey", { length: 500 }),
+  confidencial: boolean("confidencial").default(true),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Email = typeof emails.$inferSelect;
+export type InsertEmail = typeof emails.$inferInsert;

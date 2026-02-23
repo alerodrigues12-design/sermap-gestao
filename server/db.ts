@@ -1,6 +1,6 @@
 import { eq, desc, and, sql, like, or, asc } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, processos, movimentacoes, passivoTributario, simulacoes, documentos, notificacoes, timelineItems, systemConfig, recados } from "../drizzle/schema";
+import { InsertUser, users, processos, movimentacoes, passivoTributario, simulacoes, documentos, notificacoes, timelineItems, systemConfig, recados, emails } from "../drizzle/schema";
 import type { InsertRecado } from "../drizzle/schema";
 import type { InsertProcesso, InsertMovimentacao } from "../drizzle/schema";
 import { ENV } from './_core/env';
@@ -273,4 +273,58 @@ export async function getTimeline() {
   const db = await getDb();
   if (!db) return [];
   return db.select().from(timelineItems).orderBy(asc(timelineItems.ordem));
+}
+
+// === EMAILS ===
+export async function getEmails() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(emails).orderBy(desc(emails.dataEmail));
+}
+
+export async function getEmailsFiltered(filtro?: { remetente?: string; categoria?: string; dataInicio?: string; dataFim?: string }) {
+  const db = await getDb();
+  if (!db) return [];
+  
+  const conditions = [];
+  if (filtro?.remetente) {
+    conditions.push(like(emails.remetente, `%${filtro.remetente}%`));
+  }
+  if (filtro?.categoria) {
+    conditions.push(eq(emails.categoria, filtro.categoria as any));
+  }
+  if (filtro?.dataInicio) {
+    conditions.push(sql`${emails.dataEmail} >= ${filtro.dataInicio}`);
+  }
+  if (filtro?.dataFim) {
+    conditions.push(sql`${emails.dataEmail} <= ${filtro.dataFim}`);
+  }
+  
+  const query = conditions.length > 0 ? db.select().from(emails).where(and(...conditions)) : db.select().from(emails);
+  return query.orderBy(desc(emails.dataEmail));
+}
+
+export async function getEmailById(id: number) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db.select().from(emails).where(eq(emails.id, id)).limit(1);
+  return result[0];
+}
+
+export async function insertEmail(email: typeof emails.$inferInsert) {
+  const db = await getDb();
+  if (!db) return;
+  await db.insert(emails).values(email);
+}
+
+export async function updateEmail(id: number, updates: Partial<typeof emails.$inferInsert>) {
+  const db = await getDb();
+  if (!db) return;
+  await db.update(emails).set(updates).where(eq(emails.id, id));
+}
+
+export async function deleteEmail(id: number) {
+  const db = await getDb();
+  if (!db) return;
+  await db.delete(emails).where(eq(emails.id, id));
 }

@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/sidebar";
 import { getLoginUrl } from "@/const";
 import { useIsMobile } from "@/hooks/useMobile";
-import { LayoutDashboard, Scale, Landmark, FileText, Shield, Bell, TrendingUp, LogOut, PanelLeft, Clock, MessageSquarePlus } from "lucide-react";
+import { LayoutDashboard, Scale, Landmark, FileText, Shield, Bell, TrendingUp, LogOut, PanelLeft, Clock, MessageSquarePlus, Mail } from "lucide-react";
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
 import { DashboardLayoutSkeleton } from "./DashboardLayoutSkeleton";
@@ -36,6 +36,7 @@ const menuItems = [
   { icon: Landmark, label: "Passivo Tributário", path: "/tributario" },
   { icon: TrendingUp, label: "Visão Investidor", path: "/investidores" },
   { icon: Shield, label: "Documentos Confidenciais", path: "/documentos" },
+  { icon: Mail, label: "E-mails Importantes", path: "/emails" },
   { icon: Bell, label: "Notificações", path: "/notificacoes" },
   { icon: Clock, label: "Plano 90 Dias", path: "/timeline" },
   { icon: MessageSquarePlus, label: "Pendências e Recados", path: "/recados" },

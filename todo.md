@@ -105,3 +105,12 @@
 - [x] Atualizar página de Passivo Tributário com composição detalhada
 - [x] Adicionar 4 PDFs como documentos confidenciais para referência
 - [x] Documentar que estes valores ainda não foram transferidos para PGFN
+
+## Seção de E-mails Importantes
+- [x] Criar tabela de e-mails no banco de dados
+- [x] Criar endpoints tRPC para CRUD de e-mails
+- [x] Criar página de E-mails Importantes no frontend
+- [x] Integrar e-mails aos Documentos Confidenciais
+- [x] Adicionar filtros por remetente, data e assunto
+- [x] Implementar visualização inline de e-mails
+- [x] Testes unitários para os novos endpoints (7 testes passando)

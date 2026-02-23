@@ -1,6 +1,7 @@
-import { COOKIE_NAME } from "@shared/const";
+import { COOKIE_NAME } from "@shared/const"; // Already imported at top
 import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
+import { emailsRouter } from "./routers-emails";
 import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
 import { z } from "zod";
 import {
@@ -31,9 +32,16 @@ import {
   insertRecado,
   updateRecadoStatus,
   deleteRecado,
+  getEmails,
+  getEmailsFiltered,
+  getEmailById,
+  insertEmail,
+  updateEmail,
+  deleteEmail,
 } from "./db";
 import { createHash } from "crypto";
-import { processos, movimentacoes, notificacoes } from "../drizzle/schema";
+import { processos, movimentacoes, notificacoes, emails } from "../drizzle/schema";
+import type { InsertEmail } from "../drizzle/schema";
 import { eq, desc, sql } from "drizzle-orm";
 import { storagePut } from "./storage";
 import { nanoid } from "nanoid";
@@ -244,6 +252,9 @@ export const appRouter = router({
         return { success: true };
       }),
   }),
+
+  // E-mails Importantes
+  emails: emailsRouter,
 
   // Timeline
   timeline: router({

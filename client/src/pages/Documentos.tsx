@@ -4,7 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Shield, FileText, Trash2, Download, Lock, Plus, Eye, EyeOff, KeyRound, AlertCircle, X, Maximize2, Printer } from "lucide-react";
+import { Shield, FileText, Trash2, Download, Lock, Plus, Eye, EyeOff, KeyRound, AlertCircle, X, Maximize2, Printer, Mail } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter, DialogClose } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -306,6 +306,10 @@ export default function Documentos() {
           </p>
         </div>
         <div className="flex items-center gap-2">
+          <Button variant="outline" size="sm" onClick={() => window.location.href = '/emails'} className="text-muted-foreground gap-2">
+            <Mail className="h-3.5 w-3.5" />
+            E-mails Importantes
+          </Button>
           <Button variant="outline" size="sm" onClick={() => setUnlocked(false)} className="text-muted-foreground">
             <Lock className="h-3.5 w-3.5 mr-1.5" />
             Bloquear
