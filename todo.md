@@ -97,3 +97,11 @@
 - [x] Remover 2 execuções fiscais (PGFN judicializadas) do total de cíveis
 - [x] Atualizar total de cíveis de R$ 3.913.342,36 para R$ 579.152,07
 - [x] Atualizar passivo total geral
+
+## Integração de Débitos Não Transferidos para PGFN
+- [x] Extrair valores dos PDFs de débitos previdenciários (R$ 398.621,04)
+- [x] Extrair valores dos PDFs de débitos não tributários (R$ 58.056,57)
+- [x] Calcular novo total do passivo tributário consolidado (R$ 4.284.477,30)
+- [x] Atualizar página de Passivo Tributário com composição detalhada
+- [x] Adicionar 4 PDFs como documentos confidenciais para referência
+- [x] Documentar que estes valores ainda não foram transferidos para PGFN
