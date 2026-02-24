@@ -1,0 +1,19 @@
+{
+  "query": "SELECT id, numero, titulo, status, dataPrevista, dataFinalizada, percentualConclusao FROM planoAcao ORDER BY numero",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3wxDEv3kxBHyGJz.fa19c0ca9e29 --database NW4am7ZA3rszie9rtuCceh --execute SELECT id, numero, titulo, status, dataPrevista, dataFinalizada, percentualConclusao FROM planoAcao ORDER BY numero",
+  "rows": [
+    {
+      "id": "1",
+      "numero": "1",
+      "titulo": "Levantamento Completo de Passivo",
+      "status": "concluido",
+      "dataPrevista": "2026-02-15",
+      "dataFinalizada": "2026-02-24",
+      "percentualConclusao": "100"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tnumero\ttitulo\tstatus\tdataPrevista\tdataFinalizada\tpercentualConclusao\n1\t1\tLevantamento Completo de Passivo\tconcluido\t2026-02-15\t2026-02-24\t100\n",
+  "stderr": "",
+  "execution_time_ms": 57
+}
