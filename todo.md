@@ -118,3 +118,11 @@
 
 ## Processos Adicionados
 - [x] Processo urgente 0500008-92.2019.8.05.0080 (4ª Vara Cível de Feira de Santana - BA) - Risco Alto
+
+
+## Sincronização de Processos da Lista Excel
+- [x] Todos os 26 processos da lista Excel inseridos no banco de dados
+- [x] Processos com risco alto marcados como "grave" (direcionamento à Sheila)
+- [x] Informações completas incluídas: número, órgão, autor, réu, assunto, observações, valor, status
+- [x] Dashboard atualizado com novos totais: 22 trabalhistas, 39 cíveis/tributários
+- [x] Passivo total estimado recalculado: R$ 6.932.861,39

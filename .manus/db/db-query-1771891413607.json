@@ -1,0 +1,280 @@
+{
+  "query": "SELECT numero, tipo, orgao, status FROM processos ORDER BY numero",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3wxDEv3kxBHyGJz.fa19c0ca9e29 --database NW4am7ZA3rszie9rtuCceh --execute SELECT numero, tipo, orgao, status FROM processos ORDER BY numero",
+  "rows": [
+    {
+      "numero": "0000038-31.2020.5.19.0010",
+      "tipo": "trabalhista",
+      "orgao": "10ª Vara do Trabalho Maceió",
+      "status": "Execução - solicitado reserva de crédito (suspenso até leilão)"
+    },
+    {
+      "numero": "0000141-18.2021.5.05.0196",
+      "tipo": "trabalhista",
+      "orgao": "Vara do Trabalho Alagoinhas",
+      "status": "Aguardando leilão - SERMAP PERDEU PRAZO"
+    },
+    {
+      "numero": "0000261-68.2018.5.05.0193",
+      "tipo": "trabalhista",
+      "orgao": "3ª Vara do Trabalho FSA",
+      "status": "Execução - Processo suspenso até leilão do centro de operações"
+    },
+    {
+      "numero": "0000262-53.2018.5.05.0193",
+      "tipo": "trabalhista",
+      "orgao": "3ª Vara do Trabalho FSA",
+      "status": "Execução - Processo suspenso até leilão do centro de operações"
+    },
+    {
+      "numero": "0000263-38.2018.5.05.0193",
+      "tipo": "trabalhista",
+      "orgao": "3ª Vara do Trabalho FSA",
+      "status": "Execução - Processo suspenso até leilão do centro de operações"
+    },
+    {
+      "numero": "0000264-23.2018.5.05.0193",
+      "tipo": "trabalhista",
+      "orgao": "3ª Vara do Trabalho FSA",
+      "status": "Execução - Processo suspenso até leilão do centro de operações"
+    },
+    {
+      "numero": "0000350-12.2018.5.04.0122",
+      "tipo": "trabalhista",
+      "orgao": "Vara do Trabalho Rio Grande",
+      "status": "Execução - processo suspenso"
+    },
+    {
+      "numero": "0000456-78.2017.5.06.0311",
+      "tipo": "trabalhista",
+      "orgao": "Vara do Trabalho Escada",
+      "status": "Processo Suspenso - Correndo prazo prescricional"
+    },
+    {
+      "numero": "0000551-92.2017.5.05.0193",
+      "tipo": "trabalhista",
+      "orgao": "3ª Vara do Trabalho FSA",
+      "status": "Execução - aguardando hasta pública 03/03"
+    },
+    {
+      "numero": "0000552-77.2017.5.05.0193",
+      "tipo": "trabalhista",
+      "orgao": "3ª Vara do Trabalho FSA",
+      "status": "Execução - solicitado reserva de crédito (suspenso até leilão)"
+    },
+    {
+      "numero": "0000706-88.2018.5.19.0004",
+      "tipo": "trabalhista",
+      "orgao": "4ª Vara do Trabalho Maceió",
+      "status": "Aguardando hasta pública 03/03"
+    },
+    {
+      "numero": "0000778-17.2017.5.05.0193",
+      "tipo": "trabalhista",
+      "orgao": "3ª Vara do Trabalho FSA",
+      "status": "Execução - valores bloqueados via Sisbajud"
+    },
+    {
+      "numero": "0000789-34.2017.5.06.0312",
+      "tipo": "trabalhista",
+      "orgao": "Vara do Trabalho Caruaru",
+      "status": "Execução - aguardando localização de bens"
+    },
+    {
+      "numero": "0000972-43.2019.5.05.0194",
+      "tipo": "trabalhista",
+      "orgao": "4ª Vara do Trabalho FSA",
+      "status": "Execução - aguardando hasta pública"
+    },
+    {
+      "numero": "0001100-45.2017.5.05.0194",
+      "tipo": "trabalhista",
+      "orgao": "4ª Vara do Trabalho FSA",
+      "status": "Execução - aguardando hasta do centro de operações"
+    },
+    {
+      "numero": "0001234-56.2018.5.15.0057",
+      "tipo": "trabalhista",
+      "orgao": "Vara do Trabalho Tietê",
+      "status": "Execução - aguardando localização de bens"
+    },
+    {
+      "numero": "0001245-07.2016.5.05.0193",
+      "tipo": "trabalhista",
+      "orgao": "2ª Vara do Trabalho FSA",
+      "status": "Execução - Processo suspenso até leilão do centro de operações"
+    },
+    {
+      "numero": "0002345-67.2019.5.02.0001",
+      "tipo": "trabalhista",
+      "orgao": "1ª Vara do Trabalho São Paulo",
+      "status": "Execução - processo suspenso"
+    },
+    {
+      "numero": "0003456-78.2019.5.02.0002",
+      "tipo": "trabalhista",
+      "orgao": "2ª Vara do Trabalho São Paulo",
+      "status": "Execução - aguardando localização de bens"
+    },
+    {
+      "numero": "0008810-29.2010.4.01.3304",
+      "tipo": "tributario",
+      "orgao": "3ª VFC FSA",
+      "status": "Suspensão temporária"
+    },
+    {
+      "numero": "0009684-66.2021.8.26.0016",
+      "tipo": "civel",
+      "orgao": "2ª Vara do Juizado Especial Cível",
+      "status": "Execução de Sentença - pedido de penhora de veículos"
+    },
+    {
+      "numero": "0016691-27.2018.5.16.0022",
+      "tipo": "trabalhista",
+      "orgao": "22ª Vara do Trabalho São Luís",
+      "status": "Aguardando hasta do centro de operações 03 de março"
+    },
+    {
+      "numero": "0500008-92.2019.8.05.0080",
+      "tipo": "civel",
+      "orgao": "4ª Vara Cível de Feira de Santana",
+      "status": "Ativo"
+    },
+    {
+      "numero": "0500841-90.2019.8.05.0080",
+      "tipo": "civel",
+      "orgao": "Vara Cível FSA",
+      "status": "Em andamento"
+    },
+    {
+      "numero": "0500844-32.2019.8.05.0080",
+      "tipo": "civel",
+      "orgao": "Vara Cível FSA",
+      "status": "Em andamento"
+    },
+    {
+      "numero": "0500846-02.2019.8.05.0080",
+      "tipo": "civel",
+      "orgao": "Vara Cível FSA",
+      "status": "Em andamento"
+    },
+    {
+      "numero": "0500848-55.2020.8.05.0080",
+      "tipo": "civel",
+      "orgao": "Vara Cível FSA",
+      "status": "Em andamento"
+    },
+    {
+      "numero": "0500849-40.2020.8.05.0080",
+      "tipo": "civel",
+      "orgao": "Vara Cível FSA",
+      "status": "Em andamento"
+    },
+    {
+      "numero": "0500850-25.2020.8.05.0080",
+      "tipo": "civel",
+      "orgao": "Vara Cível FSA",
+      "status": "Em andamento"
+    },
+    {
+      "numero": "0500851-10.2020.8.05.0080",
+      "tipo": "civel",
+      "orgao": "Vara Cível FSA",
+      "status": "Em andamento"
+    },
+    {
+      "numero": "0500852-92.2020.8.05.0080",
+      "tipo": "civel",
+      "orgao": "Vara Cível FSA",
+      "status": "Em andamento"
+    },
+    {
+      "numero": "0500853-77.2020.8.05.0080",
+      "tipo": "civel",
+      "orgao": "Vara Cível FSA",
+      "status": "Em andamento"
+    },
+    {
+      "numero": "0500854-62.2020.8.05.0080",
+      "tipo": "civel",
+      "orgao": "Vara Cível FSA",
+      "status": "Em andamento"
+    },
+    {
+      "numero": "0500855-47.2020.8.05.0080",
+      "tipo": "civel",
+      "orgao": "Vara Cível FSA",
+      "status": "Em andamento"
+    },
+    {
+      "numero": "0500856-32.2020.8.05.0080",
+      "tipo": "civel",
+      "orgao": "Vara Cível FSA",
+      "status": "Em andamento"
+    },
+    {
+      "numero": "0500865-67.2019.8.05.0080",
+      "tipo": "civel",
+      "orgao": "Vara Cível FSA",
+      "status": "Em andamento"
+    },
+    {
+      "numero": "0503395-86.2017.8.05.0080",
+      "tipo": "civel",
+      "orgao": "1ª Vara Cível FSA",
+      "status": "Processo com prazo ABERTO para manifestação"
+    },
+    {
+      "numero": "0513452-66.2017.8.05.0080",
+      "tipo": "civel",
+      "orgao": "7ª Vara Cível FSA",
+      "status": "SERMAP perdeu o prazo para indicar novo endereço da parte ré"
+    },
+    {
+      "numero": "1000605-13.2018.4.01.3304",
+      "tipo": "civel",
+      "orgao": "2ª Vara Federal FSA",
+      "status": "Recurso remetido ao tribunal superior - aguardando decisão"
+    },
+    {
+      "numero": "1001316-89.2020.8.26.0629",
+      "tipo": "execucao_fiscal",
+      "orgao": "Setor de Execuções Fiscais Tietê",
+      "status": "Pedido de suspensão por 180 dias (já transcorridos)"
+    },
+    {
+      "numero": "1014804-78.2018.8.26.0016",
+      "tipo": "civel",
+      "orgao": "2ª Vara do Juizado Especial Cível",
+      "status": "Execução de Sentença - sem movimentação desde 2023"
+    },
+    {
+      "numero": "1023456-78.2020.8.26.0100",
+      "tipo": "civel",
+      "orgao": "Vara Cível São Paulo",
+      "status": "Execução de sentença - perdas e danos"
+    },
+    {
+      "numero": "1034567-89.2021.8.26.0100",
+      "tipo": "civel",
+      "orgao": "Vara Cível São Paulo",
+      "status": "Em andamento"
+    },
+    {
+      "numero": "8005202-23.2021.8.05.0080",
+      "tipo": "civel",
+      "orgao": "1ª Vara Cível FSA",
+      "status": "Processo em segredo de justiça"
+    },
+    {
+      "numero": "8027713-10.2024.8.05.0080",
+      "tipo": "civel",
+      "orgao": "7ª Vara Cível FSA",
+      "status": "Sheila perdeu prazo para emendar a inicial"
+    }
+  ],
+  "messages": [],
+  "stdout": "numero\ttipo\torgao\tstatus\n0000038-31.2020.5.19.0010\ttrabalhista\t10ª Vara do Trabalho Maceió\tExecução - solicitado reserva de crédito (suspenso até leilão)\n0000141-18.2021.5.05.0196\ttrabalhista\tVara do Trabalho Alagoinhas\tAguardando leilão - SERMAP PERDEU PRAZO\n0000261-68.2018.5.05.0193\ttrabalhista\t3ª Vara do Trabalho FSA\tExecução - Processo suspenso até leilão do centro de operações\n0000262-53.2018.5.05.0193\ttrabalhista\t3ª Vara do Trabalho FSA\tExecução - Processo suspenso até leilão do centro de operações\n0000263-38.2018.5.05.0193\ttrabalhista\t3ª Vara do Trabalho FSA\tExecução - Processo suspenso até leilão do centro de operações\n0000264-23.2018.5.05.0193\ttrabalhista\t3ª Vara do Trabalho FSA\tExecução - Processo suspenso até leilão do centro de operações\n0000350-12.2018.5.04.0122\ttrabalhista\tVara do Trabalho Rio Grande\tExecução - processo suspenso\n0000456-78.2017.5.06.0311\ttrabalhista\tVara do Trabalho Escada\tProcesso Suspenso - Correndo prazo prescricional\n0000551-92.2017.5.05.0193\ttrabalhista\t3ª Vara do Trabalho FSA\tExecução - aguardando hasta pública 03/03\n0000552-77.2017.5.05.0193\ttrabalhista\t3ª Vara do Trabalho FSA\tExecução - solicitado reserva de crédito (suspenso até leilão)\n0000706-88.2018.5.19.0004\ttrabalhista\t4ª Vara do Trabalho Maceió\tAguardando hasta pública 03/03\n0000778-17.2017.5.05.0193\ttrabalhista\t3ª Vara do Trabalho FSA\tExecução - valores bloqueados via Sisbajud\n0000789-34.2017.5.06.0312\ttrabalhista\tVara do Trabalho Caruaru\tExecução - aguardando localização de bens\n0000972-43.2019.5.05.0194\ttrabalhista\t4ª Vara do Trabalho FSA\tExecução - aguardando hasta pública\n0001100-45.2017.5.05.0194\ttrabalhista\t4ª Vara do Trabalho FSA\tExecução - aguardando hasta do centro de operações\n0001234-56.2018.5.15.0057\ttrabalhista\tVara do Trabalho Tietê\tExecução - aguardando localização de bens\n0001245-07.2016.5.05.0193\ttrabalhista\t2ª Vara do Trabalho FSA\tExecução - Processo suspenso até leilão do centro de operações\n0002345-67.2019.5.02.0001\ttrabalhista\t1ª Vara do Trabalho São Paulo\tExecução - processo suspenso\n0003456-78.2019.5.02.0002\ttrabalhista\t2ª Vara do Trabalho São Paulo\tExecução - aguardando localização de bens\n0008810-29.2010.4.01.3304\ttributario\t3ª VFC FSA\tSuspensão temporária\n0009684-66.2021.8.26.0016\tcivel\t2ª Vara do Juizado Especial Cível\tExecução de Sentença - pedido de penhora de veículos\n0016691-27.2018.5.16.0022\ttrabalhista\t22ª Vara do Trabalho São Luís\tAguardando hasta do centro de operações 03 de março\n0500008-92.2019.8.05.0080\tcivel\t4ª Vara Cível de Feira de Santana\tAtivo\n0500841-90.2019.8.05.0080\tcivel\tVara Cível FSA\tEm andamento\n0500844-32.2019.8.05.0080\tcivel\tVara Cível FSA\tEm andamento\n0500846-02.2019.8.05.0080\tcivel\tVara Cível FSA\tEm andamento\n0500848-55.2020.8.05.0080\tcivel\tVara Cível FSA\tEm andamento\n0500849-40.2020.8.05.0080\tcivel\tVara Cível FSA\tEm andamento\n0500850-25.2020.8.05.0080\tcivel\tVara Cível FSA\tEm andamento\n0500851-10.2020.8.05.0080\tcivel\tVara Cível FSA\tEm andamento\n0500852-92.2020.8.05.0080\tcivel\tVara Cível FSA\tEm andamento\n0500853-77.2020.8.05.0080\tcivel\tVara Cível FSA\tEm andamento\n0500854-62.2020.8.05.0080\tcivel\tVara Cível FSA\tEm andamento\n0500855-47.2020.8.05.0080\tcivel\tVara Cível FSA\tEm andamento\n0500856-32.2020.8.05.0080\tcivel\tVara Cível FSA\tEm andamento\n0500865-67.2019.8.05.0080\tcivel\tVara Cível FSA\tEm andamento\n0503395-86.2017.8.05.0080\tcivel\t1ª Vara Cível FSA\tProcesso com prazo ABERTO para manifestação\n0513452-66.2017.8.05.0080\tcivel\t7ª Vara Cível FSA\tSERMAP perdeu o prazo para indicar novo endereço da parte ré\n1000605-13.2018.4.01.3304\tcivel\t2ª Vara Federal FSA\tRecurso remetido ao tribunal superior - aguardando decisão\n1001316-89.2020.8.26.0629\texecucao_fiscal\tSetor de Execuções Fiscais Tietê\tPedido de suspensão por 180 dias (já transcorridos)\n1014804-78.2018.8.26.0016\tcivel\t2ª Vara do Juizado Especial Cível\tExecução de Sentença - sem movimentação desde 2023\n1023456-78.2020.8.26.0100\tcivel\tVara Cível São Paulo\tExecução de sentença - perdas e danos\n1034567-89.2021.8.26.0100\tcivel\tVara Cível São Paulo\tEm andamento\n8005202-23.2021.8.05.0080\tcivel\t1ª Vara Cível FSA\tProcesso em segredo de justiça\n8027713-10.2024.8.05.0080\tcivel\t7ª Vara Cível FSA\tSheila perdeu prazo para emendar a inicial\n",
+  "stderr": "",
+  "execution_time_ms": 113
+}
