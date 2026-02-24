@@ -43,6 +43,13 @@
       "when": 1771864294148,
       "tag": "0005_absent_vermin",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1771892789807,
+      "tag": "0006_normal_hellion",
+      "breakpoints": true
     }
   ]
 }

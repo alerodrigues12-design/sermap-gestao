@@ -193,3 +193,22 @@ export const emails = mysqlTable("emails", {
 
 export type Email = typeof emails.$inferSelect;
 export type InsertEmail = typeof emails.$inferInsert;
+
+// Plano de Ação
+export const planoAcao = mysqlTable("planoAcao", {
+  id: int("id").autoincrement().primaryKey(),
+  numero: int("numero").notNull(),
+  titulo: varchar("titulo", { length: 255 }).notNull(),
+  descricao: text("descricao"),
+  status: mysqlEnum("status", ["nao_iniciado", "em_andamento", "concluido", "bloqueado"]).default("nao_iniciado").notNull(),
+  dataPrevista: varchar("dataPrevista", { length: 20 }),
+  dataFinalizada: varchar("dataFinalizada", { length: 20 }),
+  responsavel: varchar("responsavel", { length: 255 }),
+  percentualConclusao: int("percentualConclusao").default(0),
+  observacoes: text("observacoes"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type PlanoAcao = typeof planoAcao.$inferSelect;
+export type InsertPlanoAcao = typeof planoAcao.$inferInsert;

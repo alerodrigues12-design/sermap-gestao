@@ -38,9 +38,14 @@ import {
   insertEmail,
   updateEmail,
   deleteEmail,
+  getPlanoAcao,
+  getPlanoAcaoById,
+  insertPlanoAcao,
+  updatePlanoAcao,
+  deletePlanoAcao,
 } from "./db";
 import { createHash } from "crypto";
-import { processos, movimentacoes, notificacoes, emails } from "../drizzle/schema";
+import { processos, movimentacoes, notificacoes, emails, planoAcao } from "../drizzle/schema";
 import type { InsertEmail } from "../drizzle/schema";
 import { eq, desc, sql } from "drizzle-orm";
 import { storagePut } from "./storage";
@@ -272,11 +277,60 @@ export const appRouter = router({
         ultimaConsulta: ultimaConsulta || null,
       };
     }),
-    executarAgora: adminProcedure.mutation(async () => {
+     executarAgora: adminProcedure.mutation(async () => {
       const resultado = await executarMonitoramento();
       return resultado;
     }),
   }),
+  // Plano de Ação
+  planoAcao: router({
+    list: protectedProcedure.query(async () => {
+      return getPlanoAcao();
+    }),
+    getById: protectedProcedure
+      .input(z.object({ id: z.number() }))
+      .query(async ({ input }) => {
+        return getPlanoAcaoById(input.id);
+      }),
+    create: adminProcedure
+      .input(z.object({
+        numero: z.number(),
+        titulo: z.string(),
+        descricao: z.string().optional(),
+        status: z.enum(["nao_iniciado", "em_andamento", "concluido", "bloqueado"]).default("nao_iniciado"),
+        dataPrevista: z.string().optional(),
+        dataFinalizada: z.string().optional(),
+        responsavel: z.string().optional(),
+        percentualConclusao: z.number().default(0),
+        observacoes: z.string().optional(),
+      }))
+      .mutation(async ({ input }) => {
+        await insertPlanoAcao(input);
+        return { success: true };
+      }),
+    update: adminProcedure
+      .input(z.object({
+        id: z.number(),
+        titulo: z.string().optional(),
+        descricao: z.string().optional(),
+        status: z.enum(["nao_iniciado", "em_andamento", "concluido", "bloqueado"]).optional(),
+        dataPrevista: z.string().optional(),
+        dataFinalizada: z.string().optional(),
+        responsavel: z.string().optional(),
+        percentualConclusao: z.number().optional(),
+        observacoes: z.string().optional(),
+      }))
+      .mutation(async ({ input }) => {
+        const { id, ...updates } = input;
+        await updatePlanoAcao(id, updates);
+        return { success: true };
+      }),
+    delete: adminProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ input }) => {
+        await deletePlanoAcao(input.id);
+        return { success: true };
+      }),
+  }),
 });
-
 export type AppRouter = typeof appRouter;

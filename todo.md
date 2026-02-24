@@ -137,3 +137,15 @@
 
 - [x] Removida duplicação do processo 0500008-92.2019.8.05.0080
 - [x] Passivo total corrigido: R$ 7.515.647,87
+
+
+## Plano de Ação
+- [ ] Criar página de Plano de Ação com status de entregas
+- [ ] Integrar ao dashboard e menu lateral
+
+- [x] Página de Plano de Ação criada e integrada ao menu
+- [x] Parte 1 - Levantamento Completo de Passivo marcada como concluída
+- [x] Data prevista: 15/02/2026
+- [x] Data finalizada: 24/02/2026
+- [x] Responsável: Alessandra Hoffmann
+- [x] Percentual de conclusão: 100%

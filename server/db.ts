@@ -1,7 +1,7 @@
 import { eq, desc, and, sql, like, or, asc } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, processos, movimentacoes, passivoTributario, simulacoes, documentos, notificacoes, timelineItems, systemConfig, recados, emails } from "../drizzle/schema";
-import type { InsertRecado } from "../drizzle/schema";
+import { InsertUser, users, processos, movimentacoes, passivoTributario, simulacoes, documentos, notificacoes, timelineItems, systemConfig, recados, emails, planoAcao } from "../drizzle/schema";
+import type { InsertRecado, InsertPlanoAcao } from "../drizzle/schema";
 import type { InsertProcesso, InsertMovimentacao } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
@@ -327,4 +327,37 @@ export async function deleteEmail(id: number) {
   const db = await getDb();
   if (!db) return;
   await db.delete(emails).where(eq(emails.id, id));
+}
+
+
+// === PLANO DE AÇÃO ===
+export async function getPlanoAcao() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(planoAcao).orderBy(asc(planoAcao.numero));
+}
+
+export async function getPlanoAcaoById(id: number) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db.select().from(planoAcao).where(eq(planoAcao.id, id)).limit(1);
+  return result[0];
+}
+
+export async function insertPlanoAcao(item: InsertPlanoAcao) {
+  const db = await getDb();
+  if (!db) return;
+  await db.insert(planoAcao).values(item);
+}
+
+export async function updatePlanoAcao(id: number, updates: Partial<InsertPlanoAcao>) {
+  const db = await getDb();
+  if (!db) return;
+  await db.update(planoAcao).set(updates).where(eq(planoAcao.id, id));
+}
+
+export async function deletePlanoAcao(id: number) {
+  const db = await getDb();
+  if (!db) return;
+  await db.delete(planoAcao).where(eq(planoAcao.id, id));
 }
