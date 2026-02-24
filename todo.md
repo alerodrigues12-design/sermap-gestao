@@ -126,3 +126,11 @@
 - [x] Informações completas incluídas: número, órgão, autor, réu, assunto, observações, valor, status
 - [x] Dashboard atualizado com novos totais: 22 trabalhistas, 39 cíveis/tributários
 - [x] Passivo total estimado recalculado: R$ 6.932.861,39
+
+
+## Correções e Destaque Visual
+- [x] Corrigidas informações do processo 0500008-92.2019.8.05.0080 (Banco do Brasil vs Sermap/Sheila)
+- [x] Valor atualizado para R$ 607.786,48
+- [x] Implementado destaque visual (fundo vermelho) para processos com direcionamento à Sheila
+- [x] Ícone de alerta em vermelho para processos graves
+- [x] Passivo total recalculado: R$ 8.123.434,35

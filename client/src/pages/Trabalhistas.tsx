@@ -132,15 +132,21 @@ export default function Trabalhistas() {
                 </tr>
               </thead>
               <tbody>
-                {filtered.map((p) => (
+                {filtered.map((p) => {
+                  const isGrave = p.risco === 'alto' && (p.observacoes?.toLowerCase().includes('sheila') || p.status?.toLowerCase().includes('redirecionamento') || p.observacoes?.toLowerCase().includes('grave'));
+                  return (
                   <tr
                     key={p.id}
-                    className={`border-b hover:bg-muted/30 cursor-pointer transition-colors ${p.perdaPrazo ? "bg-destructive/5 border-l-4 border-l-destructive" : ""}`}
+                    className={`border-b hover:bg-muted/30 cursor-pointer transition-colors ${
+                      isGrave ? "bg-red-50 border-l-4 border-l-red-600" : 
+                      p.perdaPrazo ? "bg-destructive/5 border-l-4 border-l-destructive" : ""
+                    }`}
                     onClick={() => setSelectedProcesso(p)}
                   >
                     <td className="p-3">
                       <div className="flex items-center gap-2">
-                        {p.perdaPrazo && <AlertTriangle className="h-3.5 w-3.5 text-destructive shrink-0" />}
+                        {isGrave && <AlertTriangle className="h-3.5 w-3.5 text-red-600 shrink-0" />}
+                        {p.perdaPrazo && !isGrave && <AlertTriangle className="h-3.5 w-3.5 text-destructive shrink-0" />}
                         <span className="font-mono text-xs">{p.numero}</span>
                       </div>
                     </td>
@@ -160,7 +166,8 @@ export default function Trabalhistas() {
                       )}
                     </td>
                   </tr>
-                ))}
+                  );
+                })}
               </tbody>
             </table>
           </div>

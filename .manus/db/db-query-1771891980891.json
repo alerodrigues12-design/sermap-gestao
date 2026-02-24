@@ -1,0 +1,9 @@
+{
+  "query": "UPDATE processos SET \n  autor = 'Banco do Brasil',\n  reu = 'Sermap / Sheila (fiadora)',\n  assunto = 'Ação monitória - Cobrança de débito referente a abertura de crédito (nº 004.120.211)',\n  dataAutuacao = '2019-01-07',\n  observacoes = 'Cobrança de débito referente a abertura de crédito no valor de R$ 500.000,00 (nº 004.120.211) onde Sheila foi fiadora da Sermap. Sermap citada. Sheila citada em São Paulo através de Maria Cristina. Conta de Sheila bloqueada. Desbloqueio solicitado. Decisão determina desbloqueio da conta de Sheila.',\n  valorSentenca = 607786.48,\n  status = 'Conta de Sheila bloqueada - Desbloqueio solicitado - Decisão determina desbloqueio',\n  risco = 'alto'\nWHERE numero = '0500008-92.2019.8.05.0080'",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3wxDEv3kxBHyGJz.fa19c0ca9e29 --database NW4am7ZA3rszie9rtuCceh --execute UPDATE processos SET \n  autor = 'Banco do Brasil',\n  reu = 'Sermap / Sheila (fiadora)',\n  assunto = 'Ação monitória - Cobrança de débito referente a abertura de crédito (nº 004.120.211)',\n  dataAutuacao = '2019-01-07',\n  observacoes = 'Cobrança de débito referente a abertura de crédito no valor de R$ 500.000,00 (nº 004.120.211) onde Sheila foi fiadora da Sermap. Sermap citada. Sheila citada em São Paulo através de Maria Cristina. Conta de Sheila bloqueada. Desbloqueio solicitado. Decisão determina desbloqueio da conta de Sheila.',\n  valorSentenca = 607786.48,\n  status = 'Conta de Sheila bloqueada - Desbloqueio solicitado - Decisão determina desbloqueio',\n  risco = 'alto'\nWHERE numero = '0500008-92.2019.8.05.0080'",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 59
+}
