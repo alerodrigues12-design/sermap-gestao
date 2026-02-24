@@ -134,3 +134,6 @@
 - [x] Implementado destaque visual (fundo vermelho) para processos com direcionamento à Sheila
 - [x] Ícone de alerta em vermelho para processos graves
 - [x] Passivo total recalculado: R$ 8.123.434,35
+
+- [x] Removida duplicação do processo 0500008-92.2019.8.05.0080
+- [x] Passivo total corrigido: R$ 7.515.647,87
