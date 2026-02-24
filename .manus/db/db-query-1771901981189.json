@@ -1,0 +1,9 @@
+{
+  "query": "UPDATE planoAcao SET dataFinalizada = '2026-02-24', status = 'concluido', percentualConclusao = 100, updatedAt = NOW() WHERE numero = 1",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3wxDEv3kxBHyGJz.fa19c0ca9e29 --database NW4am7ZA3rszie9rtuCceh --execute UPDATE planoAcao SET dataFinalizada = '2026-02-24', status = 'concluido', percentualConclusao = 100, updatedAt = NOW() WHERE numero = 1",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 61
+}
