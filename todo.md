@@ -156,3 +156,8 @@
 ## Atualização Processo 0000141-18.2021.5.05.0196
 - [x] Upload PDF CartPrecCiv para S3
 - [x] Atualizar processo com decisão de sobrestamento do leilão (02/03/2026)
+
+## Processo 0000141-18.2021.5.05.0196 - Suspensão Hasta
+- [x] Remover perda de prazo e atualizar status para sucesso
+- [x] Adicionar notificação fixa sobre suspensão da hasta
+- [x] Destaque visual verde/sucesso nas páginas de processos

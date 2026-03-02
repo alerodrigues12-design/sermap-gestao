@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
-import { AlertTriangle, Search, FileText, ExternalLink } from "lucide-react";
+import { AlertTriangle, Search, FileText, ExternalLink, CheckCircle2 } from "lucide-react";
 import { useState, useMemo } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -136,10 +136,12 @@ export default function Civeis() {
               <tbody>
                 {filtered.map((p) => {
                   const isGrave = p.risco === 'alto' && (p.observacoes?.toLowerCase().includes('sheila') || p.status?.toLowerCase().includes('redirecionamento') || p.observacoes?.toLowerCase().includes('grave'));
+                  const isSucesso = p.observacoes?.toLowerCase().includes('hasta pública suspensa') || p.observacoes?.toLowerCase().includes('tutela de urgência') && p.observacoes?.toLowerCase().includes('deferida');
                   return (
                   <tr
                     key={p.id}
                     className={`border-b hover:bg-muted/30 cursor-pointer transition-colors ${
+                      isSucesso ? "bg-emerald-50 border-l-4 border-l-emerald-600" :
                       isGrave ? "bg-red-50 border-l-4 border-l-red-600" : 
                       p.perdaPrazo ? "bg-destructive/5 border-l-4 border-l-destructive" : ""
                     }`}
@@ -147,8 +149,9 @@ export default function Civeis() {
                   >
                     <td className="p-3">
                       <div className="flex items-center gap-2">
-                        {isGrave && <AlertTriangle className="h-3.5 w-3.5 text-red-600 shrink-0" />}
-                        {p.perdaPrazo && !isGrave && <AlertTriangle className="h-3.5 w-3.5 text-destructive shrink-0" />}
+                        {isSucesso && <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600 shrink-0" />}
+                        {isGrave && !isSucesso && <AlertTriangle className="h-3.5 w-3.5 text-red-600 shrink-0" />}
+                        {p.perdaPrazo && !isGrave && !isSucesso && <AlertTriangle className="h-3.5 w-3.5 text-destructive shrink-0" />}
                         <span className="font-mono text-xs">{p.numero}</span>
                       </div>
                     </td>
@@ -171,7 +174,9 @@ export default function Civeis() {
                       {parseFloat(p.valorSentenca || "0") > 0 ? formatCurrency(parseFloat(p.valorSentenca || "0")) : "-"}
                     </td>
                     <td className="p-3">
-                      {p.perdaPrazo ? (
+                      {isSucesso ? (
+                        <Badge className="text-[10px] bg-emerald-600 hover:bg-emerald-700">HASTA SUSPENSA ✓</Badge>
+                      ) : p.perdaPrazo ? (
                         <Badge variant="destructive" className="text-[10px]">PERDA DE PRAZO</Badge>
                       ) : (
                         <span className="text-xs text-muted-foreground line-clamp-1">{p.status}</span>

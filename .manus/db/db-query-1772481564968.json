@@ -1,0 +1,28 @@
+{
+  "query": "SELECT * FROM notificacoes LIMIT 2;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3wxDEv3kxBHyGJz.fa19c0ca9e29 --database NW4am7ZA3rszie9rtuCceh --execute SELECT * FROM notificacoes LIMIT 2;",
+  "rows": [
+    {
+      "id": "1",
+      "processoId": "NULL",
+      "titulo": "Plataforma Ativada",
+      "mensagem": "A plataforma de gestão estratégica SERMAP foi ativada. Todos os processos foram cadastrados e o monitoramento está em andamento.",
+      "tipo": "info",
+      "lida": "0",
+      "createdAt": "2026-02-20 16:37:14"
+    },
+    {
+      "id": "2",
+      "processoId": "NULL",
+      "titulo": "Hasta Pública Agendada - 03/03/2026",
+      "mensagem": "O leilão do Centro de Operações está agendado para 03/03/2026. Processos vinculados: 0000141-18.2021.5.05.0196, 0000706-88.2018.5.19.0004.",
+      "tipo": "alerta",
+      "lida": "0",
+      "createdAt": "2026-02-20 16:37:14"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tprocessoId\ttitulo\tmensagem\ttipo\tlida\tcreatedAt\n1\tNULL\tPlataforma Ativada\tA plataforma de gestão estratégica SERMAP foi ativada. Todos os processos foram cadastrados e o monitoramento está em andamento.\tinfo\t0\t2026-02-20 16:37:14\n2\tNULL\tHasta Pública Agendada - 03/03/2026\tO leilão do Centro de Operações está agendado para 03/03/2026. Processos vinculados: 0000141-18.2021.5.05.0196, 0000706-88.2018.5.19.0004.\talerta\t0\t2026-02-20 16:37:14\n",
+  "stderr": "",
+  "execution_time_ms": 63
+}
