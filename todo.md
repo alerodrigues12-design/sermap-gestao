@@ -152,3 +152,7 @@
 
 ## NDA Preenchível- [x] Criar página NDA com campos preenchiíveis e geração de PDF
 - [x] Integrar ao menu lateral e rotas
+
+## Atualização Processo 0000141-18.2021.5.05.0196
+- [x] Upload PDF CartPrecCiv para S3
+- [x] Atualizar processo com decisão de sobrestamento do leilão (02/03/2026)

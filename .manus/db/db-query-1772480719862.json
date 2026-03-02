@@ -1,0 +1,9 @@
+{
+  "query": "UPDATE processos SET \n  observacoes = CONCAT(\n    IFNULL(observacoes, ''),\n    '\\n\\n--- DECISÃO JUDICIAL - 02/03/2026 ---\\nDentro deste contexto, DEFIRO o pedido de concessão de tutela de urgência, determinando o SOBRESTAMENTO do leilão ora designado, prestando-se tal informação com urgência ao Núcleo de Hastas Públicas. Intimem-se. Feira de Santana, 02 de março de 2026. Documento assinado eletronicamente por INGRID HEIDI OLIVA BONESS, em 02/03/2026, às 16:32:34 - 234d025\\n\\nAnexo: https://files.manuscdn.com/user_upload_by_module/session_file/310519663297073580/LxiAVWSqRSwFDZIM.pdf'\n  ),\n  status = 'ativo',\n  risco = 'alto',\n  updatedAt = NOW()\nWHERE numero = '0000141-18.2021.5.05.0196';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3wxDEv3kxBHyGJz.fa19c0ca9e29 --database NW4am7ZA3rszie9rtuCceh --execute UPDATE processos SET \n  observacoes = CONCAT(\n    IFNULL(observacoes, ''),\n    '\\n\\n--- DECISÃO JUDICIAL - 02/03/2026 ---\\nDentro deste contexto, DEFIRO o pedido de concessão de tutela de urgência, determinando o SOBRESTAMENTO do leilão ora designado, prestando-se tal informação com urgência ao Núcleo de Hastas Públicas. Intimem-se. Feira de Santana, 02 de março de 2026. Documento assinado eletronicamente por INGRID HEIDI OLIVA BONESS, em 02/03/2026, às 16:32:34 - 234d025\\n\\nAnexo: https://files.manuscdn.com/user_upload_by_module/session_file/310519663297073580/LxiAVWSqRSwFDZIM.pdf'\n  ),\n  status = 'ativo',\n  risco = 'alto',\n  updatedAt = NOW()\nWHERE numero = '0000141-18.2021.5.05.0196';",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 65
+}
