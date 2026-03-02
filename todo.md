@@ -149,3 +149,6 @@
 - [x] Data finalizada: 24/02/2026
 - [x] Responsável: Alessandra Hoffmann
 - [x] Percentual de conclusão: 100%
+
+## NDA Preenchível- [x] Criar página NDA com campos preenchiíveis e geração de PDF
+- [x] Integrar ao menu lateral e rotas
