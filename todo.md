@@ -172,3 +172,10 @@
 ## Proteção Inventário - Senha
 - [x] Adicionar resumo executivo na página
 - [x] Implementar proteção por senha (docs26)
+
+
+## Apresentações - Visão do Investidor
+- [x] Ler e analisar PDFs de infraestrutura e potencial da empresa
+- [x] Fazer upload dos PDFs para S3
+- [x] Criar seção de apresentações na página Visão do Investidor
+- [x] Adicionar resumo visual do potencial da empresa
