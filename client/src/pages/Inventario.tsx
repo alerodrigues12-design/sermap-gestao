@@ -8,7 +8,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 // @ts-ignore
 import CryptoJS from 'crypto-js';
 
-const INVENTARIO_PASSWORD_HASH = '8d969eef6ecad3c29a3a873fba6ee2c47adef46db4d9c0db1da0720b5712384b'; // hash SHA-256 de 'docs26'
+const INVENTARIO_PASSWORD_HASH = '1a77c9390acdcabf1c57142c663d1cbfb91a61288bf9e923092aa4ebdc77091d'; // hash SHA-256 de 'docs26'
 
 function hashPassword(password: string): string {
   return CryptoJS.SHA256(password).toString();
