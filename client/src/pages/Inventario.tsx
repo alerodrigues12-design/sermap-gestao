@@ -1,14 +1,69 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { FileText, Download, AlertCircle, CheckCircle2 } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { FileText, Download, AlertCircle, CheckCircle2, Lock, LockOpen } from "lucide-react";
 import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import crypto from 'crypto';
+
+const INVENTARIO_PASSWORD_HASH = '8d969eef6ecad3c29a3a873fba6ee2c47adef46db4d9c0db1da0720b5712384b'; // hash SHA-256 de 'docs26'
+
+function hashPassword(password: string): string {
+  return crypto.createHash('sha256').update(password).digest('hex');
+}
 
 export default function Inventario() {
   const [selectedSection, setSelectedSection] = useState<string | null>(null);
+  const [passwordInput, setPasswordInput] = useState('');
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [passwordError, setPasswordError] = useState('');
+
+  const handlePasswordSubmit = () => {
+    const hash = hashPassword(passwordInput);
+    if (hash === INVENTARIO_PASSWORD_HASH) {
+      setIsAuthenticated(true);
+      setPasswordError('');
+    } else {
+      setPasswordError('Senha incorreta');
+    }
+  };
 
   const pdfUrl = "https://files.manuscdn.com/user_upload_by_module/session_file/310519663297073580/JTtVxoStfcJLEYtl.pdf";
+
+  if (!isAuthenticated) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-slate-900 to-slate-800">
+        <div className="w-full max-w-md">
+          <Card className="border-0 shadow-2xl">
+            <CardHeader className="text-center space-y-2">
+              <div className="flex justify-center mb-4">
+                <Lock className="h-8 w-8 text-blue-600" />
+              </div>
+              <CardTitle className="text-2xl">Inventário Protegido</CardTitle>
+              <p className="text-sm text-muted-foreground">Este documento é restrito. Digite a senha para acessar.</p>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div>
+                <Input
+                  type="password"
+                  placeholder="Digite a senha"
+                  value={passwordInput}
+                  onChange={(e) => setPasswordInput(e.target.value)}
+                  onKeyPress={(e) => e.key === 'Enter' && handlePasswordSubmit()}
+                  className="text-center"
+                />
+                {passwordError && <p className="text-sm text-red-600 mt-2">{passwordError}</p>}
+              </div>
+              <Button onClick={handlePasswordSubmit} className="w-full" size="lg">
+                Acessar
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    );
+  }
 
   const sections = [
     {
@@ -191,10 +246,28 @@ export default function Inventario() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl md:text-3xl font-bold font-serif">Inventário Judicial</h1>
-        <p className="text-muted-foreground mt-1">Processo nº 8012478-03.2024.8.05.0080 - Vara de Família e Sucessões</p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl md:text-3xl font-bold font-serif">Inventário Judicial</h1>
+          <p className="text-muted-foreground mt-1">Processo nº 8012478-03.2024.8.05.0080 - Vara de Família e Sucessões</p>
+        </div>
+        <Button variant="outline" size="sm" onClick={() => setIsAuthenticated(false)} className="gap-2">
+          <LockOpen className="h-4 w-4" />
+          Sair
+        </Button>
       </div>
+
+      {/* Resumo Executivo */}
+      <Card className="border-blue-200 bg-gradient-to-r from-blue-50 to-blue-100">
+        <CardHeader>
+          <CardTitle className="text-blue-900">Resumo Executivo</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-3 text-sm text-blue-900">
+          <p>O inventário teve início regular e permanece em tramitação.</p>
+          <p>Foram identificados atrasos pontuais relacionados ao cumprimento de prazos e diligências, além de impacto decorrente da existência de ação judicial de cumprimento de testamento.</p>
+          <p>Atualmente o processo encontra-se em fase intermediária, dependendo da regularização das etapas processuais e fiscais necessárias para avançar à partilha.</p>
+        </CardContent>
+      </Card>
 
       {/* Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

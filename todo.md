@@ -168,3 +168,7 @@
 - [x] Fazer upload do PDF para S3
 - [x] Criar página de Inventário com resumo limpo
 - [x] Integrar ao menu lateral
+
+## Proteção Inventário - Senha
+- [x] Adicionar resumo executivo na página
+- [x] Implementar proteção por senha (docs26)
