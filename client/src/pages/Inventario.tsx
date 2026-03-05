@@ -5,12 +5,13 @@ import { Input } from "@/components/ui/input";
 import { FileText, Download, AlertCircle, CheckCircle2, Lock, LockOpen } from "lucide-react";
 import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import crypto from 'crypto';
+// @ts-ignore
+import CryptoJS from 'crypto-js';
 
 const INVENTARIO_PASSWORD_HASH = '8d969eef6ecad3c29a3a873fba6ee2c47adef46db4d9c0db1da0720b5712384b'; // hash SHA-256 de 'docs26'
 
 function hashPassword(password: string): string {
-  return crypto.createHash('sha256').update(password).digest('hex');
+  return CryptoJS.SHA256(password).toString();
 }
 
 export default function Inventario() {
