@@ -161,3 +161,10 @@
 - [x] Remover perda de prazo e atualizar status para sucesso
 - [x] Adicionar notificação fixa sobre suspensão da hasta
 - [x] Destaque visual verde/sucesso nas páginas de processos
+
+
+## Inventário do Pai da Sheila
+- [x] Ler e processar arquivos (PDF e resumo)
+- [x] Fazer upload do PDF para S3
+- [x] Criar página de Inventário com resumo limpo
+- [x] Integrar ao menu lateral
