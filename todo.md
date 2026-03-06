@@ -215,3 +215,6 @@
 
 ## Bug - Visão do Investidor PDFs
 - [x] Corrigir erro ao abrir PDFs da empresa na página Visão do Investidor (worker local pdfjs v5 + fallback com botões)
+
+## Bug - PDFs CORS na Visão do Investidor
+- [x] Corrigir erro de CORS ao carregar PDFs do CDN no componente PDFViewer (proxy /api/pdf-proxy implementado no servidor)

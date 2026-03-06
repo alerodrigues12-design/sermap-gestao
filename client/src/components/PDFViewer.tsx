@@ -8,6 +8,14 @@ import { Button } from '@/components/ui/button';
 // Use local worker bundled with pdfjs-dist v5 (compatible with react-pdf v10)
 pdfjs.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
 
+// Helper: wrap CDN URLs through local proxy to avoid CORS issues
+function toProxiedUrl(url: string): string {
+  if (url.startsWith('https://files.manuscdn.com/')) {
+    return `/api/pdf-proxy?url=${encodeURIComponent(url)}`;
+  }
+  return url;
+}
+
 interface PDFViewerProps {
   url: string;
   title: string;
@@ -152,7 +160,7 @@ export default function PDFViewer({ url, title, downloadName }: PDFViewerProps) 
           </div>
         ) : (
           <Document
-            file={url}
+            file={toProxiedUrl(url)}
             onLoadSuccess={onDocumentLoadSuccess}
             onLoadError={onDocumentLoadError}
             loading={

@@ -39,6 +39,28 @@ async function startServer() {
   registerOAuthRoutes(app);
   // Local auth routes (username/password)
   registerLocalAuthRoutes(app);
+  // Proxy de PDF para contornar CORS do CDN
+  app.get("/api/pdf-proxy", async (req, res) => {
+    const url = req.query.url as string;
+    if (!url || !url.startsWith("https://files.manuscdn.com/")) {
+      return res.status(400).json({ error: "URL inválida ou não permitida" });
+    }
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        return res.status(response.status).json({ error: "Erro ao buscar PDF" });
+      }
+      const buffer = await response.arrayBuffer();
+      res.setHeader("Content-Type", "application/pdf");
+      res.setHeader("Access-Control-Allow-Origin", "*");
+      res.setHeader("Cache-Control", "public, max-age=3600");
+      return res.send(Buffer.from(buffer));
+    } catch (err) {
+      console.error("PDF proxy error:", err);
+      return res.status(500).json({ error: "Erro interno ao buscar PDF" });
+    }
+  });
+
   // tRPC API
   app.use(
     "/api/trpc",
