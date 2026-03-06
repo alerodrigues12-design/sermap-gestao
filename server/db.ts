@@ -1,7 +1,7 @@
 import { eq, desc, and, sql, like, or, asc } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, processos, movimentacoes, passivoTributario, simulacoes, documentos, notificacoes, timelineItems, systemConfig, recados, emails, planoAcao } from "../drizzle/schema";
-import type { InsertRecado, InsertPlanoAcao } from "../drizzle/schema";
+import { InsertUser, users, processos, movimentacoes, passivoTributario, simulacoes, documentos, notificacoes, timelineItems, systemConfig, recados, emails, planoAcao, governancaDocumentos, governancaReunioes, governancaParticipantes, governancaAtas, governancaGravacoes, governancaAssinaturas } from "../drizzle/schema";
+import type { InsertRecado, InsertPlanoAcao, InsertGovernancaDocumento, InsertGovernancaReuniao, InsertGovernancaParticipante, InsertGovernancaAta, InsertGovernancaGravacao, InsertGovernancaAssinatura } from "../drizzle/schema";
 import type { InsertProcesso, InsertMovimentacao } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
@@ -360,4 +360,143 @@ export async function deletePlanoAcao(id: number) {
   const db = await getDb();
   if (!db) return;
   await db.delete(planoAcao).where(eq(planoAcao.id, id));
+}
+
+
+// === GOVERNANÇA CORPORATIVA - DOCUMENTOS ===
+export async function getGovernancaDocumentos() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(governancaDocumentos).orderBy(desc(governancaDocumentos.dataCriacao));
+}
+export async function insertGovernancaDocumento(doc: InsertGovernancaDocumento) {
+  const db = await getDb();
+  if (!db) return;
+  await db.insert(governancaDocumentos).values(doc);
+}
+export async function updateGovernancaDocumento(id: number, updates: Partial<InsertGovernancaDocumento>) {
+  const db = await getDb();
+  if (!db) return;
+  await db.update(governancaDocumentos).set(updates).where(eq(governancaDocumentos.id, id));
+}
+export async function deleteGovernancaDocumento(id: number) {
+  const db = await getDb();
+  if (!db) return;
+  await db.delete(governancaDocumentos).where(eq(governancaDocumentos.id, id));
+}
+
+// === GOVERNANÇA CORPORATIVA - REUNIÕES ===
+export async function getGovernancaReunioes() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(governancaReunioes).orderBy(desc(governancaReunioes.dataReuniao));
+}
+export async function getGovernancaReuniao(id: number) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db.select().from(governancaReunioes).where(eq(governancaReunioes.id, id)).limit(1);
+  return result[0];
+}
+export async function insertGovernancaReuniao(reuniao: InsertGovernancaReuniao) {
+  const db = await getDb();
+  if (!db) return;
+  await db.insert(governancaReunioes).values(reuniao);
+}
+export async function updateGovernancaReuniao(id: number, updates: Partial<InsertGovernancaReuniao>) {
+  const db = await getDb();
+  if (!db) return;
+  await db.update(governancaReunioes).set(updates).where(eq(governancaReunioes.id, id));
+}
+export async function deleteGovernancaReuniao(id: number) {
+  const db = await getDb();
+  if (!db) return;
+  await db.delete(governancaReunioes).where(eq(governancaReunioes.id, id));
+}
+
+// === GOVERNANÇA CORPORATIVA - PARTICIPANTES ===
+export async function getGovernancaParticipantes(reuniaoId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(governancaParticipantes).where(eq(governancaParticipantes.reuniaoId, reuniaoId));
+}
+export async function insertGovernancaParticipante(participante: InsertGovernancaParticipante) {
+  const db = await getDb();
+  if (!db) return;
+  await db.insert(governancaParticipantes).values(participante);
+}
+export async function updateGovernancaParticipante(id: number, updates: Partial<InsertGovernancaParticipante>) {
+  const db = await getDb();
+  if (!db) return;
+  await db.update(governancaParticipantes).set(updates).where(eq(governancaParticipantes.id, id));
+}
+export async function deleteGovernancaParticipante(id: number) {
+  const db = await getDb();
+  if (!db) return;
+  await db.delete(governancaParticipantes).where(eq(governancaParticipantes.id, id));
+}
+
+// === GOVERNANÇA CORPORATIVA - ATAS ===
+export async function getGovernancaAtas(reuniaoId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(governancaAtas).where(eq(governancaAtas.reuniaoId, reuniaoId));
+}
+export async function insertGovernancaAta(ata: InsertGovernancaAta) {
+  const db = await getDb();
+  if (!db) return;
+  await db.insert(governancaAtas).values(ata);
+}
+export async function updateGovernancaAta(id: number, updates: Partial<InsertGovernancaAta>) {
+  const db = await getDb();
+  if (!db) return;
+  await db.update(governancaAtas).set(updates).where(eq(governancaAtas.id, id));
+}
+export async function deleteGovernancaAta(id: number) {
+  const db = await getDb();
+  if (!db) return;
+  await db.delete(governancaAtas).where(eq(governancaAtas.id, id));
+}
+
+// === GOVERNANÇA CORPORATIVA - GRAVAÇÕES ===
+export async function getGovernancaGravacoes(reuniaoId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(governancaGravacoes).where(eq(governancaGravacoes.reuniaoId, reuniaoId));
+}
+export async function insertGovernancaGravacao(gravacao: InsertGovernancaGravacao) {
+  const db = await getDb();
+  if (!db) return;
+  await db.insert(governancaGravacoes).values(gravacao);
+}
+export async function updateGovernancaGravacao(id: number, updates: Partial<InsertGovernancaGravacao>) {
+  const db = await getDb();
+  if (!db) return;
+  await db.update(governancaGravacoes).set(updates).where(eq(governancaGravacoes.id, id));
+}
+export async function deleteGovernancaGravacao(id: number) {
+  const db = await getDb();
+  if (!db) return;
+  await db.delete(governancaGravacoes).where(eq(governancaGravacoes.id, id));
+}
+
+// === GOVERNANÇA CORPORATIVA - ASSINATURAS ===
+export async function getGovernancaAssinaturas(documentoId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(governancaAssinaturas).where(eq(governancaAssinaturas.documentoId, documentoId));
+}
+export async function insertGovernancaAssinatura(assinatura: InsertGovernancaAssinatura) {
+  const db = await getDb();
+  if (!db) return;
+  await db.insert(governancaAssinaturas).values(assinatura);
+}
+export async function updateGovernancaAssinatura(id: number, updates: Partial<InsertGovernancaAssinatura>) {
+  const db = await getDb();
+  if (!db) return;
+  await db.update(governancaAssinaturas).set(updates).where(eq(governancaAssinaturas.id, id));
+}
+export async function deleteGovernancaAssinatura(id: number) {
+  const db = await getDb();
+  if (!db) return;
+  await db.delete(governancaAssinaturas).where(eq(governancaAssinaturas.id, id));
 }

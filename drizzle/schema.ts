@@ -212,3 +212,99 @@ export const planoAcao = mysqlTable("planoAcao", {
 
 export type PlanoAcao = typeof planoAcao.$inferSelect;
 export type InsertPlanoAcao = typeof planoAcao.$inferInsert;
+
+
+// Governança Corporativa - Documentos
+export const governancaDocumentos = mysqlTable("governancaDocumentos", {
+  id: int("id").autoincrement().primaryKey(),
+  titulo: varchar("titulo", { length: 255 }).notNull(),
+  descricao: text("descricao"),
+  tipo: mysqlEnum("tipo", ["politica", "procedimento", "norma", "resolucao", "estatuto", "regimento", "outro"]).notNull(),
+  versao: int("versao").default(1),
+  status: mysqlEnum("status", ["rascunho", "em_aprovacao", "aprovado", "arquivado"]).default("rascunho").notNull(),
+  documentoUrl: text("documentoUrl"),
+  documentoKey: varchar("documentoKey", { length: 500 }),
+  dataCriacao: varchar("dataCriacao", { length: 20 }).notNull(),
+  dataAprovacao: varchar("dataAprovacao", { length: 20 }),
+  responsavel: varchar("responsavel", { length: 255 }),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type GovernancaDocumento = typeof governancaDocumentos.$inferSelect;
+export type InsertGovernancaDocumento = typeof governancaDocumentos.$inferInsert;
+
+// Governança Corporativa - Reuniões
+export const governancaReunioes = mysqlTable("governancaReunioes", {
+  id: int("id").autoincrement().primaryKey(),
+  titulo: varchar("titulo", { length: 255 }).notNull(),
+  descricao: text("descricao"),
+  dataReuniao: varchar("dataReuniao", { length: 20 }).notNull(),
+  horaReuniao: varchar("horaReuniao", { length: 10 }).notNull(),
+  local: varchar("local", { length: 255 }),
+  linkGoogleMeet: text("linkGoogleMeet"),
+  status: mysqlEnum("status", ["agendada", "em_andamento", "concluida", "cancelada"]).default("agendada").notNull(),
+  responsavel: varchar("responsavel", { length: 255 }).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type GovernancaReuniao = typeof governancaReunioes.$inferSelect;
+export type InsertGovernancaReuniao = typeof governancaReunioes.$inferInsert;
+
+// Governança Corporativa - Participantes de Reuniões
+export const governancaParticipantes = mysqlTable("governancaParticipantes", {
+  id: int("id").autoincrement().primaryKey(),
+  reuniaoId: int("reuniaoId").notNull().references(() => governancaReunioes.id),
+  nome: varchar("nome", { length: 255 }).notNull(),
+  email: varchar("email", { length: 320 }).notNull(),
+  cargo: varchar("cargo", { length: 255 }),
+  confirmacao: mysqlEnum("confirmacao", ["pendente", "confirmado", "recusado"]).default("pendente"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type GovernancaParticipante = typeof governancaParticipantes.$inferSelect;
+export type InsertGovernancaParticipante = typeof governancaParticipantes.$inferInsert;
+
+// Governança Corporativa - Atas
+export const governancaAtas = mysqlTable("governancaAtas", {
+  id: int("id").autoincrement().primaryKey(),
+  reuniaoId: int("reuniaoId").notNull().references(() => governancaReunioes.id),
+  titulo: varchar("titulo", { length: 255 }).notNull(),
+  conteudo: text("conteudo"),
+  ataUrl: text("ataUrl"),
+  ataKey: varchar("ataKey", { length: 500 }),
+  dataAta: varchar("dataAta", { length: 20 }).notNull(),
+  responsavel: varchar("responsavel", { length: 255 }).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type GovernancaAta = typeof governancaAtas.$inferSelect;
+export type InsertGovernancaAta = typeof governancaAtas.$inferInsert;
+
+// Governança Corporativa - Gravações
+export const governancaGravacoes = mysqlTable("governancaGravacoes", {
+  id: int("id").autoincrement().primaryKey(),
+  reuniaoId: int("reuniaoId").notNull().references(() => governancaReunioes.id),
+  titulo: varchar("titulo", { length: 255 }).notNull(),
+  linkGravacao: text("linkGravacao").notNull(),
+  duracao: varchar("duracao", { length: 20 }),
+  dataGravacao: varchar("dataGravacao", { length: 20 }).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type GovernancaGravacao = typeof governancaGravacoes.$inferSelect;
+export type InsertGovernancaGravacao = typeof governancaGravacoes.$inferInsert;
+
+// Governança Corporativa - Assinaturas Eletrônicas
+export const governancaAssinaturas = mysqlTable("governancaAssinaturas", {
+  id: int("id").autoincrement().primaryKey(),
+  documentoId: int("documentoId").notNull().references(() => governancaDocumentos.id),
+  signatario: varchar("signatario", { length: 255 }).notNull(),
+  email: varchar("email", { length: 320 }).notNull(),
+  status: mysqlEnum("status", ["pendente", "assinado", "recusado"]).default("pendente").notNull(),
+  dataAssinatura: varchar("dataAssinatura", { length: 20 }),
+  linkAutentique: text("linkAutentique"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type GovernancaAssinatura = typeof governancaAssinaturas.$inferSelect;
+export type InsertGovernancaAssinatura = typeof governancaAssinaturas.$inferInsert;

@@ -50,6 +50,8 @@ const DEFAULT_WIDTH = 280;
 const MIN_WIDTH = 200;
 const MAX_WIDTH = 480;
 
+const LOGO_HOFFMANN = "https://files.manuscdn.com/user_upload_by_module/session_file/310519663297073580/TyiOkdOoemdyXAvy.png";
+const LOGO_SERMAP = "https://files.manuscdn.com/user_upload_by_module/session_file/310519663297073580/DQSwzrYVUrZzVnsQ.PNG";
 const LOGO_URL = "https://files.manuscdn.com/user_upload_by_module/session_file/310519663297073580/ccNIzQZwCRQQckuK.png";
 
 export default function DashboardLayout({
@@ -158,8 +160,9 @@ function DashboardLayoutContent({
                 <PanelLeft className="h-4 w-4 text-sidebar-foreground/70" />
               </button>
               {!isCollapsed ? (
-                <div className="flex items-center gap-2 min-w-0">
-                  <img src={LOGO_URL} alt="AH" className="h-8 object-contain" />
+                <div className="flex items-center gap-2 min-w-0 flex-col">
+                  <img src={LOGO_HOFFMANN} alt="Alessandra Hoffmann" className="h-10 object-contain" />
+                  <img src={LOGO_SERMAP} alt="SERMAP" className="h-8 object-contain" />
                 </div>
               ) : null}
             </div>
@@ -192,7 +195,14 @@ function DashboardLayoutContent({
             </SidebarMenu>
           </SidebarContent>
 
-          <SidebarFooter className="p-3 border-t border-sidebar-border">
+          <SidebarFooter className="p-3 border-t border-sidebar-border space-y-3">
+            {!isCollapsed && (
+              <div className="flex items-center justify-center gap-2 py-2 px-1">
+                <img src={LOGO_HOFFMANN} alt="Alessandra Hoffmann" className="h-6 object-contain" />
+                <span className="text-xs text-sidebar-foreground/60">|</span>
+                <img src={LOGO_SERMAP} alt="SERMAP" className="h-5 object-contain" />
+              </div>
+            )}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <button className="flex items-center gap-3 rounded-lg px-1 py-1 hover:bg-sidebar-accent/50 transition-colors w-full text-left group-data-[collapsible=icon]:justify-center focus:outline-none">

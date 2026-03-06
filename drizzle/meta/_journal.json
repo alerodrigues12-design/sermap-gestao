@@ -50,6 +50,13 @@
       "when": 1771892789807,
       "tag": "0006_normal_hellion",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "5",
+      "when": 1772765675160,
+      "tag": "0007_flat_old_lace",
+      "breakpoints": true
     }
   ]
 }

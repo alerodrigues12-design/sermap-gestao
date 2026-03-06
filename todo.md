@@ -186,3 +186,22 @@
 - [x] Criar componente de visualizador PDF com navegação e zoom
 - [x] Integrar visualizadores à página Visão do Investidor
 - [x] Testar navegação, zoom e download
+
+
+## Módulo de Governança Corporativa
+- [ ] Atualizar banco de dados com tabelas para documentos, reuniões, atas e assinaturas
+- [ ] Criar página de Governança com seções: Documentos, Reuniões, Atas e Assinaturas
+- [ ] Implementar gestão de documentos com upload e versionamento
+- [ ] Implementar gestão de reuniões (criar, editar, convidar participantes)
+- [ ] Implementar envio de e-mails com convites de reunião
+- [ ] Implementar armazenamento de gravações e atas
+- [ ] Integrar Autentique para assinatura eletrônica (estrutura pronta)
+- [ ] Criar conta corporativa Google e integrar Google Meet
+
+
+## Branding - Logos
+- [x] Extrair logo da SERMAP dos PDFs
+- [x] Adicionar logo Alessandra Hoffmann ao header
+- [x] Adicionar logo SERMAP ao header
+- [x] Adicionar logos ao footer
+- [x] Adicionar logos às páginas principais
