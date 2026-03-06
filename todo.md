@@ -189,14 +189,16 @@
 
 
 ## Módulo de Governança Corporativa
-- [ ] Atualizar banco de dados com tabelas para documentos, reuniões, atas e assinaturas
-- [ ] Criar página de Governança com seções: Documentos, Reuniões, Atas e Assinaturas
-- [ ] Implementar gestão de documentos com upload e versionamento
-- [ ] Implementar gestão de reuniões (criar, editar, convidar participantes)
-- [ ] Implementar envio de e-mails com convites de reunião
-- [ ] Implementar armazenamento de gravações e atas
-- [ ] Integrar Autentique para assinatura eletrônica (estrutura pronta)
-- [ ] Criar conta corporativa Google e integrar Google Meet
+- [x] Atualizar banco de dados com tabelas para documentos, reuniões, atas e assinaturas
+- [x] Criar página de Governança com 4 abas: Documentos, Reuniões, Atas e Assinaturas
+- [x] Implementar gestão de documentos com cadastro e versionamento
+- [x] Implementar gestão de reuniões (criar, editar, status, link Google Meet)
+- [x] Implementar armazenamento de atas com conteúdo e PDF
+- [x] Integrar Autentique para assinatura eletrônica (documentos, atas e NDA)
+- [x] Adicionar botão 'Enviar para Assinatura' na página NDA
+- [x] Adicionar item 'Governança Corporativa' no menu lateral
+- [ ] PENDENTE: Atualizar chave API do Autentique com token completo (chave atual truncada/inválida)
+- [ ] Criar conta corporativa Google e integrar Google Meet (futuro)
 
 
 ## Branding - Logos

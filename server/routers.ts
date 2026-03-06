@@ -2,6 +2,7 @@ import { COOKIE_NAME } from "@shared/const"; // Already imported at top
 import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { emailsRouter } from "./routers-emails";
+import { governancaRouter } from "./routers-governanca";
 import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
 import { z } from "zod";
 import {
@@ -332,5 +333,7 @@ export const appRouter = router({
         return { success: true };
       }),
   }),
+  // Governança Corporativa
+  governanca: governancaRouter,
 });
 export type AppRouter = typeof appRouter;
