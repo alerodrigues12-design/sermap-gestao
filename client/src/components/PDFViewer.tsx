@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { Document, Page, pdfjs } from 'react-pdf';
-import { ChevronLeft, ChevronRight, ZoomIn, ZoomOut, Download } from 'lucide-react';
+import 'react-pdf/dist/Page/AnnotationLayer.css';
+import 'react-pdf/dist/Page/TextLayer.css';
+import { ChevronLeft, ChevronRight, ZoomIn, ZoomOut, Download, ExternalLink } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-// Set up PDF.js worker
-pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
+// Use local worker bundled with pdfjs-dist v5 (compatible with react-pdf v10)
+pdfjs.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
 
 interface PDFViewerProps {
   url: string;
@@ -15,11 +17,18 @@ interface PDFViewerProps {
 export default function PDFViewer({ url, title, downloadName }: PDFViewerProps) {
   const [numPages, setNumPages] = useState<number | null>(null);
   const [pageNumber, setPageNumber] = useState(1);
-  const [scale, setScale] = useState(1);
+  const [scale, setScale] = useState(1.0);
+  const [loadError, setLoadError] = useState<string | null>(null);
 
   function onDocumentLoadSuccess({ numPages }: { numPages: number }) {
     setNumPages(numPages);
     setPageNumber(1);
+    setLoadError(null);
+  }
+
+  function onDocumentLoadError(error: Error) {
+    console.error('PDF load error:', error);
+    setLoadError(error.message || 'Erro desconhecido');
   }
 
   const handlePrevPage = () => {
@@ -42,25 +51,31 @@ export default function PDFViewer({ url, title, downloadName }: PDFViewerProps) 
     const link = document.createElement('a');
     link.href = url;
     link.download = downloadName || 'documento.pdf';
+    link.target = '_blank';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
   };
 
+  const handleOpenExternal = () => {
+    window.open(url, '_blank', 'noopener,noreferrer');
+  };
+
   return (
     <div className="space-y-4">
       {/* Header com Título */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between flex-wrap gap-2">
         <h3 className="text-lg font-semibold">{title}</h3>
-        <Button
-          onClick={handleDownload}
-          variant="outline"
-          size="sm"
-          className="gap-2"
-        >
-          <Download className="h-4 w-4" />
-          Download
-        </Button>
+        <div className="flex gap-2">
+          <Button onClick={handleOpenExternal} variant="outline" size="sm" className="gap-2">
+            <ExternalLink className="h-4 w-4" />
+            Abrir em nova aba
+          </Button>
+          <Button onClick={handleDownload} variant="outline" size="sm" className="gap-2">
+            <Download className="h-4 w-4" />
+            Download
+          </Button>
+        </div>
       </div>
 
       {/* Controles de Navegação e Zoom */}
@@ -117,18 +132,46 @@ export default function PDFViewer({ url, title, downloadName }: PDFViewerProps) 
       </div>
 
       {/* Visualizador PDF */}
-      <div className="border rounded-lg overflow-auto bg-muted/50 flex justify-center p-4" style={{ maxHeight: '600px' }}>
-        <Document
-          file={url}
-          onLoadSuccess={onDocumentLoadSuccess}
-          loading={<div className="text-center py-8">Carregando PDF...</div>}
-          error={<div className="text-center py-8 text-red-500">Erro ao carregar PDF</div>}
-        >
-          <Page
-            pageNumber={pageNumber}
-            scale={scale}
-          />
-        </Document>
+      <div className="border rounded-lg overflow-auto bg-muted/50 flex justify-center p-4" style={{ maxHeight: '650px' }}>
+        {loadError ? (
+          <div className="flex flex-col items-center justify-center py-12 gap-4 text-center">
+            <p className="text-red-500 font-medium">Não foi possível renderizar o PDF no navegador.</p>
+            <p className="text-sm text-muted-foreground max-w-sm">
+              Isso pode ocorrer por restrições de segurança. Use os botões abaixo para acessar o arquivo.
+            </p>
+            <div className="flex gap-2">
+              <Button onClick={handleOpenExternal} variant="default" size="sm" className="gap-2">
+                <ExternalLink className="h-4 w-4" />
+                Abrir em nova aba
+              </Button>
+              <Button onClick={handleDownload} variant="outline" size="sm" className="gap-2">
+                <Download className="h-4 w-4" />
+                Download
+              </Button>
+            </div>
+          </div>
+        ) : (
+          <Document
+            file={url}
+            onLoadSuccess={onDocumentLoadSuccess}
+            onLoadError={onDocumentLoadError}
+            loading={
+              <div className="flex items-center justify-center py-12">
+                <div className="flex flex-col items-center gap-3">
+                  <div className="h-8 w-8 animate-spin rounded-full border-2 border-[#c8956c] border-t-transparent" />
+                  <p className="text-sm text-muted-foreground">Carregando PDF...</p>
+                </div>
+              </div>
+            }
+          >
+            <Page
+              pageNumber={pageNumber}
+              scale={scale}
+              renderTextLayer={true}
+              renderAnnotationLayer={true}
+            />
+          </Document>
+        )}
       </div>
 
       {/* Informações */}

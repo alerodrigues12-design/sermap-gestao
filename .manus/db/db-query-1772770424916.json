@@ -1,0 +1,24 @@
+{
+  "query": "SELECT id, numero, tipo, status, observacoes FROM processos WHERE numero LIKE '%1056834%' OR numero LIKE '%0500008%';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3wxDEv3kxBHyGJz.fa19c0ca9e29 --database NW4am7ZA3rszie9rtuCceh --execute SELECT id, numero, tipo, status, observacoes FROM processos WHERE numero LIKE '%1056834%' OR numero LIKE '%0500008%';",
+  "rows": [
+    {
+      "id": "30001",
+      "numero": "0500008-92.2019.8.05.0080",
+      "tipo": "civel",
+      "status": "Conta de Sheila bloqueada - Desbloqueio solicitado - Decisão determina desbloqueio",
+      "observacoes": "Cobrança de débito referente a abertura de crédito no valor de R$ 500.000,00 (nº 004.120.211) onde Sheila foi fiadora da Sermap. Sermap citada. Sheila citada em São Paulo através de Maria Cristina. Conta de Sheila bloqueada. Desbloqueio solicitado. Decisão determina desbloqueio da conta de Sheila."
+    },
+    {
+      "id": "30014",
+      "numero": "1056834-34.2020.4.01.3300",
+      "tipo": "execucao_fiscal",
+      "status": "Pedido de redirecionametno contra a Sheila",
+      "observacoes": "Sermap citada por edital - decorrido prazo"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tnumero\ttipo\tstatus\tobservacoes\n30001\t0500008-92.2019.8.05.0080\tcivel\tConta de Sheila bloqueada - Desbloqueio solicitado - Decisão determina desbloqueio\tCobrança de débito referente a abertura de crédito no valor de R$ 500.000,00 (nº 004.120.211) onde Sheila foi fiadora da Sermap. Sermap citada. Sheila citada em São Paulo através de Maria Cristina. Conta de Sheila bloqueada. Desbloqueio solicitado. Decisão determina desbloqueio da conta de Sheila.\n30014\t1056834-34.2020.4.01.3300\texecucao_fiscal\tPedido de redirecionametno contra a Sheila\tSermap citada por edital - decorrido prazo\n",
+  "stderr": "",
+  "execution_time_ms": 56
+}

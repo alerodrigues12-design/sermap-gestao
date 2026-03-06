@@ -1,0 +1,178 @@
+{
+  "query": "DESCRIBE processos;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3wxDEv3kxBHyGJz.fa19c0ca9e29 --database NW4am7ZA3rszie9rtuCceh --execute DESCRIBE processos;",
+  "rows": [
+    {
+      "Field": "id",
+      "Type": "int",
+      "Null": "NO",
+      "Key": "PRI",
+      "Default": "NULL",
+      "Extra": "auto_increment"
+    },
+    {
+      "Field": "numero",
+      "Type": "varchar(50)",
+      "Null": "NO",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "tipo",
+      "Type": "enum('trabalhista','civel','tributario','execucao_fiscal')",
+      "Null": "NO",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "sistema",
+      "Type": "enum('pje','esaj')",
+      "Null": "NO",
+      "Key": "",
+      "Default": "pje",
+      "Extra": ""
+    },
+    {
+      "Field": "orgao",
+      "Type": "varchar(255)",
+      "Null": "YES",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "local",
+      "Type": "varchar(255)",
+      "Null": "YES",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "autor",
+      "Type": "text",
+      "Null": "YES",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "reu",
+      "Type": "text",
+      "Null": "YES",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "assunto",
+      "Type": "text",
+      "Null": "YES",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "dataAutuacao",
+      "Type": "varchar(20)",
+      "Null": "YES",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "observacoes",
+      "Type": "text",
+      "Null": "YES",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "valorCondenacao",
+      "Type": "decimal(15,2)",
+      "Null": "YES",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "valorSentenca",
+      "Type": "decimal(15,2)",
+      "Null": "YES",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "status",
+      "Type": "text",
+      "Null": "YES",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "perdaPrazo",
+      "Type": "tinyint(1)",
+      "Null": "YES",
+      "Key": "",
+      "Default": "0",
+      "Extra": ""
+    },
+    {
+      "Field": "risco",
+      "Type": "enum('alto','medio','baixo','indefinido')",
+      "Null": "YES",
+      "Key": "",
+      "Default": "indefinido",
+      "Extra": ""
+    },
+    {
+      "Field": "advogadoReclamante",
+      "Type": "text",
+      "Null": "YES",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "enderecoReclamante",
+      "Type": "text",
+      "Null": "YES",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "enderecoAdvogado",
+      "Type": "text",
+      "Null": "YES",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "createdAt",
+      "Type": "timestamp",
+      "Null": "NO",
+      "Key": "",
+      "Default": "CURRENT_TIMESTAMP",
+      "Extra": ""
+    },
+    {
+      "Field": "updatedAt",
+      "Type": "timestamp",
+      "Null": "NO",
+      "Key": "",
+      "Default": "CURRENT_TIMESTAMP",
+      "Extra": "DEFAULT_GENERATED on update CURRENT_TIMESTAMP"
+    }
+  ],
+  "messages": [],
+  "stdout": "Field\tType\tNull\tKey\tDefault\tExtra\nid\tint\tNO\tPRI\tNULL\tauto_increment\nnumero\tvarchar(50)\tNO\t\tNULL\t\ntipo\tenum('trabalhista','civel','tributario','execucao_fiscal')\tNO\t\tNULL\t\nsistema\tenum('pje','esaj')\tNO\t\tpje\t\norgao\tvarchar(255)\tYES\t\tNULL\t\nlocal\tvarchar(255)\tYES\t\tNULL\t\nautor\ttext\tYES\t\tNULL\t\nreu\ttext\tYES\t\tNULL\t\nassunto\ttext\tYES\t\tNULL\t\ndataAutuacao\tvarchar(20)\tYES\t\tNULL\t\nobservacoes\ttext\tYES\t\tNULL\t\nvalorCondenacao\tdecimal(15,2)\tYES\t\tNULL\t\nvalorSentenca\tdecimal(15,2)\tYES\t\tNULL\t\nstatus\ttext\tYES\t\tNULL\t\nperdaPrazo\ttinyint(1)\tYES\t\t0\t\nrisco\tenum('alto','medio','baixo','indefinido')\tYES\t\tindefinido\t\nadvogadoReclamante\ttext\tYES\t\tNULL\t\nenderecoReclamante\ttext\tYES\t\tNULL\t\nenderecoAdvogado\ttext\tYES\t\tNULL\t\ncreatedAt\ttimestamp\tNO\t\tCURRENT_TIMESTAMP\t\nupdatedAt\ttimestamp\tNO\t\tCURRENT_TIMESTAMP\tDEFAULT_GENERATED on update CURRENT_TIMESTAMP\n",
+  "stderr": "",
+  "execution_time_ms": 53
+}

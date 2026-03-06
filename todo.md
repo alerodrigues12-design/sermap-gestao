@@ -207,3 +207,11 @@
 - [x] Adicionar logo SERMAP ao header
 - [x] Adicionar logos ao footer
 - [x] Adicionar logos às páginas principais
+
+## Atualização de Processos - Março 2026
+- [x] Registrar peticionamento no processo 1056834-34.2020.4.01.3300 (TRF1) - status e movimentação atualizados
+- [x] Registrar peticionamento no processo 0500008-92.2019.8.05.0080 (TJBA - União e Banco do Brasil) - status e movimentação atualizados
+- [ ] Indicador de perda de prazo mantido para acompanhamento contínuo (conforme solicitação da Ale)
+
+## Bug - Visão do Investidor PDFs
+- [x] Corrigir erro ao abrir PDFs da empresa na página Visão do Investidor (worker local pdfjs v5 + fallback com botões)
