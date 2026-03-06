@@ -2,7 +2,9 @@ import { trpc } from "@/lib/trpc";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { TrendingUp, Building2, Shield, Target, CheckCircle2, AlertCircle, ArrowRight, FileText, Download } from "lucide-react";
+import { TrendingUp, Building2, Shield, Target, CheckCircle2, AlertCircle, ArrowRight, FileText, Download, ChevronDown } from "lucide-react";
+import PDFViewer from "@/components/PDFViewer";
+import { useState } from "react";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, BarChart, Bar, XAxis, YAxis } from "recharts";
 
 function formatCurrency(value: number) {
@@ -10,6 +12,7 @@ function formatCurrency(value: number) {
 }
 
 export default function Investidores() {
+  const [expandedPDF, setExpandedPDF] = useState<string | null>(null);
   const { data: summary, isLoading } = trpc.dashboard.summary.useQuery();
   const { data: timeline } = trpc.timeline.list.useQuery();
   const { data: simulacoes } = trpc.tributario.simulacoes.useQuery();
@@ -213,56 +216,75 @@ export default function Investidores() {
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Apresentação 1 */}
-            <div className="p-6 rounded-lg border bg-gradient-to-br from-[#2d2a1e]/5 to-[#c8956c]/5 hover:shadow-md transition-shadow">
+            {/* Botão Apresentação 1 */}
+            <button
+              onClick={() => setExpandedPDF(expandedPDF === 'infra' ? null : 'infra')}
+              className="p-6 rounded-lg border bg-gradient-to-br from-[#2d2a1e]/5 to-[#c8956c]/5 hover:shadow-md transition-shadow text-left w-full"
+            >
               <div className="flex items-start gap-4 mb-4">
                 <div className="p-3 rounded-lg bg-[#c8956c]/10">
                   <FileText className="h-6 w-6 text-[#c8956c]" />
                 </div>
                 <div className="flex-1">
-                  <h4 className="font-semibold text-base mb-1">Infraestrutura e Equipamentos</h4>
-                  <p className="text-xs text-muted-foreground">Relatório técnico detalhado</p>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h4 className="font-semibold text-base mb-1">Infraestrutura e Equipamentos</h4>
+                      <p className="text-xs text-muted-foreground">Relatório técnico detalhado</p>
+                    </div>
+                    <ChevronDown className={`h-5 w-5 text-[#c8956c] transition-transform ${expandedPDF === 'infra' ? 'rotate-180' : ''}`} />
+                  </div>
                 </div>
               </div>
-              <p className="text-sm text-muted-foreground mb-4 leading-relaxed">
-                Apresentação completa da infraestrutura de limpeza química da SERMAP, com especificações técnicas de equipamentos de alta capacidade operacional. Demonstra a escala e sofisticação das operações.
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                Clique para visualizar a apresentação completa com navegação interativa
               </p>
-              <a 
-                href="https://files.manuscdn.com/user_upload_by_module/session_file/310519663297073580/VioeIjLbrjQfHQmz.pdf" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#c8956c] text-white text-sm font-medium hover:bg-[#b87d52] transition-colors"
-              >
-                <Download className="h-4 w-4" />
-                Baixar Apresentação
-              </a>
-            </div>
+            </button>
 
-            {/* Apresentação 2 */}
-            <div className="p-6 rounded-lg border bg-gradient-to-br from-[#4a5a3a]/5 to-[#2d2a1e]/5 hover:shadow-md transition-shadow">
+            {/* Botão Apresentação 2 */}
+            <button
+              onClick={() => setExpandedPDF(expandedPDF === 'empresa' ? null : 'empresa')}
+              className="p-6 rounded-lg border bg-gradient-to-br from-[#4a5a3a]/5 to-[#2d2a1e]/5 hover:shadow-md transition-shadow text-left w-full"
+            >
               <div className="flex items-start gap-4 mb-4">
                 <div className="p-3 rounded-lg bg-[#4a5a3a]/10">
                   <Building2 className="h-6 w-6 text-[#4a5a3a]" />
                 </div>
                 <div className="flex-1">
-                  <h4 className="font-semibold text-base mb-1">Empresa SERMAP</h4>
-                  <p className="text-xs text-muted-foreground">Visão geral e potencial</p>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h4 className="font-semibold text-base mb-1">Empresa SERMAP</h4>
+                      <p className="text-xs text-muted-foreground">Visão geral e potencial</p>
+                    </div>
+                    <ChevronDown className={`h-5 w-5 text-[#4a5a3a] transition-transform ${expandedPDF === 'empresa' ? 'rotate-180' : ''}`} />
+                  </div>
                 </div>
               </div>
-              <p className="text-sm text-muted-foreground mb-4 leading-relaxed">
-                Apresentação estratégica sobre a SERMAP Engenharia, destacando seu histórico no setor, capacidade operacional, e o potencial impressionante da empresa para retomada de atividades com investimento estratégico.
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                Clique para visualizar a apresentação completa com navegação interativa
               </p>
-              <a 
-                href="https://files.manuscdn.com/user_upload_by_module/session_file/310519663297073580/JyAHLiNajogLsJdn.pdf" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#4a5a3a] text-white text-sm font-medium hover:bg-[#3a4a2a] transition-colors"
-              >
-                <Download className="h-4 w-4" />
-                Baixar Apresentação
-              </a>
-            </div>
+            </button>
           </div>
+
+          {/* Visualizadores PDF Expandidos */}
+          {expandedPDF === 'infra' && (
+            <div className="mt-6 p-6 rounded-lg border bg-card">
+              <PDFViewer
+                url="https://files.manuscdn.com/user_upload_by_module/session_file/310519663297073580/VioeIjLbrjQfHQmz.pdf"
+                title="Infraestrutura e Equipamentos - SERMAP"
+                downloadName="REPORT-INFRAESTRUTURAEEQUIPAMENTOS.pdf"
+              />
+            </div>
+          )}
+
+          {expandedPDF === 'empresa' && (
+            <div className="mt-6 p-6 rounded-lg border bg-card">
+              <PDFViewer
+                url="https://files.manuscdn.com/user_upload_by_module/session_file/310519663297073580/JyAHLiNajogLsJdn.pdf"
+                title="Empresa SERMAP - Visão Estratégica"
+                downloadName="EmpresaSERMAP.pdf"
+              />
+            </div>
+          )}
 
           {/* Destaque de Potencial */}
           <div className="mt-6 p-4 rounded-lg bg-amber-50 border border-amber-200">

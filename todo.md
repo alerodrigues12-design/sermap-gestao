@@ -179,3 +179,10 @@
 - [x] Fazer upload dos PDFs para S3
 - [x] Criar seção de apresentações na página Visão do Investidor
 - [x] Adicionar resumo visual do potencial da empresa
+
+
+## Visualizadores PDF Interativos
+- [x] Instalar biblioteca react-pdf
+- [x] Criar componente de visualizador PDF com navegação e zoom
+- [x] Integrar visualizadores à página Visão do Investidor
+- [x] Testar navegação, zoom e download
