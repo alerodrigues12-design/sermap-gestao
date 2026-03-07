@@ -39,6 +39,8 @@ const cronogramaData = [
     mes: "Mar/26", fase: 1, cor: "#E05252", concluido: true,
     acoes: [
       "✅ Peticionamento nos processos urgentes (TRF1 + TJBA)",
+      "✅ Cancelamento do leilão — nova avaliação determinada",
+      "✅ Petição de nulidade na execução fiscal da União (TRF1)",
       "✅ Mapeamento do passivo extrajudicial iniciado",
       "✅ Regularização de prazos perdidos",
     ]
@@ -46,6 +48,7 @@ const cronogramaData = [
   {
     mes: "Abr/26", fase: 1, cor: "#E05252", concluido: false,
     acoes: [
+      "Acompanhar nomeação e proposta de honorários do avaliador (leilão)",
       "Obter acesso e-CAC para análise de nulidade das CDAs",
       "Formalizar contratos de consultoria e NDA",
       "Monitorar desconsideração PJ (22 processos)",
@@ -54,14 +57,15 @@ const cronogramaData = [
   {
     mes: "Mai/26", fase: 1, cor: "#E05252", concluido: false,
     acoes: [
-      "⚠️ DECISÃO: Aderir ao PGDAU (prazo 29/05/2026)",
+      "⚠️ DECISÃO: Aderir ao PGDAU (prazo 29/05/2026) — somente se nulidade União for negada",
       "Aprovação da REF trabalhista pelo juízo",
-      "Verificar habilitações de crédito no leilão",
+      "Impugnar avaliação do leilão se necessário (prazo após entrega do laudo)",
     ]
   },
   {
     mes: "Jun/26", fase: 2, cor: "#E07B30", concluido: false,
     acoes: [
+      "Aguardar decisão sobre nulidade da União — define estratégia PGFN",
       "Negociar débitos de condomínio (Hangar/Bradesco)",
       "Regularizar reintegração de posse do terreno",
       "Impugnar cálculos trabalhistas",
@@ -77,8 +81,9 @@ const cronogramaData = [
   {
     mes: "Ago/26", fase: 2, cor: "#E07B30", concluido: false,
     acoes: [
+      "Previsão: nova hasta pública (4-6 meses após cancelamento do leilão)",
       "Negociar Banco do Brasil (liberação da fiança de Sheila)",
-      "Negociar maiores credores trabalhistas",
+      "Negociar maiores credores trabalhistas com caixa disponível",
     ]
   },
   {
@@ -498,6 +503,12 @@ export default function PlanoEstrategico() {
                     A análise de nulidades em CDAs é uma das ferramentas mais poderosas da consultoria tributária estratégica. Aproximadamente 1 em cada 100 execuções fiscais apresenta nulidades que podem levar à extinção do débito. No caso da SERMAP, o principal das CDAs é de apenas R$ 702.398,29 — os demais R$ 3,1M são multas, juros e encargos que podem ser contestados. As nulidades podem ser arguidas a qualquer tempo.
                   </p>
                 </div>
+                <div className="mt-3 p-3 bg-yellow-500/10 border border-yellow-500/30 rounded-lg">
+                  <p className="text-xs text-yellow-300 leading-relaxed">
+                    <span className="font-bold">⚠️ Estratégia Condicionada — Execução Fiscal da União (TRF1): </span>
+                    Foi peticionado em março/2026 levantando possível nulidade na execução fiscal da União, com médias chances de êxito em razão do tempo decorrido sem defesa. <strong className="text-yellow-200">Enquanto não houver decisão naquele processo, nenhuma negociação com a PGFN será realizada</strong> — pois uma decisão favorável pode reduzir substancialmente o passivo antes de qualquer acordo.
+                  </p>
+                </div>
               </CardContent>
             </Card>
 
@@ -523,7 +534,8 @@ export default function PlanoEstrategico() {
                     </thead>
                     <tbody className="divide-y divide-[#2A3A4A]">
                       {[
-                        { estrategia: "1. Aprovação da REF", desc: "Recuperação Extrajudicial Facilitada — plano já apresentado ao juízo", impacto: "Suspensão de todas as execuções + impede desconsideração PJ", prazo: "Mai/26", status: "AGUARDANDO JUÍZO", statusCor: "yellow" },
+                        { estrategia: "0. Suspensão Temporária — Nova Avaliação do Leilão", desc: "Cancelamento do leilão + nomeação de avaliador → 4 a 6 meses até nova hasta", impacto: "Execuções trabalhistas suspensas durante o processo de avaliação", prazo: "Mar–Ago/26", status: "EM CURSO", statusCor: "yellow" },
+                        { estrategia: "1. Aprovação da REF", desc: "Recuperação Extrajudicial Facilitada — plano já apresentado ao juízo", impacto: "Suspensão definitiva de todas as execuções + impede desconsideração PJ", prazo: "Mai/26", status: "AGUARDANDO JUÍZO", statusCor: "yellow" },
                         { estrategia: "2. Impugnação de Cálculos", desc: "Revisão técnica dos cálculos de liquidação em todos os processos", impacto: "Redução de 20% a 40% nos valores individuais", prazo: "Abr–Jun/26", status: "PLANEJADO", statusCor: "blue" },
                         { estrategia: "3. Negociação com Maiores Credores", desc: "Vagner Brum (R$ 520k) + André Vital (R$ 315k)", impacto: "Redução de 40% a 60% com pagamento à vista", prazo: "Set–Nov/26", status: "AGUARDANDO CAIXA", statusCor: "gray" },
                       ].map((r, i) => (
@@ -575,10 +587,16 @@ export default function PlanoEstrategico() {
                     </div>
                   ))}
                 </div>
+                <div className="p-3 bg-green-500/10 border border-green-500/30 rounded-lg mb-3">
+                  <p className="text-xs text-green-300 leading-relaxed">
+                    <span className="font-bold">🏗️ Ativo Estratégico — Centro de Operações: </span>
+                    O <strong className="text-green-200">Centro de Operações da SERMAP é um bem de valor suficiente para quitar integralmente o passivo total da empresa</strong>. Isso significa que, em última análise, a empresa tem lastro real para honrar todas as suas obrigações. Esse fato é fundamental para a tranquilidade de Sheila e para a negociação com o Family Office: o risco não é de insolvabilidade, mas de <em>gestão de fluxo e timing das negociações</em>.
+                  </p>
+                </div>
                 <div className="p-3 bg-blue-500/10 border border-blue-500/30 rounded-lg">
                   <p className="text-xs text-blue-300 leading-relaxed">
-                    <span className="font-bold">Por Que Não Negociar Agora: </span>
-                    Dívidas bancárias antigas acumulam deságio com o tempo. Bancos preferem receber um valor menor à vista do que continuar executando por anos. Dívidas com 5+ anos de inadimplência costumam aceitar <strong>70% a 90% de desconto</strong> em negociações à vista. A estratégia correta é aguardar o momento em que houver caixa (venda de ativos ou aporte do Family Office) para negociar com o máximo poder de barganha.
+                    <span className="font-bold">Por Que Aguardar Para Negociar: </span>
+                    Dívidas bancárias antigas acumulam deságio com o tempo. Bancos preferem receber um valor menor à vista do que continuar executando por anos. Dívidas com 5+ anos de inadimplência costumam aceitar <strong>70% a 90% de desconto</strong> em negociações à vista. A estratégia é aguardar o momento em que houver recursos em caixa (venda de ativos, aporte ou geração própria) para quitar com o <strong>mínimo de valor possível</strong> — o poder de barganha é muito maior quando se tem dinheiro na mão.
                   </p>
                 </div>
               </CardContent>

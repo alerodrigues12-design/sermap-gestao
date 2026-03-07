@@ -230,3 +230,9 @@
 - [x] Aba Gaps: lista de 10 gaps com urgência e impacto
 - [x] Adicionar rota /plano-estrategico no App.tsx
 - [x] Adicionar item 'Plano Estratégico' no menu lateral com ícone BarChart3
+
+## Atualização Plano Estratégico - Março 2026
+- [x] Adicionar info: cancelamento leilão → nova avaliação → 4-6 meses → suspensão execuções trabalhistas
+- [x] Adicionar info: execução fiscal União → petição de nulidade → aguardar decisão antes de negociar PGFN
+- [x] Atualizar estratégia bancária: aguardar recursos em caixa para quitar com o mínimo possível (maior poder de barganha)
+- [x] Destacar que o Centro de Operações é ativo suficiente para quitar o passivo total (fator de tranquilidade para Sheila)
