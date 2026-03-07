@@ -1,0 +1,67 @@
+{
+  "query": "SELECT table_name FROM information_schema.tables WHERE table_schema = DATABASE() ORDER BY table_name;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3wxDEv3kxBHyGJz.fa19c0ca9e29 --database NW4am7ZA3rszie9rtuCceh --execute SELECT table_name FROM information_schema.tables WHERE table_schema = DATABASE() ORDER BY table_name;",
+  "rows": [
+    {
+      "table_name": "__drizzle_migrations"
+    },
+    {
+      "table_name": "documentos"
+    },
+    {
+      "table_name": "emails"
+    },
+    {
+      "table_name": "governancaAssinaturas"
+    },
+    {
+      "table_name": "governancaAtas"
+    },
+    {
+      "table_name": "governancaDocumentos"
+    },
+    {
+      "table_name": "governancaGravacoes"
+    },
+    {
+      "table_name": "governancaParticipantes"
+    },
+    {
+      "table_name": "governancaReunioes"
+    },
+    {
+      "table_name": "movimentacoes"
+    },
+    {
+      "table_name": "notificacoes"
+    },
+    {
+      "table_name": "passivoTributario"
+    },
+    {
+      "table_name": "planoAcao"
+    },
+    {
+      "table_name": "processos"
+    },
+    {
+      "table_name": "recados"
+    },
+    {
+      "table_name": "simulacoes"
+    },
+    {
+      "table_name": "systemConfig"
+    },
+    {
+      "table_name": "timelineItems"
+    },
+    {
+      "table_name": "users"
+    }
+  ],
+  "messages": [],
+  "stdout": "table_name\n__drizzle_migrations\ndocumentos\nemails\ngovernancaAssinaturas\ngovernancaAtas\ngovernancaDocumentos\ngovernancaGravacoes\ngovernancaParticipantes\ngovernancaReunioes\nmovimentacoes\nnotificacoes\npassivoTributario\nplanoAcao\nprocessos\nrecados\nsimulacoes\nsystemConfig\ntimelineItems\nusers\n",
+  "stderr": "",
+  "execution_time_ms": 57
+}

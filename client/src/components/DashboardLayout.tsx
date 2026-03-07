@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/sidebar";
 import { getLoginUrl } from "@/const";
 import { useIsMobile } from "@/hooks/useMobile";
-import { LayoutDashboard, Scale, Landmark, FileText, Shield, Bell, TrendingUp, LogOut, PanelLeft, Clock, MessageSquarePlus, Mail, CheckSquare, FileSignature, Briefcase, Building2 } from "lucide-react";
+import { LayoutDashboard, Scale, Landmark, FileText, Shield, Bell, TrendingUp, LogOut, PanelLeft, Clock, MessageSquarePlus, Mail, CheckSquare, FileSignature, Briefcase, Building2, BarChart3 } from "lucide-react";
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
 import { DashboardLayoutSkeleton } from "./DashboardLayoutSkeleton";
@@ -44,6 +44,7 @@ const menuItems = [
   { icon: FileSignature, label: "NDA", path: "/nda" },
   { icon: Briefcase, label: "Inventário", path: "/inventario" },
   { icon: Building2, label: "Governança Corporativa", path: "/governanca" },
+  { icon: BarChart3, label: "Plano Estratégico", path: "/plano-estrategico" },
 ];
 
 const SIDEBAR_WIDTH_KEY = "sidebar-width";

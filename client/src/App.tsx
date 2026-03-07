@@ -19,6 +19,7 @@ import PlanoAcao from "./pages/PlanoAcao";
 import NDA from "./pages/NDA";
 import Inventario from "./pages/Inventario";
 import GovernancaCorporativa from "./pages/GovernancaCorporativa";
+import PlanoEstrategico from "./pages/PlanoEstrategico";
 import Login from "./pages/Login";
 import { useAuth } from "./_core/hooks/useAuth";
 import { Loader2 } from "lucide-react";
@@ -41,6 +42,7 @@ function AuthenticatedRouter() {
         <Route path="/nda" component={NDA} />
         <Route path="/inventario" component={Inventario} />
         <Route path="/governanca" component={GovernancaCorporativa} />
+        <Route path="/plano-estrategico" component={PlanoEstrategico} />
         <Route path="/404" component={NotFound} />
         <Route component={NotFound} />
       </Switch>

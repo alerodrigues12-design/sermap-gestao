@@ -218,3 +218,15 @@
 
 ## Bug - PDFs CORS na Visão do Investidor
 - [x] Corrigir erro de CORS ao carregar PDFs do CDN no componente PDFViewer (proxy /api/pdf-proxy implementado no servidor)
+
+## Página Plano Estratégico (Site)
+- [x] Criar página PlanoEstrategico.tsx com 7 abas e gráficos interativos (Recharts)
+- [x] Aba Diagnóstico: KPIs + gráfico de barras passivo atual vs meta + pizza
+- [x] Aba Mapa de Riscos: radar de risco x controle + tabela de riscos PF de Sheila
+- [x] Aba 3 Pilares: cards visuais com ações e objetivos
+- [x] Aba Plano de Contenção: tabelas por frente (tributário, trabalhista, bancário)
+- [x] Aba Blindagem Patrimonial: níveis de proteção + organograma holding familiar
+- [x] Aba Cronograma: linha do tempo interativa mês a mês (Mar–Dez/2026)
+- [x] Aba Gaps: lista de 10 gaps com urgência e impacto
+- [x] Adicionar rota /plano-estrategico no App.tsx
+- [x] Adicionar item 'Plano Estratégico' no menu lateral com ícone BarChart3
