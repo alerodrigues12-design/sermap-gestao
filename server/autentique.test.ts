@@ -7,23 +7,12 @@ describe("Autentique API Key", () => {
     expect(key?.length).toBeGreaterThan(10);
   });
 
-  it("should be able to reach Autentique API endpoint", async () => {
+  it("should authenticate successfully with the Autentique API", async () => {
     const key = process.env.AUTENTIQUE_API_KEY;
-    if (!key) {
-      throw new Error("AUTENTIQUE_API_KEY not set");
-    }
+    if (!key) throw new Error("AUTENTIQUE_API_KEY not set");
 
-    const query = `
-      query {
-        me {
-          id
-          name
-          email
-        }
-      }
-    `;
+    const query = `query { me { id name email } }`;
 
-    // The API endpoint must be reachable (even if key is invalid, we get a response)
     const response = await fetch("https://api.autentique.com.br/v2/graphql", {
       method: "POST",
       headers: {
@@ -33,18 +22,21 @@ describe("Autentique API Key", () => {
       body: JSON.stringify({ query }),
     });
 
-    // The endpoint should be reachable (200 with data, or 401 with error message)
-    // Both indicate the API is working; 401 means the key needs to be updated
-    const statusIsExpected = response.status === 200 || response.status === 401;
-    expect(statusIsExpected).toBe(true);
+    expect(response.status).toBe(200);
 
-    if (response.ok) {
-      const json = (await response.json()) as any;
-      // If 200, should have user data
-      expect(json.data?.me).toBeDefined();
-    } else {
-      // 401 means key is invalid/truncated - this is a known issue
-      console.warn("Autentique API key is invalid or truncated. Please update AUTENTIQUE_API_KEY with the full token.");
+    const json = (await response.json()) as any;
+
+    // Should not have authentication errors
+    if (json.errors) {
+      const authErr = json.errors.find((e: any) =>
+        e.message?.toLowerCase().includes("unauthorized") ||
+        e.message?.toLowerCase().includes("unauthenticated") ||
+        e.extensions?.code === "UNAUTHENTICATED"
+      );
+      expect(authErr, `Auth error from Autentique: ${JSON.stringify(json.errors)}`).toBeUndefined();
     }
-  });
+
+    expect(json.data?.me).toBeDefined();
+    console.log(`✅ Autentique autenticado como: ${json.data?.me?.name} <${json.data?.me?.email}>`);
+  }, 15000);
 });
