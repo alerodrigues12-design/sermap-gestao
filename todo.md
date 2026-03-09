@@ -241,3 +241,17 @@
 - [x] Fazer upload do NDA (NDAALESSANDRAESHEILA.pdf) para o CDN
 - [x] Adicionar NDA na lista de documentos confidenciais com visualizador PDF
 - [x] Integrar botão 'Assinar' via Autentique nos cards e na visualização de documentos PDF
+
+## Plano de Negócios Hoffmann (Aba no Plano Estratégico)
+- [x] Fazer upload de fotos e logos da Hoffmann para o CDN
+- [x] Criar aba "Plano de Negócios Hoffmann" na página PlanoEstrategico.tsx
+- [x] Seção hero com foto profissional + logo + tagline
+- [x] Seção Visão do Negócio e Metodologia AH
+- [x] Seção Experiência e Qualificação (23 anos, 18 como advogada, mestrado, 12 pós-graduações)
+- [x] Seção Modelo de Serviços (3 frentes: Gestão de Passivo, Projetos de Redução, Recuperação)
+- [x] Gráfico de projeção de receita (conservador/estável/expansão)
+- [x] Seção Ponto de Equilíbrio com gráfico
+- [x] Seção Infraestrutura Tecnológica (sem nomes dos softwares, apenas custo R$10k/mês)
+- [x] Seção Estrutura Geográfica (SP + Porto Alegre + Bahia com Sheila)
+- [x] Seção Contratos Ativos
+- [x] Seção Viabilidade e Conclusão

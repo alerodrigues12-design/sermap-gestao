@@ -5,11 +5,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
   PieChart, Pie, Cell, Legend, RadarChart, Radar, PolarGrid, PolarAngleAxis,
+  AreaChart, Area,
 } from "recharts";
 import {
   Shield, TrendingDown, Building2, AlertTriangle, CheckCircle2,
   Clock, Target, ChevronDown, ChevronUp, AlertCircle, Info,
-  Landmark, Scale, FileText, Users, Home, ArrowRight
+  Landmark, Scale, FileText, Users, Home, ArrowRight,
+  Star, Award, MapPin, TrendingUp, Briefcase, Globe, DollarSign, Zap
 } from "lucide-react";
 
 // ─── Data ───────────────────────────────────────────────────────────────────
@@ -170,6 +172,562 @@ const CustomTooltip = ({ active, payload, label }: any) => {
   return null;
 };
 
+// ─── CDN URLs das imagens Hoffmann ─────────────────────────────────────────
+const IMG = {
+  logoVerdeBeige: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663297073580/eRObmJhgnGkKHOmL.png",
+  logoBeige: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663297073580/HRhEfdCBzTwkwHxu.png",
+  iconeVerde: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663297073580/LfYxNnImiKwTLTnu.png",
+  logotipoVerde: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663297073580/SoVecElfXMRExkoT.png",
+  aleBlazerBranco: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663297073580/GmbrUiqWfCeakQwt.png",
+  aleBlazerPreto: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663297073580/rezFCWehdBgROoeb.png",
+  aleCamisaBranca: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663297073580/TdSgPwkvHsqRJlLq.png",
+  aleTernoBranco: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663297073580/ACcbJlzJYSjNdtJs.png",
+};
+
+// ─── Dados Hoffmann ──────────────────────────────────────────────────────────
+const receitaData = [
+  { cenario: "Conservador", contratos: 3, receita: 30, fill: "#6B8F71" },
+  { cenario: "Estável", contratos: 5, receita: 50, fill: "#4A7C59" },
+  { cenario: "Expansão", contratos: 10, receita: 100, fill: "#2D6A4F" },
+];
+
+const projecaoMensal = [
+  { mes: "Jan", conservador: 30, estavel: 50, expansao: 100 },
+  { mes: "Fev", conservador: 30, estavel: 50, expansao: 100 },
+  { mes: "Mar", conservador: 30, estavel: 55, expansao: 110 },
+  { mes: "Abr", conservador: 35, estavel: 60, expansao: 120 },
+  { mes: "Mai", conservador: 35, estavel: 65, expansao: 130 },
+  { mes: "Jun", conservador: 40, estavel: 70, expansao: 150 },
+  { mes: "Jul", conservador: 40, estavel: 75, expansao: 160 },
+  { mes: "Ago", conservador: 45, estavel: 80, expansao: 180 },
+  { mes: "Set", conservador: 45, estavel: 85, expansao: 200 },
+  { mes: "Out", conservador: 50, estavel: 90, expansao: 220 },
+  { mes: "Nov", conservador: 50, estavel: 95, expansao: 240 },
+  { mes: "Dez", conservador: 55, estavel: 100, expansao: 260 },
+];
+
+const custosData = [
+  { item: "Infraestrutura Tecnológica", valor: 10000, cor: "#6B8F71" },
+  { item: "Equipe Operacional", valor: 8000, cor: "#4A7C59" },
+];
+
+// ─── Componente PlanoHoffmann ────────────────────────────────────────────────
+function PlanoHoffmann() {
+  return (
+    <div className="space-y-0">
+
+      {/* ── HERO SECTION ── */}
+      <div
+        className="relative rounded-2xl overflow-hidden mb-8"
+        style={{
+          background: "linear-gradient(135deg, #2D4A2D 0%, #1A3A1A 40%, #0F2A0F 100%)",
+          minHeight: "340px",
+        }}
+      >
+        {/* Padrão decorativo */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-0 right-0 w-96 h-96 rounded-full" style={{ background: "radial-gradient(circle, #C9A84C 0%, transparent 70%)", transform: "translate(30%, -30%)" }} />
+          <div className="absolute bottom-0 left-0 w-64 h-64 rounded-full" style={{ background: "radial-gradient(circle, #6B8F71 0%, transparent 70%)", transform: "translate(-30%, 30%)" }} />
+        </div>
+
+        <div className="relative z-10 flex flex-col md:flex-row items-center gap-8 p-8">
+          {/* Foto principal */}
+          <div className="relative shrink-0">
+            <div
+              className="w-52 h-64 rounded-2xl overflow-hidden shadow-2xl"
+              style={{ border: "3px solid rgba(201,168,76,0.5)" }}
+            >
+              <img
+                src={IMG.aleBlazerPreto}
+                alt="Alessandra Hoffmann"
+                className="w-full h-full object-cover object-top"
+              />
+            </div>
+            <div
+              className="absolute -bottom-3 -right-3 w-14 h-14 rounded-xl overflow-hidden shadow-xl"
+              style={{ border: "2px solid rgba(201,168,76,0.6)" }}
+            >
+              <img src={IMG.iconeVerde} alt="AH" className="w-full h-full object-contain bg-white p-1" />
+            </div>
+          </div>
+
+          {/* Texto hero */}
+          <div className="flex-1 text-center md:text-left">
+            <div className="mb-3">
+              <img src={IMG.logoVerdeBeige} alt="Alessandra Hoffmann" className="h-16 mx-auto md:mx-0 object-contain" />
+            </div>
+            <h2 className="text-3xl font-extrabold text-white mb-2" style={{ fontFamily: "Georgia, serif", letterSpacing: "-0.5px" }}>
+              Plano de Negócios Hoffmann
+            </h2>
+            <p className="text-lg font-semibold mb-4" style={{ color: "#C9A84C" }}>
+              Inteligência Tributária Estratégica
+            </p>
+            <p className="text-sm text-white/75 leading-relaxed max-w-xl">
+              Uma consultoria especializada em transformar passivos tributários em instrumentos de reorganização e fortalecimento empresarial — com metodologia própria, expertise multidisciplinar e atuação nacional.
+            </p>
+            <div className="flex flex-wrap gap-3 mt-5 justify-center md:justify-start">
+              {[
+                { icon: Award, label: "23 anos de atuação" },
+                { icon: Globe, label: "Atuação Nacional" },
+                { icon: Briefcase, label: "Metodologia Própria" },
+              ].map(({ icon: Icon, label }) => (
+                <div key={label} className="flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold" style={{ background: "rgba(201,168,76,0.15)", border: "1px solid rgba(201,168,76,0.4)", color: "#C9A84C" }}>
+                  <Icon className="h-3.5 w-3.5" />
+                  {label}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ── VISÃO DO NEGÓCIO ── */}
+      <div className="grid md:grid-cols-2 gap-6 mb-6">
+        <Card className="bg-[#1A2535] border-[#2A3A4A]">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm font-bold uppercase tracking-wider flex items-center gap-2" style={{ color: "#C9A84C" }}>
+              <Target className="h-4 w-4" /> Visão do Negócio
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3 text-sm text-white/80 leading-relaxed">
+            <p>
+              A <strong className="text-white">Hoffmann – Inteligência Tributária Estratégica</strong> é uma consultoria especializada em gestão estratégica de passivo tributário empresarial, com atuação voltada à reorganização fiscal e financeira de empresas que enfrentam alto nível de endividamento tributário.
+            </p>
+            <p>
+              A consultoria parte do princípio de que o passivo tributário não deve ser tratado apenas como um problema jurídico, mas como um <strong className="text-white">elemento estratégico de reorganização empresarial</strong>.
+            </p>
+            <div className="grid grid-cols-2 gap-2 mt-3">
+              {[
+                "Diagnósticos fiscais empresariais",
+                "Gestão estratégica de passivos",
+                "Negociação com órgãos fiscais",
+                "Reorganização tributária",
+                "Contencioso fiscal estratégico",
+                "Governança tributária",
+                "Recuperação de créditos fiscais",
+                "Proteção patrimonial empresarial",
+                "Estratégias Reforma Tributária",
+              ].map((item) => (
+                <div key={item} className="flex items-start gap-1.5 text-xs text-white/70">
+                  <CheckCircle2 className="h-3 w-3 mt-0.5 shrink-0" style={{ color: "#6B8F71" }} />
+                  {item}
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Foto + Qualificação */}
+        <div className="space-y-4">
+          <Card className="bg-[#1A2535] border-[#2A3A4A] overflow-hidden">
+            <div className="flex gap-4 p-4">
+              <div className="w-24 h-28 rounded-xl overflow-hidden shrink-0" style={{ border: "2px solid rgba(107,143,113,0.5)" }}>
+                <img src={IMG.aleCamisaBranca} alt="Alessandra Hoffmann" className="w-full h-full object-cover object-top" />
+              </div>
+              <div>
+                <p className="text-xs uppercase tracking-wider mb-1" style={{ color: "#C9A84C" }}>Fundadora & Diretora Estratégica</p>
+                <h3 className="text-base font-bold text-white mb-2">Alessandra Hoffmann</h3>
+                <div className="space-y-1">
+                  {[
+                    { label: "Experiência jurídica", value: "23 anos" },
+                    { label: "Advocacia", value: "18 anos" },
+                    { label: "Pós-graduações", value: "12+ (MBA, LL.M.)" },
+                    { label: "Especializações", value: "30+" },
+                  ].map(({ label, value }) => (
+                    <div key={label} className="flex justify-between text-xs">
+                      <span className="text-white/60">{label}</span>
+                      <span className="font-semibold text-white">{value}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </Card>
+
+          <Card className="bg-[#1A2535] border-[#2A3A4A]">
+            <CardContent className="pt-4">
+              <p className="text-xs uppercase tracking-wider mb-3" style={{ color: "#C9A84C" }}>Áreas de Especialização</p>
+              <div className="flex flex-wrap gap-2">
+                {[
+                  "Passivo Tributário",
+                  "Governança Empresarial",
+                  "Compliance",
+                  "Planejamento Tributário",
+                  "Reorganização Empresarial",
+                  "Proteção Patrimonial",
+                  "Reforma Tributária",
+                  "M&A Estratégico",
+                ].map((tag) => (
+                  <span key={tag} className="text-[11px] px-2 py-1 rounded-full" style={{ background: "rgba(107,143,113,0.2)", border: "1px solid rgba(107,143,113,0.4)", color: "#9DC09E" }}>
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+
+      {/* ── METODOLOGIA AH ── */}
+      <Card className="bg-[#1A2535] border-[#2A3A4A] mb-6">
+        <CardHeader className="pb-3">
+          <CardTitle className="text-sm font-bold uppercase tracking-wider flex items-center gap-2" style={{ color: "#C9A84C" }}>
+            <Zap className="h-4 w-4" /> Metodologia AH — Inteligência Tributária Estratégica
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid md:grid-cols-5 gap-3">
+            {[
+              { num: "01", titulo: "Diagnóstico", desc: "Fiscal e empresarial completo", cor: "#6B8F71" },
+              { num: "02", titulo: "Mapeamento", desc: "Riscos tributários identificados", cor: "#4A7C59" },
+              { num: "03", titulo: "Plano Estratégico", desc: "Redução ou reorganização do passivo", cor: "#2D6A4F" },
+              { num: "04", titulo: "Negociação", desc: "Reorganização fiscal estruturada", cor: "#1A5C3A" },
+              { num: "05", titulo: "Governança", desc: "Implantação de governança tributária", cor: "#0D4A2D" },
+            ].map((step, i) => (
+              <div key={step.num} className="relative">
+                {i < 4 && (
+                  <div className="hidden md:block absolute top-6 right-0 w-full h-0.5 z-0" style={{ background: `linear-gradient(to right, ${step.cor}60, transparent)`, transform: "translateX(50%)" }} />
+                )}
+                <div className="relative z-10 text-center p-3 rounded-xl" style={{ background: `${step.cor}15`, border: `1px solid ${step.cor}40` }}>
+                  <div className="w-10 h-10 rounded-full flex items-center justify-center mx-auto mb-2 text-sm font-extrabold text-white" style={{ background: step.cor }}>
+                    {step.num}
+                  </div>
+                  <p className="text-xs font-bold text-white mb-1">{step.titulo}</p>
+                  <p className="text-[10px] text-white/60">{step.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* ── MODELO DE SERVIÇOS ── */}
+      <div className="grid md:grid-cols-3 gap-4 mb-6">
+        {[
+          {
+            titulo: "Gestão Estratégica de Passivo",
+            icon: Shield,
+            cor: "#6B8F71",
+            descricao: "Análise completa da dívida tributária, avaliação de execuções fiscais, identificação de nulidades, negociação com PGFN e acompanhamento estratégico do contencioso.",
+            modelo: "Contrato de gestão mensal",
+            valor: "A partir de R$ 10.000/mês",
+            prazo: "Contratos de 12 meses",
+            publico: "Empresas com passivo > R$ 1M",
+          },
+          {
+            titulo: "Projetos de Redução de Passivo",
+            icon: TrendingDown,
+            cor: "#4A7C59",
+            descricao: "Estratégias de redução via teses jurídicas, identificação de nulidades, negociações estratégicas e transações tributárias personalizadas com a PGFN.",
+            modelo: "Honorários de êxito",
+            valor: "% sobre redução obtida",
+            prazo: "Por projeto",
+            publico: "Passivos com potencial de contestação",
+          },
+          {
+            titulo: "Recuperação Tributária",
+            icon: DollarSign,
+            cor: "#2D6A4F",
+            descricao: "Identificação de créditos fiscais e valores pagos indevidamente. Análise de oportunidades de recuperação e compensação tributária.",
+            modelo: "Êxito sobre recuperado",
+            valor: "% sobre valores recuperados",
+            prazo: "Por projeto",
+            publico: "Empresas com histórico de pagamentos",
+          },
+        ].map(({ titulo, icon: Icon, cor, descricao, modelo, valor, prazo, publico }) => (
+          <Card key={titulo} className="bg-[#1A2535] border-[#2A3A4A] flex flex-col" style={{ borderTopWidth: "3px", borderTopColor: cor }}>
+            <CardHeader className="pb-2">
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: `${cor}25` }}>
+                  <Icon className="h-4 w-4" style={{ color: cor }} />
+                </div>
+                <CardTitle className="text-sm font-bold text-white leading-tight">{titulo}</CardTitle>
+              </div>
+            </CardHeader>
+            <CardContent className="flex-1 space-y-3">
+              <p className="text-xs text-white/70 leading-relaxed">{descricao}</p>
+              <div className="space-y-2 pt-2 border-t border-[#2A3A4A]">
+                {[
+                  { label: "Modelo", value: modelo },
+                  { label: "Remuneração", value: valor },
+                  { label: "Prazo", value: prazo },
+                  { label: "Público-alvo", value: publico },
+                ].map(({ label, value }) => (
+                  <div key={label} className="flex justify-between text-xs">
+                    <span className="text-white/50">{label}</span>
+                    <span className="font-semibold text-right" style={{ color: cor, maxWidth: "55%" }}>{value}</span>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+
+      {/* ── FINANCEIRO ── */}
+      <div className="grid md:grid-cols-2 gap-6 mb-6">
+        {/* Projeção de Receita */}
+        <Card className="bg-[#1A2535] border-[#2A3A4A]">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-bold uppercase tracking-wider flex items-center gap-2" style={{ color: "#C9A84C" }}>
+              <TrendingUp className="h-4 w-4" /> Projeção de Receita Mensal
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ResponsiveContainer width="100%" height={200}>
+              <BarChart data={receitaData} barCategoryGap="35%">
+                <CartesianGrid strokeDasharray="3 3" stroke="#2A3A4A" />
+                <XAxis dataKey="cenario" tick={{ fill: "#8899AA", fontSize: 11 }} />
+                <YAxis tick={{ fill: "#8899AA", fontSize: 11 }} tickFormatter={(v) => `R$${v}k`} />
+                <Tooltip
+                  formatter={(v: number) => [`R$ ${v.toLocaleString("pt-BR")}.000/mês`, "Receita"]}
+                  contentStyle={{ background: "#1A2535", border: "1px solid #2A3A4A", borderRadius: "8px", color: "#fff" }}
+                />
+                <Bar dataKey="receita" name="Receita" radius={[6, 6, 0, 0]}>
+                  {receitaData.map((d, i) => <Cell key={i} fill={d.fill} />)}
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+            <div className="grid grid-cols-3 gap-2 mt-3">
+              {receitaData.map((d) => (
+                <div key={d.cenario} className="text-center p-2 rounded-lg" style={{ background: `${d.fill}15`, border: `1px solid ${d.fill}40` }}>
+                  <p className="text-[10px] text-white/60 mb-1">{d.cenario}</p>
+                  <p className="text-sm font-extrabold" style={{ color: d.fill }}>R$ {d.receita}k</p>
+                  <p className="text-[10px] text-white/50">{d.contratos} contratos</p>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Ponto de Equilíbrio + Custos */}
+        <div className="space-y-4">
+          <Card className="bg-[#1A2535] border-[#2A3A4A]">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-bold uppercase tracking-wider flex items-center gap-2" style={{ color: "#C9A84C" }}>
+                <Target className="h-4 w-4" /> Ponto de Equilíbrio
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center justify-center gap-8 py-3">
+                <div className="text-center">
+                  <p className="text-[10px] text-white/50 uppercase tracking-wider">Custo Fixo Mensal</p>
+                  <p className="text-2xl font-extrabold text-red-400">R$ 18k</p>
+                  <p className="text-[10px] text-white/50">operação completa</p>
+                </div>
+                <div className="text-3xl text-white/30">÷</div>
+                <div className="text-center">
+                  <p className="text-[10px] text-white/50 uppercase tracking-wider">Ticket Mínimo</p>
+                  <p className="text-2xl font-extrabold" style={{ color: "#6B8F71" }}>R$ 10k</p>
+                  <p className="text-[10px] text-white/50">por contrato</p>
+                </div>
+                <div className="text-3xl text-white/30">=</div>
+                <div className="text-center">
+                  <p className="text-[10px] text-white/50 uppercase tracking-wider">Break-Even</p>
+                  <p className="text-2xl font-extrabold" style={{ color: "#C9A84C" }}>2</p>
+                  <p className="text-[10px] text-white/50">contratos ativos</p>
+                </div>
+              </div>
+              <div className="mt-3 p-3 rounded-lg" style={{ background: "rgba(107,143,113,0.1)", border: "1px solid rgba(107,143,113,0.3)" }}>
+                <p className="text-xs text-white/70 text-center">
+                  Com apenas <strong className="text-white">2 contratos ativos</strong>, a operação já se paga. Cada contrato adicional representa <strong style={{ color: "#6B8F71" }}>lucro líquido direto</strong>.
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-[#1A2535] border-[#2A3A4A]">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-bold uppercase tracking-wider flex items-center gap-2" style={{ color: "#C9A84C" }}>
+                <DollarSign className="h-4 w-4" /> Estrutura de Custos Mensais
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <div className="space-y-2">
+                <div className="flex justify-between items-center">
+                  <div>
+                    <p className="text-sm font-semibold text-white">Infraestrutura Tecnológica</p>
+                    <p className="text-[11px] text-white/50">Plataformas especializadas de análise tributária, acompanhamento processual e gestão estratégica</p>
+                  </div>
+                  <span className="text-sm font-bold shrink-0 ml-3" style={{ color: "#6B8F71" }}>R$ 10.000</span>
+                </div>
+                <div className="w-full bg-[#0F1923] rounded-full h-1.5">
+                  <div className="h-1.5 rounded-full" style={{ width: "56%", background: "#6B8F71" }} />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <div className="flex justify-between items-center">
+                  <div>
+                    <p className="text-sm font-semibold text-white">Equipe Operacional</p>
+                    <p className="text-[11px] text-white/50">Gestão administrativa + 2 colaboradores operacionais</p>
+                  </div>
+                  <span className="text-sm font-bold shrink-0 ml-3" style={{ color: "#4A7C59" }}>R$ 8.000</span>
+                </div>
+                <div className="w-full bg-[#0F1923] rounded-full h-1.5">
+                  <div className="h-1.5 rounded-full" style={{ width: "44%", background: "#4A7C59" }} />
+                </div>
+              </div>
+              <div className="flex justify-between items-center pt-2 border-t border-[#2A3A4A]">
+                <span className="text-sm font-bold text-white">Total Mensal</span>
+                <span className="text-lg font-extrabold" style={{ color: "#C9A84C" }}>R$ 18.000</span>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+
+      {/* ── CONTRATOS ATIVOS ── */}
+      <Card className="bg-[#1A2535] border-[#2A3A4A] mb-6">
+        <CardHeader className="pb-3">
+          <CardTitle className="text-sm font-bold uppercase tracking-wider flex items-center gap-2" style={{ color: "#C9A84C" }}>
+            <Briefcase className="h-4 w-4" /> Contratos Ativos — Fase Inicial de Estruturação
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid md:grid-cols-4 gap-3 mb-4">
+            {[
+              { nome: "Farmácia Maravilha", fase: "Diagnóstico", cor: "#6B8F71" },
+              { nome: "Sr. Carlos (Uninter)", fase: "Diagnóstico", cor: "#4A7C59" },
+              { nome: "Brastrela", fase: "Diagnóstico", cor: "#2D6A4F" },
+              { nome: "Sr. Paulo", fase: "Diagnóstico", cor: "#1A5C3A" },
+            ].map(({ nome, fase, cor }) => (
+              <div key={nome} className="p-3 rounded-xl text-center" style={{ background: `${cor}15`, border: `1px solid ${cor}40` }}>
+                <div className="w-10 h-10 rounded-full flex items-center justify-center mx-auto mb-2" style={{ background: cor }}>
+                  <Briefcase className="h-5 w-5 text-white" />
+                </div>
+                <p className="text-xs font-bold text-white">{nome}</p>
+                <p className="text-[10px] mt-1" style={{ color: cor }}>{fase}</p>
+              </div>
+            ))}
+          </div>
+          <div className="p-3 rounded-lg" style={{ background: "rgba(201,168,76,0.08)", border: "1px solid rgba(201,168,76,0.25)" }}>
+            <p className="text-xs text-white/70 leading-relaxed">
+              Os contratos iniciam com <strong className="text-white">diagnóstico estratégico completo do passivo fiscal</strong> (~3 meses). Após essa fase, evoluem para o modelo completo de gestão estratégica mensal, com os valores previstos no modelo de atuação da consultoria.
+            </p>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* ── ESTRUTURA GEOGRÁFICA ── */}
+      <Card className="bg-[#1A2535] border-[#2A3A4A] mb-6">
+        <CardHeader className="pb-3">
+          <CardTitle className="text-sm font-bold uppercase tracking-wider flex items-center gap-2" style={{ color: "#C9A84C" }}>
+            <MapPin className="h-4 w-4" /> Estrutura Geográfica & Expansão
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid md:grid-cols-3 gap-4">
+            {[
+              {
+                cidade: "São Paulo — Mooca",
+                status: "Ativo",
+                desc: "Escritório presencial principal. Futura presença em Alphaville em parceria estratégica.",
+                cor: "#6B8F71",
+                badge: "bg-green-500/20 text-green-400 border-green-500/40",
+              },
+              {
+                cidade: "Porto Alegre — RS",
+                status: "Planejado",
+                desc: "Instalação de escritório onde a fundadora estará presencialmente para atendimento regional.",
+                cor: "#4A7C59",
+                badge: "bg-yellow-500/20 text-yellow-400 border-yellow-500/40",
+              },
+              {
+                cidade: "Bahia — Salvador/Feira",
+                status: "Parceria Sheila",
+                desc: "Ponto de presença em parceria estratégica: atendimento empresarial, workshops e eventos. Direção estratégica centralizada pela Hoffmann.",
+                cor: "#C9A84C",
+                badge: "bg-amber-500/20 text-amber-400 border-amber-500/40",
+              },
+            ].map(({ cidade, status, desc, cor, badge }) => (
+              <div key={cidade} className="p-4 rounded-xl" style={{ background: `${cor}10`, border: `1px solid ${cor}35` }}>
+                <div className="flex items-start justify-between mb-2">
+                  <div className="flex items-center gap-2">
+                    <MapPin className="h-4 w-4 shrink-0" style={{ color: cor }} />
+                    <p className="text-sm font-bold text-white">{cidade}</p>
+                  </div>
+                  <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold border ${badge}`}>{status}</span>
+                </div>
+                <p className="text-xs text-white/65 leading-relaxed">{desc}</p>
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* ── VIABILIDADE + CONCLUSÃO ── */}
+      <div className="grid md:grid-cols-2 gap-6 mb-6">
+        <Card className="bg-[#1A2535] border-[#2A3A4A]">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm font-bold uppercase tracking-wider flex items-center gap-2" style={{ color: "#C9A84C" }}>
+              <Star className="h-4 w-4" /> Viabilidade do Modelo
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            {[
+              { titulo: "Ticket Médio Elevado", desc: "Contratos de gestão estratégica a partir de R$ 10.000/mês garantem receita recorrente previsível.", cor: "#6B8F71" },
+              { titulo: "Estrutura Operacional Enxuta", desc: "Break-even com apenas 2 contratos. Escalabilidade sem crescimento proporcional de custos.", cor: "#4A7C59" },
+              { titulo: "Demanda Crescente", desc: "O cenário tributário brasileiro, com elevado número de empresas com passivos relevantes, gera demanda permanente.", cor: "#2D6A4F" },
+            ].map(({ titulo, desc, cor }) => (
+              <div key={titulo} className="flex gap-3 p-3 rounded-lg" style={{ background: `${cor}10`, border: `1px solid ${cor}30` }}>
+                <div className="w-2 h-2 rounded-full mt-1.5 shrink-0" style={{ background: cor }} />
+                <div>
+                  <p className="text-sm font-bold text-white mb-1">{titulo}</p>
+                  <p className="text-xs text-white/65 leading-relaxed">{desc}</p>
+                </div>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+
+        {/* Conclusão com foto */}
+        <Card className="bg-[#1A2535] border-[#2A3A4A] overflow-hidden">
+          <div className="relative h-full">
+            <div className="absolute inset-0 opacity-20">
+              <img src={IMG.aleTernoBranco} alt="" className="w-full h-full object-cover object-top" />
+            </div>
+            <div className="relative z-10 p-5 h-full flex flex-col justify-between">
+              <div>
+                <p className="text-xs uppercase tracking-wider mb-3" style={{ color: "#C9A84C" }}>Conclusão & Parceria Estratégica</p>
+                <p className="text-sm text-white/85 leading-relaxed mb-3">
+                  A <strong className="text-white">Hoffmann – Inteligência Tributária Estratégica</strong> apresenta um modelo sólido de consultoria empresarial, baseado em expertise técnica, metodologia própria e estrutura escalável.
+                </p>
+                <p className="text-sm text-white/85 leading-relaxed">
+                  A eventual <strong className="text-white">parceria estratégica com Sheila</strong> poderá contribuir para ampliar a atuação nacional e desenvolver projetos empresariais de maior escala, com presença na Bahia e potencial de expansão para o primeiro escritório de M&A especializado para indústrias.
+                </p>
+              </div>
+              <div className="mt-4 p-3 rounded-lg" style={{ background: "rgba(201,168,76,0.15)", border: "1px solid rgba(201,168,76,0.4)" }}>
+                <p className="text-xs font-bold text-center" style={{ color: "#C9A84C" }}>
+                  "Transformar passivo fiscal em instrumento de reorganização e fortalecimento empresarial."
+                </p>
+              </div>
+            </div>
+          </div>
+        </Card>
+      </div>
+
+      {/* ── RODAPÉ HOFFMANN ── */}
+      <div
+        className="rounded-2xl p-6 flex flex-col md:flex-row items-center justify-between gap-4"
+        style={{ background: "linear-gradient(135deg, #1A3A1A 0%, #0F2A0F 100%)", border: "1px solid rgba(107,143,113,0.3)" }}
+      >
+        <div className="flex items-center gap-4">
+          <img src={IMG.logoVerdeBeige} alt="Hoffmann" className="h-12 object-contain" />
+        </div>
+        <div className="text-center">
+          <p className="text-xs text-white/50">Plano de Negócios — Versão Executiva · Março 2026</p>
+          <p className="text-xs text-white/50">Documento Confidencial — Uso Restrito</p>
+        </div>
+        <div className="text-right">
+          <p className="text-sm font-bold text-white">consultoria@hoffmannefioretto.com</p>
+          <p className="text-xs text-white/50">Atuação Nacional</p>
+        </div>
+      </div>
+
+    </div>
+  );
+}
+
 // ─── Component ──────────────────────────────────────────────────────────────
 
 export default function PlanoEstrategico() {
@@ -228,6 +786,7 @@ export default function PlanoEstrategico() {
               { value: "blindagem", label: "Blindagem Patrimonial" },
               { value: "cronograma", label: "Cronograma" },
               { value: "gaps", label: "Gaps" },
+              { value: "hoffmann", label: "Plano Hoffmann" },
             ].map((t) => (
               <TabsTrigger
                 key={t.value}
@@ -806,6 +1365,11 @@ export default function PlanoEstrategico() {
                 })}
               </div>
             </div>
+          </TabsContent>
+
+          {/* ── Tab: Plano de Negócios Hoffmann ── */}
+          <TabsContent value="hoffmann" className="mt-6">
+            <PlanoHoffmann />
           </TabsContent>
 
           {/* ── Tab: Gaps ── */}
