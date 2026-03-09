@@ -745,6 +745,139 @@ function PlanoHoffmann() {
         </CardContent>
       </Card>
 
+      {/* ── EXPANSÃO BAHIA ── */}
+      <Card className="mb-6 overflow-hidden" style={{ background: "linear-gradient(135deg, #0D1F2D 0%, #0A1A2A 60%, #1A2A1A 100%)", border: "1px solid rgba(201,168,76,0.35)" }}>
+        {/* Cabeçalho com gradiente dourado */}
+        <div className="px-6 pt-6 pb-4" style={{ borderBottom: "1px solid rgba(201,168,76,0.2)" }}>
+          <div className="flex items-center justify-between flex-wrap gap-3">
+            <div className="flex items-center gap-3">
+              <div className="p-2.5 rounded-xl" style={{ background: "rgba(201,168,76,0.15)", border: "1px solid rgba(201,168,76,0.4)" }}>
+                <MapPin className="h-5 w-5" style={{ color: "#C9A84C" }} />
+              </div>
+              <div>
+                <p className="text-[10px] uppercase tracking-widest text-white/40 mb-0.5">Proposta de Sociedade Estratégica</p>
+                <h3 className="text-lg font-extrabold tracking-tight" style={{ color: "#C9A84C" }}>Expansão Bahia</h3>
+              </div>
+            </div>
+            <div className="flex gap-2">
+              <span className="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider" style={{ background: "rgba(107,143,113,0.2)", color: "#6B8F71", border: "1px solid rgba(107,143,113,0.4)" }}>Em Negociação</span>
+              <span className="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider" style={{ background: "rgba(201,168,76,0.15)", color: "#C9A84C", border: "1px solid rgba(201,168,76,0.4)" }}>Confidencial</span>
+            </div>
+          </div>
+        </div>
+
+        <CardContent className="p-6 space-y-6">
+
+          {/* Cidades candidatas */}
+          <div>
+            <p className="text-[10px] uppercase tracking-widest text-white/40 mb-3">Cidades Candidatas</p>
+            <div className="grid md:grid-cols-2 gap-4">
+              {[
+                {
+                  cidade: "Salvador",
+                  estado: "Bahia",
+                  destaque: "Capital Estratégica",
+                  desc: "Centro financeiro e empresarial do Nordeste. Hub de grandes grupos industriais, redes varejistas e empresas com passivos tributários relevantes. Presença da Sheila facilita a instalação imediata.",
+                  cor: "#C9A84C",
+                  icone: "★",
+                },
+                {
+                  cidade: "Feira de Santana",
+                  estado: "Bahia",
+                  destaque: "Polo Industrial",
+                  desc: "2ª maior cidade da Bahia e principal polo industrial do interior nordestino. Alta concentração de indústricas de médio porte com demanda crônica por gestão tributária e M&A especializado.",
+                  cor: "#6B8F71",
+                  icone: "◆",
+                },
+              ].map(({ cidade, estado, destaque, desc, cor, icone }) => (
+                <div key={cidade} className="p-4 rounded-xl space-y-3" style={{ background: `rgba(${cor === "#C9A84C" ? "201,168,76" : "107,143,113"},0.08)`, border: `1px solid rgba(${cor === "#C9A84C" ? "201,168,76" : "107,143,113"},0.3)` }}>
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <p className="text-xl font-extrabold text-white">{cidade}</p>
+                      <p className="text-xs text-white/50">{estado}</p>
+                    </div>
+                    <span className="text-2xl" style={{ color: cor }}>{icone}</span>
+                  </div>
+                  <span className="inline-block px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider" style={{ background: `rgba(${cor === "#C9A84C" ? "201,168,76" : "107,143,113"},0.2)`, color: cor }}>{destaque}</span>
+                  <p className="text-xs text-white/65 leading-relaxed">{desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Proposta de Sociedade */}
+          <div>
+            <p className="text-[10px] uppercase tracking-widest text-white/40 mb-3">Estrutura da Sociedade Proposta</p>
+            <div className="grid md:grid-cols-2 gap-3">
+              {[
+                { titulo: "Divisão de Espaço Físico", desc: "Compartilhamento do escritório na cidade escolhida, reduzindo custos fixos de implantação para ambas as partes.", icone: Building2, cor: "#6B8F71" },
+                { titulo: "1º Escritório M&A Especializado", desc: "Posicionamento único no mercado baiano: M&A para indústrias e nichos especializados, sem concorrência direta na região.", icone: Briefcase, cor: "#C9A84C" },
+                { titulo: "Gatilhos Digitais Nacionais", desc: "Ações de marketing digital e eventos diferenciados executados em todo o país, com intenções internacionais.", icone: TrendingUp, cor: "#4A7C59" },
+                { titulo: "Sociedade de Resultados", desc: "Modelo baseado em resultados compartilhados, alinhando incentivos entre as sociócias e maximizando o retorno mútuo.", icone: Target, cor: "#2D6A4F" },
+              ].map(({ titulo, desc, icone: Icon, cor }) => (
+                <div key={titulo} className="flex gap-3 p-3 rounded-xl" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)" }}>
+                  <div className="p-2 rounded-lg shrink-0" style={{ background: `${cor}20` }}>
+                    <Icon className="h-4 w-4" style={{ color: cor }} />
+                  </div>
+                  <div>
+                    <p className="text-sm font-bold text-white mb-1">{titulo}</p>
+                    <p className="text-xs text-white/60 leading-relaxed">{desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Linha do tempo da expansão */}
+          <div>
+            <p className="text-[10px] uppercase tracking-widest text-white/40 mb-3">Cronograma de Implantação</p>
+            <div className="relative">
+              <div className="absolute left-4 top-0 bottom-0 w-px" style={{ background: "rgba(201,168,76,0.3)" }} />
+              <div className="space-y-4 pl-10">
+                {[
+                  { fase: "Fase 1 — Formalização", prazo: "Abr–Mai/2026", desc: "Assinatura do NDA, definição da cidade-sede, estrutura jurídica da sociedade e plano de negócios conjunto.", cor: "#C9A84C" },
+                  { fase: "Fase 2 — Instalação", prazo: "Jun–Jul/2026", desc: "Abertura do escritório físico, contratação de equipe local, registro da marca e lançamento das ações digitais.", cor: "#6B8F71" },
+                  { fase: "Fase 3 — Operação", prazo: "Ago/2026 em diante", desc: "Prospecção ativa de clientes industriais, realização de eventos regionais e expansão progressiva para outros estados.", cor: "#4A7C59" },
+                  { fase: "Fase 4 — Internacionalização", prazo: "2027+", desc: "Expansão para mercados internacionais com foco em empresas brasileiras com operações no exterior e investidores estrangeiros no Brasil.", cor: "#2D6A4F" },
+                ].map(({ fase, prazo, desc, cor }, i) => (
+                  <div key={i} className="relative">
+                    <div className="absolute -left-6 w-3 h-3 rounded-full border-2" style={{ background: cor, borderColor: cor, top: "4px" }} />
+                    <div className="p-3 rounded-xl" style={{ background: "rgba(255,255,255,0.03)", border: `1px solid ${cor}25` }}>
+                      <div className="flex items-center justify-between mb-1">
+                        <p className="text-sm font-bold" style={{ color: cor }}>{fase}</p>
+                        <span className="text-[10px] px-2 py-0.5 rounded-full font-semibold" style={{ background: `${cor}20`, color: cor }}>{prazo}</span>
+                      </div>
+                      <p className="text-xs text-white/60 leading-relaxed">{desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Próximos Passos */}
+          <div className="p-4 rounded-xl" style={{ background: "rgba(201,168,76,0.08)", border: "1px solid rgba(201,168,76,0.35)" }}>
+            <p className="text-[10px] uppercase tracking-widest mb-3" style={{ color: "#C9A84C" }}>Próximos Passos Acordados</p>
+            <div className="grid md:grid-cols-3 gap-3">
+              {[
+                { num: "01", acao: "Plano de Negócios Conjunto", desc: "Elaboração do plano completo com estudo de viabilidade financeira da expansão Bahia." },
+                { num: "02", acao: "Assinatura do NDA", desc: "Formalização do acordo de confidencialidade para proteção das informações compartilhadas." },
+                { num: "03", acao: "Definição da Cidade-Sede", desc: "Decisão final entre Salvador e Feira de Santana com base em análise de mercado e logística." },
+              ].map(({ num, acao, desc }) => (
+                <div key={num} className="flex gap-3">
+                  <span className="text-2xl font-extrabold shrink-0" style={{ color: "rgba(201,168,76,0.3)" }}>{num}</span>
+                  <div>
+                    <p className="text-sm font-bold text-white mb-1">{acao}</p>
+                    <p className="text-xs text-white/55 leading-relaxed">{desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+        </CardContent>
+      </Card>
+
       {/* ── VIABILIDADE + CONCLUSÃO ── */}
       <div className="grid md:grid-cols-2 gap-6 mb-6">
         <Card className="bg-[#1A2535] border-[#2A3A4A]">

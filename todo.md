@@ -265,3 +265,11 @@
 - [x] Adicionar custo de marketing R$10.000/mês na estrutura de custos
 - [x] Recalcular custo fixo total: R$28.000/mês
 - [x] Recalcular ponto de equilíbrio e tabela de cenários
+
+## Seção Expansão Bahia - Aba Plano Hoffmann
+- [x] Criar seção visual "Expansão Bahia" no componente PlanoHoffmann
+- [x] Detalhar proposta de sociedade Hoffmann + Sheila/SERMAP
+- [x] Cidades candidatas: Salvador e Feira de Santana
+- [x] 1º escritório M&A para indústrias e nichos especializados
+- [x] Gatilhos digitais e eventos nacionais/internacionais
+- [x] Modelo de divisão de espaço e responsabilidades
