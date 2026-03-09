@@ -301,3 +301,6 @@
 - [x] Integrar chamada de registro no componente de login do Plano Estratégico
 - [x] Criar painel de monitoramento na aba Log de Acessos em Documentos Confidenciais
 - [x] Adicionar aba "Guia de Senhas" em Documentos Confidenciais com todas as credenciais
+
+## Correção Senha Inventário
+- [x] Atualizar senha do Inventário para docs2026@ (mesma dos Documentos Confidenciais)
