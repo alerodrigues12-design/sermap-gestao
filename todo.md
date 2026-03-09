@@ -260,3 +260,8 @@
 - [x] Calcular break-even por mix de contratos (gestão mensal + êxito)
 - [x] Exibir simulador visual de mix de contratos na aba Hoffmann
 - [x] Mostrar faturamento mínimo necessário para cobrir R$18.000/mês
+
+## Atualização Custos - Marketing Hoffmann
+- [x] Adicionar custo de marketing R$10.000/mês na estrutura de custos
+- [x] Recalcular custo fixo total: R$28.000/mês
+- [x] Recalcular ponto de equilíbrio e tabela de cenários

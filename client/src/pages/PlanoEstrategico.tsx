@@ -514,18 +514,18 @@ function PlanoHoffmann() {
               <div className="grid grid-cols-3 gap-3 text-center">
                 <div className="p-3 rounded-xl" style={{ background: "rgba(224,82,82,0.1)", border: "1px solid rgba(224,82,82,0.3)" }}>
                   <p className="text-[10px] text-white/50 uppercase tracking-wider mb-1">Custo Fixo Mensal</p>
-                  <p className="text-xl font-extrabold text-red-400">R$ 18.000</p>
-                  <p className="text-[10px] text-white/50">infra + equipe</p>
+                  <p className="text-xl font-extrabold text-red-400">R$ 28.000</p>
+                  <p className="text-[10px] text-white/50">infra + equipe + marketing</p>
                 </div>
                 <div className="p-3 rounded-xl" style={{ background: "rgba(201,168,76,0.1)", border: "1px solid rgba(201,168,76,0.3)" }}>
                   <p className="text-[10px] text-white/50 uppercase tracking-wider mb-1">Receita Mínima</p>
-                  <p className="text-xl font-extrabold" style={{ color: "#C9A84C" }}>R$ 18.000</p>
+                  <p className="text-xl font-extrabold" style={{ color: "#C9A84C" }}>R$ 28.000</p>
                   <p className="text-[10px] text-white/50">para break-even</p>
                 </div>
                 <div className="p-3 rounded-xl" style={{ background: "rgba(107,143,113,0.1)", border: "1px solid rgba(107,143,113,0.3)" }}>
-                  <p className="text-[10px] text-white/50 uppercase tracking-wider mb-1">Margem após BE</p>
-                  <p className="text-xl font-extrabold" style={{ color: "#6B8F71" }}>100%</p>
-                  <p className="text-[10px] text-white/50">do contrato adicional</p>
+                  <p className="text-[10px] text-white/50 uppercase tracking-wider mb-1">Break-Even</p>
+                  <p className="text-xl font-extrabold" style={{ color: "#6B8F71" }}>3 contratos</p>
+                  <p className="text-[10px] text-white/50">de gestão mensal</p>
                 </div>
               </div>
 
@@ -547,9 +547,9 @@ function PlanoHoffmann() {
                       {[
                         {
                           cenario: "Break-Even Mínimo",
-                          gestao: "2 × R$ 10k",
+                          gestao: "3 × R$ 10k",
                           exito: "—",
-                          receita: 20000,
+                          receita: 30000,
                           resultado: 2000,
                           cor: "#C9A84C",
                           bg: "rgba(201,168,76,0.06)",
@@ -557,8 +557,8 @@ function PlanoHoffmann() {
                         {
                           cenario: "Conservador",
                           gestao: "3 × R$ 10k",
-                          exito: "—",
-                          receita: 30000,
+                          exito: "1 proj. × R$ 10k",
+                          receita: 40000,
                           resultado: 12000,
                           cor: "#6B8F71",
                           bg: "transparent",
@@ -566,8 +566,8 @@ function PlanoHoffmann() {
                         {
                           cenario: "Estável",
                           gestao: "3 × R$ 10k",
-                          exito: "2 proj. × R$ 10k",
-                          receita: 50000,
+                          exito: "3 proj. × R$ 10k",
+                          receita: 60000,
                           resultado: 32000,
                           cor: "#4A7C59",
                           bg: "transparent",
@@ -577,7 +577,7 @@ function PlanoHoffmann() {
                           gestao: "5 × R$ 10k",
                           exito: "5 proj. × R$ 10k",
                           receita: 100000,
-                          resultado: 82000,
+                          resultado: 72000,
                           cor: "#2D6A4F",
                           bg: "transparent",
                         },
@@ -601,19 +601,19 @@ function PlanoHoffmann() {
 
               {/* Barra de progresso visual */}
               <div className="space-y-2">
-                <p className="text-[10px] text-white/50 uppercase tracking-wider">Faturamento vs. Custo Fixo</p>
+                <p className="text-[10px] text-white/50 uppercase tracking-wider">Faturamento vs. Custo Fixo (R$ 28.000)</p>
                 {[
-                  { label: "Break-Even (R$ 20k)", pct: 100, receita: 20000, cor: "#C9A84C" },
-                  { label: "Conservador (R$ 30k)", pct: 167, receita: 30000, cor: "#6B8F71" },
-                  { label: "Estável (R$ 50k)", pct: 278, receita: 50000, cor: "#4A7C59" },
-                  { label: "Expansão (R$ 100k)", pct: 556, receita: 100000, cor: "#2D6A4F" },
+                  { label: "Break-Even (R$ 30k)", pct: 107, cor: "#C9A84C" },
+                  { label: "Conservador (R$ 40k)", pct: 143, cor: "#6B8F71" },
+                  { label: "Estável (R$ 60k)", pct: 214, cor: "#4A7C59" },
+                  { label: "Expansão (R$ 100k)", pct: 357, cor: "#2D6A4F" },
                 ].map((b) => (
                   <div key={b.label} className="flex items-center gap-3">
                     <span className="text-[11px] text-white/60 w-40 shrink-0">{b.label}</span>
                     <div className="flex-1 bg-[#0F1923] rounded-full h-2 overflow-hidden">
                       <div
                         className="h-2 rounded-full transition-all"
-                        style={{ width: `${Math.min(b.pct / 5.56, 100)}%`, background: b.cor }}
+                        style={{ width: `${Math.min(b.pct / 3.57, 100)}%`, background: b.cor }}
                       />
                     </div>
                     <span className="text-[11px] font-bold shrink-0" style={{ color: b.cor }}>
@@ -625,7 +625,7 @@ function PlanoHoffmann() {
 
               <div className="p-3 rounded-lg" style={{ background: "rgba(107,143,113,0.1)", border: "1px solid rgba(107,143,113,0.3)" }}>
                 <p className="text-xs text-white/70 leading-relaxed text-center">
-                  O break-even real é atingido com <strong className="text-white">R$ 18.000/mês de receita</strong> — equivalente a <strong className="text-white">2 contratos de gestão</strong> ou <strong className="text-white">1 contrato + 1 projeto de êxito</strong>. Cada real acima disso é <strong style={{ color: "#6B8F71" }}>lucro líquido direto</strong>.
+                  Com marketing incluso, o break-even real é atingido com <strong className="text-white">R$ 28.000/mês</strong> — equivalente a <strong className="text-white">3 contratos de gestão</strong> ou <strong className="text-white">2 contratos + 1 projeto de êxito</strong>. O marketing já está gerando os 4 contratos ativos em diagnóstico — a operação está no caminho certo.
                 </p>
               </div>
 
@@ -639,33 +639,27 @@ function PlanoHoffmann() {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
-              <div className="space-y-2">
-                <div className="flex justify-between items-center">
-                  <div>
-                    <p className="text-sm font-semibold text-white">Infraestrutura Tecnológica</p>
-                    <p className="text-[11px] text-white/50">Plataformas especializadas de análise tributária, acompanhamento processual e gestão estratégica</p>
+              {[
+                { titulo: "Infraestrutura Tecnológica", desc: "Plataformas especializadas de análise tributária, acompanhamento processual e gestão estratégica", valor: 10000, pct: 36, cor: "#6B8F71" },
+                { titulo: "Equipe Operacional", desc: "Gestão administrativa + 2 colaboradores operacionais", valor: 8000, pct: 28, cor: "#4A7C59" },
+                { titulo: "Marketing & Aquisição", desc: "Agências, anúncios digitais e ações de posicionamento e geração de leads", valor: 10000, pct: 36, cor: "#C9A84C" },
+              ].map(({ titulo, desc, valor, pct, cor }) => (
+                <div key={titulo} className="space-y-1.5">
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <p className="text-sm font-semibold text-white">{titulo}</p>
+                      <p className="text-[11px] text-white/50">{desc}</p>
+                    </div>
+                    <span className="text-sm font-bold shrink-0 ml-3" style={{ color: cor }}>R$ {valor.toLocaleString("pt-BR")}</span>
                   </div>
-                  <span className="text-sm font-bold shrink-0 ml-3" style={{ color: "#6B8F71" }}>R$ 10.000</span>
-                </div>
-                <div className="w-full bg-[#0F1923] rounded-full h-1.5">
-                  <div className="h-1.5 rounded-full" style={{ width: "56%", background: "#6B8F71" }} />
-                </div>
-              </div>
-              <div className="space-y-2">
-                <div className="flex justify-between items-center">
-                  <div>
-                    <p className="text-sm font-semibold text-white">Equipe Operacional</p>
-                    <p className="text-[11px] text-white/50">Gestão administrativa + 2 colaboradores operacionais</p>
+                  <div className="w-full bg-[#0F1923] rounded-full h-1.5">
+                    <div className="h-1.5 rounded-full" style={{ width: `${pct}%`, background: cor }} />
                   </div>
-                  <span className="text-sm font-bold shrink-0 ml-3" style={{ color: "#4A7C59" }}>R$ 8.000</span>
                 </div>
-                <div className="w-full bg-[#0F1923] rounded-full h-1.5">
-                  <div className="h-1.5 rounded-full" style={{ width: "44%", background: "#4A7C59" }} />
-                </div>
-              </div>
+              ))}
               <div className="flex justify-between items-center pt-2 border-t border-[#2A3A4A]">
                 <span className="text-sm font-bold text-white">Total Mensal</span>
-                <span className="text-lg font-extrabold" style={{ color: "#C9A84C" }}>R$ 18.000</span>
+                <span className="text-lg font-extrabold" style={{ color: "#C9A84C" }}>R$ 28.000</span>
               </div>
             </CardContent>
           </Card>
@@ -887,7 +881,7 @@ export default function PlanoEstrategico() {
               <TabsTrigger
                 key={t.value}
                 value={t.value}
-                className="text-xs data-[state=active]:bg-[#C9A84C] data-[state=active]:text-[#0F1923] data-[state=active]:font-bold"
+                className="text-xs text-white/70 hover:text-white data-[state=active]:bg-[#C9A84C] data-[state=active]:text-[#0F1923] data-[state=active]:font-bold"
               >
                 {t.label}
               </TabsTrigger>
