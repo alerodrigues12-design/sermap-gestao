@@ -255,3 +255,8 @@
 - [x] Seção Estrutura Geográfica (SP + Porto Alegre + Bahia com Sheila)
 - [x] Seção Contratos Ativos
 - [x] Seção Viabilidade e Conclusão
+
+## Ponto de Equilíbrio Detalhado - Aba Hoffmann
+- [x] Calcular break-even por mix de contratos (gestão mensal + êxito)
+- [x] Exibir simulador visual de mix de contratos na aba Hoffmann
+- [x] Mostrar faturamento mínimo necessário para cobrir R$18.000/mês

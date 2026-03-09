@@ -505,34 +505,130 @@ function PlanoHoffmann() {
           <Card className="bg-[#1A2535] border-[#2A3A4A]">
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-bold uppercase tracking-wider flex items-center gap-2" style={{ color: "#C9A84C" }}>
-                <Target className="h-4 w-4" /> Ponto de Equilíbrio
+                <Target className="h-4 w-4" /> Ponto de Equilíbrio — Mix de Contratos
               </CardTitle>
             </CardHeader>
-            <CardContent>
-              <div className="flex items-center justify-center gap-8 py-3">
-                <div className="text-center">
-                  <p className="text-[10px] text-white/50 uppercase tracking-wider">Custo Fixo Mensal</p>
-                  <p className="text-2xl font-extrabold text-red-400">R$ 18k</p>
-                  <p className="text-[10px] text-white/50">operação completa</p>
+            <CardContent className="space-y-4">
+
+              {/* Custo fixo vs receita mínima */}
+              <div className="grid grid-cols-3 gap-3 text-center">
+                <div className="p-3 rounded-xl" style={{ background: "rgba(224,82,82,0.1)", border: "1px solid rgba(224,82,82,0.3)" }}>
+                  <p className="text-[10px] text-white/50 uppercase tracking-wider mb-1">Custo Fixo Mensal</p>
+                  <p className="text-xl font-extrabold text-red-400">R$ 18.000</p>
+                  <p className="text-[10px] text-white/50">infra + equipe</p>
                 </div>
-                <div className="text-3xl text-white/30">÷</div>
-                <div className="text-center">
-                  <p className="text-[10px] text-white/50 uppercase tracking-wider">Ticket Mínimo</p>
-                  <p className="text-2xl font-extrabold" style={{ color: "#6B8F71" }}>R$ 10k</p>
-                  <p className="text-[10px] text-white/50">por contrato</p>
+                <div className="p-3 rounded-xl" style={{ background: "rgba(201,168,76,0.1)", border: "1px solid rgba(201,168,76,0.3)" }}>
+                  <p className="text-[10px] text-white/50 uppercase tracking-wider mb-1">Receita Mínima</p>
+                  <p className="text-xl font-extrabold" style={{ color: "#C9A84C" }}>R$ 18.000</p>
+                  <p className="text-[10px] text-white/50">para break-even</p>
                 </div>
-                <div className="text-3xl text-white/30">=</div>
-                <div className="text-center">
-                  <p className="text-[10px] text-white/50 uppercase tracking-wider">Break-Even</p>
-                  <p className="text-2xl font-extrabold" style={{ color: "#C9A84C" }}>2</p>
-                  <p className="text-[10px] text-white/50">contratos ativos</p>
+                <div className="p-3 rounded-xl" style={{ background: "rgba(107,143,113,0.1)", border: "1px solid rgba(107,143,113,0.3)" }}>
+                  <p className="text-[10px] text-white/50 uppercase tracking-wider mb-1">Margem após BE</p>
+                  <p className="text-xl font-extrabold" style={{ color: "#6B8F71" }}>100%</p>
+                  <p className="text-[10px] text-white/50">do contrato adicional</p>
                 </div>
               </div>
-              <div className="mt-3 p-3 rounded-lg" style={{ background: "rgba(107,143,113,0.1)", border: "1px solid rgba(107,143,113,0.3)" }}>
-                <p className="text-xs text-white/70 text-center">
-                  Com apenas <strong className="text-white">2 contratos ativos</strong>, a operação já se paga. Cada contrato adicional representa <strong style={{ color: "#6B8F71" }}>lucro líquido direto</strong>.
+
+              {/* Tabela de mix de contratos */}
+              <div>
+                <p className="text-[10px] text-white/50 uppercase tracking-wider mb-2">Simulação por Mix de Contratos</p>
+                <div className="rounded-xl overflow-hidden border border-[#2A3A4A]">
+                  <table className="w-full text-xs">
+                    <thead>
+                      <tr className="bg-[#0F1923]">
+                        <th className="text-left px-3 py-2 text-white/50 font-semibold">Cenário</th>
+                        <th className="text-center px-2 py-2 text-white/50 font-semibold">Gestão Mensal</th>
+                        <th className="text-center px-2 py-2 text-white/50 font-semibold">Êxito (méd.)</th>
+                        <th className="text-right px-3 py-2 text-white/50 font-semibold">Receita Total</th>
+                        <th className="text-right px-3 py-2 text-white/50 font-semibold">Resultado</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {[
+                        {
+                          cenario: "Break-Even Mínimo",
+                          gestao: "2 × R$ 10k",
+                          exito: "—",
+                          receita: 20000,
+                          resultado: 2000,
+                          cor: "#C9A84C",
+                          bg: "rgba(201,168,76,0.06)",
+                        },
+                        {
+                          cenario: "Conservador",
+                          gestao: "3 × R$ 10k",
+                          exito: "—",
+                          receita: 30000,
+                          resultado: 12000,
+                          cor: "#6B8F71",
+                          bg: "transparent",
+                        },
+                        {
+                          cenario: "Estável",
+                          gestao: "3 × R$ 10k",
+                          exito: "2 proj. × R$ 10k",
+                          receita: 50000,
+                          resultado: 32000,
+                          cor: "#4A7C59",
+                          bg: "transparent",
+                        },
+                        {
+                          cenario: "Expansão",
+                          gestao: "5 × R$ 10k",
+                          exito: "5 proj. × R$ 10k",
+                          receita: 100000,
+                          resultado: 82000,
+                          cor: "#2D6A4F",
+                          bg: "transparent",
+                        },
+                      ].map((row, i) => (
+                        <tr key={i} style={{ background: row.bg }} className="border-t border-[#2A3A4A]">
+                          <td className="px-3 py-2.5 font-semibold" style={{ color: row.cor }}>{row.cenario}</td>
+                          <td className="px-2 py-2.5 text-center text-white/70">{row.gestao}</td>
+                          <td className="px-2 py-2.5 text-center text-white/70">{row.exito}</td>
+                          <td className="px-3 py-2.5 text-right font-bold text-white">
+                            R$ {row.receita.toLocaleString("pt-BR")}
+                          </td>
+                          <td className="px-3 py-2.5 text-right font-extrabold" style={{ color: row.cor }}>
+                            + R$ {row.resultado.toLocaleString("pt-BR")}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              {/* Barra de progresso visual */}
+              <div className="space-y-2">
+                <p className="text-[10px] text-white/50 uppercase tracking-wider">Faturamento vs. Custo Fixo</p>
+                {[
+                  { label: "Break-Even (R$ 20k)", pct: 100, receita: 20000, cor: "#C9A84C" },
+                  { label: "Conservador (R$ 30k)", pct: 167, receita: 30000, cor: "#6B8F71" },
+                  { label: "Estável (R$ 50k)", pct: 278, receita: 50000, cor: "#4A7C59" },
+                  { label: "Expansão (R$ 100k)", pct: 556, receita: 100000, cor: "#2D6A4F" },
+                ].map((b) => (
+                  <div key={b.label} className="flex items-center gap-3">
+                    <span className="text-[11px] text-white/60 w-40 shrink-0">{b.label}</span>
+                    <div className="flex-1 bg-[#0F1923] rounded-full h-2 overflow-hidden">
+                      <div
+                        className="h-2 rounded-full transition-all"
+                        style={{ width: `${Math.min(b.pct / 5.56, 100)}%`, background: b.cor }}
+                      />
+                    </div>
+                    <span className="text-[11px] font-bold shrink-0" style={{ color: b.cor }}>
+                      {b.pct}% do custo
+                    </span>
+                  </div>
+                ))}
+              </div>
+
+              <div className="p-3 rounded-lg" style={{ background: "rgba(107,143,113,0.1)", border: "1px solid rgba(107,143,113,0.3)" }}>
+                <p className="text-xs text-white/70 leading-relaxed text-center">
+                  O break-even real é atingido com <strong className="text-white">R$ 18.000/mês de receita</strong> — equivalente a <strong className="text-white">2 contratos de gestão</strong> ou <strong className="text-white">1 contrato + 1 projeto de êxito</strong>. Cada real acima disso é <strong style={{ color: "#6B8F71" }}>lucro líquido direto</strong>.
                 </p>
               </div>
+
             </CardContent>
           </Card>
 
