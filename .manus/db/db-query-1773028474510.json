@@ -1,0 +1,14 @@
+{
+  "query": "SELECT MAX(numero) as max_numero, COUNT(*) as total FROM planoAcao;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3wxDEv3kxBHyGJz.fa19c0ca9e29 --database NW4am7ZA3rszie9rtuCceh --execute SELECT MAX(numero) as max_numero, COUNT(*) as total FROM planoAcao;",
+  "rows": [
+    {
+      "max_numero": "1",
+      "total": "1"
+    }
+  ],
+  "messages": [],
+  "stdout": "max_numero\ttotal\n1\t1\n",
+  "stderr": "",
+  "execution_time_ms": 54
+}

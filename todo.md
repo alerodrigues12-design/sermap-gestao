@@ -311,3 +311,9 @@
 - [x] Adicionar nota nos processos cíveis: petições apresentadas, maior risco era BB, tese de nulidade de citação para ganhar tempo
 - [x] Adicionar nota nos processos da União: empresa sem procurador constituído, nova tese peticionada, deve ganhar bom tempo
 - [x] Manter info de perda de prazo apenas como nota interna nos processos (não no dashboard)
+
+## Plano de Ação - Cobrança Aluguel Sr. Paulo
+- [x] Adicionar tarefa no Plano de Ação: cobrança de aluguel do Sr. Paulo (imóvel do inventário)
+- [x] Incluir: Sheila tem 30% do imóvel = R$ 6.000/mês de participação
+- [x] Incluir: Sheila solicitou a cobrança e aguarda o valor a ser cobrado
+- [x] Incluir: após assinatura do contrato, serviço absorvido na consultoria mensal (sem cobrança adicional)
