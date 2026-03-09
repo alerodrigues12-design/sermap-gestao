@@ -280,3 +280,15 @@
 - [x] Nível completo: acesso total (passivos, Hoffmann, Expansão Bahia, Gaps)
 - [x] Bloquear abas sensíveis para visitante (Diagnóstico, Mapa de Riscos, Plano de Contenção, Blindagem, Gaps, Plano Hoffmann)
 - [x] Listar todas as senhas do sistema para a Ale
+
+## Sistema de Autenticação com 5 Perfis
+- [x] Criar arquivo central de autenticação client/src/lib/auth-profiles.ts
+- [x] Perfil Ale: login=Ale, senha=Ale2026, acesso completo
+- [x] Perfil Sheila: login=Sheila, senha=Sermap26, acesso completo
+- [x] Perfil Conselho: login=Conselho, senha=Conselho26, sem docs confidenciais e sem valores Hoffmann
+- [x] Perfil Visitante: login=Visitante, senha=Visitante2026, apenas 3 Pilares e Cronograma
+- [x] Perfil Jurídico: login=Juridico, senha=Jurid2026@, tudo exceto confidencial e valores
+- [x] Atualizar Plano Estratégico para usar sistema central
+- [x] Atualizar Documentos Confidenciais com senha docs2026@
+- [x] Mover E-mails Importantes para dentro de Documentos Confidenciais
+- [x] Remover E-mails Importantes do menu lateral (ou redirecionar)

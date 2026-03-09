@@ -10,6 +10,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Textarea } from "@/components/ui/textarea";
+import { Calendar } from "lucide-react";
 import { useState, useRef, useCallback } from "react";
 import { toast } from "sonner";
 
@@ -51,6 +54,58 @@ export default function Documentos() {
   const [confidencial, setConfidencial] = useState(true);
   const [file, setFile] = useState<File | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
+
+  // ─── E-mails Importantes (integrado) ─────────────────────────────────────
+  const [viewingEmail, setViewingEmail] = useState<any>(null);
+  const [filtroRemetente, setFiltroRemetente] = useState("");
+  const [filtroCategoria, setFiltroCategoria] = useState<string | undefined>();
+  const [emailDialogOpen, setEmailDialogOpen] = useState(false);
+  const [remetente, setRemetente] = useState("");
+  const [destinatario, setDestinatario] = useState("");
+  const [assunto, setAssunto] = useState("");
+  const [conteudo, setConteudo] = useState("");
+  const [emailCategoria, setEmailCategoria] = useState<"proposta" | "contrato" | "comunicacao" | "importante" | "outros">("comunicacao");
+  const [dataEmail, setDataEmail] = useState("");
+  const [emailFile, setEmailFile] = useState<File | null>(null);
+  const emailFileRef = useRef<HTMLInputElement>(null);
+
+  const { data: emails, isLoading: emailsLoading, refetch: refetchEmails } = trpc.emails.list.useQuery(undefined, { enabled: unlocked });
+  const createEmailMutation = trpc.emails.create.useMutation({
+    onSuccess: () => { toast.success("E-mail adicionado!"); refetchEmails(); setEmailDialogOpen(false); resetEmailForm(); },
+    onError: (err) => toast.error("Erro: " + err.message),
+  });
+  const uploadEmailMutation = trpc.emails.uploadWithFile.useMutation({
+    onSuccess: () => { toast.success("E-mail com arquivo enviado!"); refetchEmails(); setEmailDialogOpen(false); resetEmailForm(); },
+    onError: (err) => toast.error("Erro: " + err.message),
+  });
+  const deleteEmailMutation = trpc.emails.delete.useMutation({
+    onSuccess: () => { toast.success("E-mail removido."); refetchEmails(); },
+  });
+
+  const resetEmailForm = () => {
+    setRemetente(""); setDestinatario(""); setAssunto(""); setConteudo("");
+    setEmailCategoria("comunicacao"); setDataEmail(""); setEmailFile(null);
+    if (emailFileRef.current) emailFileRef.current.value = "";
+  };
+
+  const handleCreateEmail = async () => {
+    if (!remetente || !destinatario || !assunto || !conteudo || !dataEmail) {
+      toast.error("Preencha todos os campos obrigatórios."); return;
+    }
+    if (emailFile) {
+      const reader = new FileReader();
+      reader.onload = async () => {
+        const base64 = (reader.result as string).split(",")[1];
+        await uploadEmailMutation.mutateAsync({ remetente, destinatario, assunto, conteudo, categoria: emailCategoria, dataEmail, fileBase64: base64, fileName: emailFile.name, mimeType: emailFile.type });
+      };
+      reader.readAsDataURL(emailFile);
+    } else {
+      await createEmailMutation.mutateAsync({ remetente, destinatario, assunto, conteudo, categoria: emailCategoria, dataEmail });
+    }
+  };
+
+  const emailCategoriaLabels: Record<string, string> = { proposta: "Proposta", contrato: "Contrato", comunicacao: "Comunicação", importante: "Importante", outros: "Outros" };
+  const emailCategoriaColors: Record<string, string> = { proposta: "bg-blue-50 text-blue-700 border-blue-200", contrato: "bg-emerald-50 text-emerald-700 border-emerald-200", comunicacao: "bg-purple-50 text-purple-700 border-purple-200", importante: "bg-red-50 text-red-700 border-red-200", outros: "bg-gray-50 text-gray-700 border-gray-200" };
 
   // Autentique
   const [autentiqueDialog, setAutentiqueDialog] = useState(false);
@@ -423,10 +478,7 @@ export default function Documentos() {
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm" onClick={() => window.location.href = '/emails'} className="text-muted-foreground gap-2">
-            <Mail className="h-3.5 w-3.5" />
-            E-mails Importantes
-          </Button>
+
           <Button variant="outline" size="sm" onClick={() => setUnlocked(false)} className="text-muted-foreground">
             <Lock className="h-3.5 w-3.5 mr-1.5" />
             Bloquear
@@ -497,85 +549,244 @@ export default function Documentos() {
         </div>
       </div>
 
-      {/* Documents Grid */}
-      {(!documentos || documentos.length === 0) ? (
-        <Card className="text-center p-12">
-          <FileText className="h-16 w-16 text-muted-foreground/30 mx-auto mb-4" />
-          <h3 className="text-lg font-medium">Nenhum documento cadastrado</h3>
-          <p className="text-sm text-muted-foreground mt-1">Clique em "Enviar Documento" para adicionar contratos e documentos.</p>
-        </Card>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {documentos.map((doc) => (
-            <Card key={doc.id} className="overflow-hidden hover:shadow-lg transition-all duration-200 cursor-pointer group border-l-4"
-              style={{ borderLeftColor: doc.categoria === "contrato" ? "#3b82f6" : doc.categoria === "honorarios" ? "#10b981" : doc.categoria === "procuracao" ? "#8b5cf6" : "#6b7280" }}
-              onClick={() => setViewingDoc(doc)}
-            >
-              <CardContent className="p-5">
-                <div className="flex items-start justify-between mb-3">
-                  <div className="flex items-start gap-3">
-                    <div className="w-10 h-10 rounded-lg bg-[#4a5a3a]/10 flex items-center justify-center shrink-0 mt-0.5">
-                      <FileText className="h-5 w-5 text-[#4a5a3a]" />
-                    </div>
-                    <div>
-                      <h4 className="text-sm font-semibold group-hover:text-[#4a5a3a] transition-colors">{doc.titulo}</h4>
-                      {doc.descricao && <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{doc.descricao}</p>}
-                    </div>
-                  </div>
-                  {doc.confidencial && (
-                    <Badge variant="outline" className="text-[10px] border-amber-300 text-amber-600 shrink-0 ml-2">
-                      <Lock className="h-2.5 w-2.5 mr-1" />
-                      Confidencial
-                    </Badge>
-                  )}
-                </div>
-                <div className="flex items-center justify-between mt-4 pt-3 border-t">
-                  <div className="flex items-center gap-2">
-                    <Badge variant="outline" className={`text-[10px] ${categoriaColors[doc.categoria ?? 'outros'] || ''}`}>
-                      {categoriaLabels[doc.categoria ?? 'outros'] || doc.categoria}
-                    </Badge>
-                    {doc.htmlContent && (
-                      <Badge variant="outline" className="text-[10px] border-[#4a5a3a]/30 text-[#4a5a3a]">
-                        <Eye className="h-2.5 w-2.5 mr-1" />
-                        Visualizar
-                      </Badge>
-                    )}
-                  </div>
-                  <div className="flex items-center gap-1" onClick={(e) => e.stopPropagation()}>
-                    {doc.fileUrl && (
-                      <>
-                        <Button
-                          variant="ghost" size="sm"
-                          className="h-8 px-2 gap-1 text-[10px] text-[#4a5a3a] hover:text-[#4a5a3a] hover:bg-[#4a5a3a]/10"
-                          title="Enviar para assinatura via Autentique"
-                          onClick={() => {
-                            setAutentiqueDoc(doc);
-                            setSignatarios([{ nome: "", email: "", acao: "SIGN" }]);
-                            setAutentiqueDialog(true);
-                          }}
-                        >
-                          <PenLine className="h-3 w-3" />
-                          Assinar
-                        </Button>
-                        <Button variant="ghost" size="sm" className="h-8 w-8 p-0" onClick={() => window.open(doc.fileUrl!, "_blank")}>
-                          <Download className="h-3.5 w-3.5" />
-                        </Button>
-                      </>
-                    )}
-                    <Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-destructive hover:text-destructive" onClick={() => {
-                      if (confirm("Tem certeza que deseja excluir este documento?")) {
-                        deleteMutation.mutate({ id: doc.id });
-                      }
-                    }}>
-                      <Trash2 className="h-3.5 w-3.5" />
-                    </Button>
-                  </div>
-                </div>
-              </CardContent>
+      {/* Tabs: Documentos + E-mails */}
+      <Tabs defaultValue="documentos">
+        <TabsList className="mb-4">
+          <TabsTrigger value="documentos" className="gap-2"><FileText className="h-4 w-4" />Documentos</TabsTrigger>
+          <TabsTrigger value="emails" className="gap-2"><Mail className="h-4 w-4" />E-mails Importantes</TabsTrigger>
+        </TabsList>
+
+        {/* ── Aba Documentos ── */}
+        <TabsContent value="documentos">
+          {(!documentos || documentos.length === 0) ? (
+            <Card className="text-center p-12">
+              <FileText className="h-16 w-16 text-muted-foreground/30 mx-auto mb-4" />
+              <h3 className="text-lg font-medium">Nenhum documento cadastrado</h3>
+              <p className="text-sm text-muted-foreground mt-1">Clique em "Enviar Documento" para adicionar contratos e documentos.</p>
             </Card>
-          ))}
-        </div>
-      )}
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {documentos.map((doc) => (
+                <Card key={doc.id} className="overflow-hidden hover:shadow-lg transition-all duration-200 cursor-pointer group border-l-4"
+                  style={{ borderLeftColor: doc.categoria === "contrato" ? "#3b82f6" : doc.categoria === "honorarios" ? "#10b981" : doc.categoria === "procuracao" ? "#8b5cf6" : "#6b7280" }}
+                  onClick={() => setViewingDoc(doc)}
+                >
+                  <CardContent className="p-5">
+                    <div className="flex items-start justify-between mb-3">
+                      <div className="flex items-start gap-3">
+                        <div className="w-10 h-10 rounded-lg bg-[#4a5a3a]/10 flex items-center justify-center shrink-0 mt-0.5">
+                          <FileText className="h-5 w-5 text-[#4a5a3a]" />
+                        </div>
+                        <div>
+                          <h4 className="text-sm font-semibold group-hover:text-[#4a5a3a] transition-colors">{doc.titulo}</h4>
+                          {doc.descricao && <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{doc.descricao}</p>}
+                        </div>
+                      </div>
+                      {doc.confidencial && (
+                        <Badge variant="outline" className="text-[10px] border-amber-300 text-amber-600 shrink-0 ml-2">
+                          <Lock className="h-2.5 w-2.5 mr-1" />Confidencial
+                        </Badge>
+                      )}
+                    </div>
+                    <div className="flex items-center justify-between mt-4 pt-3 border-t">
+                      <div className="flex items-center gap-2">
+                        <Badge variant="outline" className={`text-[10px] ${categoriaColors[doc.categoria ?? 'outros'] || ''}`}>
+                          {categoriaLabels[doc.categoria ?? 'outros'] || doc.categoria}
+                        </Badge>
+                        {doc.htmlContent && (
+                          <Badge variant="outline" className="text-[10px] border-[#4a5a3a]/30 text-[#4a5a3a]">
+                            <Eye className="h-2.5 w-2.5 mr-1" />Visualizar
+                          </Badge>
+                        )}
+                      </div>
+                      <div className="flex items-center gap-1" onClick={(e) => e.stopPropagation()}>
+                        {doc.fileUrl && (
+                          <>
+                            <Button variant="ghost" size="sm" className="h-8 px-2 gap-1 text-[10px] text-[#4a5a3a] hover:bg-[#4a5a3a]/10"
+                              title="Enviar para assinatura via Autentique"
+                              onClick={() => { setAutentiqueDoc(doc); setSignatarios([{ nome: "", email: "", acao: "SIGN" }]); setAutentiqueDialog(true); }}>
+                              <PenLine className="h-3 w-3" />Assinar
+                            </Button>
+                            <Button variant="ghost" size="sm" className="h-8 w-8 p-0" onClick={() => window.open(doc.fileUrl!, "_blank")}>
+                              <Download className="h-3.5 w-3.5" />
+                            </Button>
+                          </>
+                        )}
+                        <Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-destructive hover:text-destructive"
+                          onClick={() => { if (confirm("Excluir este documento?")) deleteMutation.mutate({ id: doc.id }); }}>
+                          <Trash2 className="h-3.5 w-3.5" />
+                        </Button>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          )}
+        </TabsContent>
+
+        {/* ── Aba E-mails Importantes ── */}
+        <TabsContent value="emails">
+          <div className="space-y-4">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+              <p className="text-sm text-muted-foreground">Correspondência importante entre Alessandra e Sheila</p>
+              <Dialog open={emailDialogOpen} onOpenChange={setEmailDialogOpen}>
+                <DialogTrigger asChild>
+                  <Button className="bg-[#4a5a3a] hover:bg-[#3d4d2f]" size="sm">
+                    <Plus className="h-4 w-4 mr-2" />Adicionar E-mail
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-2xl">
+                  <DialogHeader><DialogTitle className="font-serif">Adicionar Novo E-mail</DialogTitle></DialogHeader>
+                  <div className="space-y-4 max-h-[60vh] overflow-y-auto">
+                    <div className="grid grid-cols-2 gap-4">
+                      <div><Label>Remetente *</Label><Input value={remetente} onChange={(e) => setRemetente(e.target.value)} placeholder="Ex: sheila@sermap.com" /></div>
+                      <div><Label>Destinatário *</Label><Input value={destinatario} onChange={(e) => setDestinatario(e.target.value)} placeholder="Ex: ale@consultoria.com" /></div>
+                    </div>
+                    <div><Label>Assunto *</Label><Input value={assunto} onChange={(e) => setAssunto(e.target.value)} placeholder="Assunto do e-mail" /></div>
+                    <div><Label>Data do E-mail *</Label><Input type="date" value={dataEmail} onChange={(e) => setDataEmail(e.target.value)} /></div>
+                    <div>
+                      <Label>Categoria</Label>
+                      <Select value={emailCategoria} onValueChange={(v: any) => setEmailCategoria(v)}>
+                        <SelectTrigger><SelectValue /></SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="proposta">Proposta</SelectItem>
+                          <SelectItem value="contrato">Contrato</SelectItem>
+                          <SelectItem value="comunicacao">Comunicação</SelectItem>
+                          <SelectItem value="importante">Importante</SelectItem>
+                          <SelectItem value="outros">Outros</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div><Label>Conteúdo *</Label><Textarea value={conteudo} onChange={(e) => setConteudo(e.target.value)} placeholder="Corpo do e-mail" rows={6} /></div>
+                    <div>
+                      <Label>Arquivo (opcional)</Label>
+                      <Input ref={emailFileRef} type="file" onChange={(e) => setEmailFile(e.target.files?.[0] || null)} accept=".pdf,.doc,.docx,.jpg,.png,.eml" />
+                      <p className="text-xs text-muted-foreground mt-1">Máximo 10MB. Formatos: PDF, DOC, DOCX, JPG, PNG, EML</p>
+                    </div>
+                  </div>
+                  <DialogFooter>
+                    <DialogClose asChild><Button variant="outline">Cancelar</Button></DialogClose>
+                    <Button onClick={handleCreateEmail} disabled={createEmailMutation.isPending || uploadEmailMutation.isPending} className="bg-[#4a5a3a] hover:bg-[#3d4d2f]">
+                      {createEmailMutation.isPending || uploadEmailMutation.isPending ? "Salvando..." : "Adicionar"}
+                    </Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
+            </div>
+
+            {/* Filtros */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label className="text-sm">Filtrar por Remetente</Label>
+                <Input placeholder="Nome ou e-mail" value={filtroRemetente} onChange={(e) => setFiltroRemetente(e.target.value)} className="mt-1" />
+              </div>
+              <div>
+                <Label className="text-sm">Filtrar por Categoria</Label>
+                <Select value={filtroCategoria || "all"} onValueChange={(v) => setFiltroCategoria(v === "all" ? undefined : v as any)}>
+                  <SelectTrigger className="mt-1"><SelectValue placeholder="Todas as categorias" /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Todas as categorias</SelectItem>
+                    <SelectItem value="proposta">Proposta</SelectItem>
+                    <SelectItem value="contrato">Contrato</SelectItem>
+                    <SelectItem value="comunicacao">Comunicação</SelectItem>
+                    <SelectItem value="importante">Importante</SelectItem>
+                    <SelectItem value="outros">Outros</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            {/* Lista de e-mails */}
+            {emailsLoading ? (
+              <div className="space-y-3">{[1,2,3].map(i => <div key={i} className="h-20 rounded-lg bg-muted animate-pulse" />)}</div>
+            ) : (() => {
+              const filteredEmails = (emails || []).filter(e =>
+                (!filtroRemetente || e.remetente.toLowerCase().includes(filtroRemetente.toLowerCase())) &&
+                (!filtroCategoria || e.categoria === filtroCategoria)
+              );
+              return filteredEmails.length === 0 ? (
+                <Card className="text-center p-12">
+                  <Mail className="h-16 w-16 text-muted-foreground/30 mx-auto mb-4" />
+                  <h3 className="text-lg font-medium">Nenhum e-mail cadastrado</h3>
+                  <p className="text-sm text-muted-foreground mt-1">Clique em "Adicionar E-mail" para incluir correspondência importante.</p>
+                </Card>
+              ) : (
+                <div className="space-y-3">
+                  {filteredEmails.map((email) => (
+                    <Card key={email.id} className="overflow-hidden hover:shadow-lg transition-all duration-200 cursor-pointer border-l-4"
+                      style={{ borderLeftColor: email.categoria === "proposta" ? "#3b82f6" : email.categoria === "contrato" ? "#10b981" : email.categoria === "importante" ? "#ef4444" : email.categoria === "comunicacao" ? "#8b5cf6" : "#6b7280" }}
+                      onClick={() => setViewingEmail(email)}
+                    >
+                      <CardContent className="p-4">
+                        <div className="flex items-start justify-between gap-4">
+                          <div className="flex items-start gap-3 flex-1 min-w-0">
+                            <div className="w-10 h-10 rounded-lg bg-[#4a5a3a]/10 flex items-center justify-center shrink-0 mt-0.5">
+                              <Mail className="h-5 w-5 text-[#4a5a3a]" />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <h4 className="text-sm font-semibold truncate hover:text-[#4a5a3a] transition-colors">{email.assunto}</h4>
+                              <p className="text-xs text-muted-foreground mt-0.5"><span className="font-medium">{email.remetente}</span> → {email.destinatario}</p>
+                              <p className="text-xs text-muted-foreground mt-1 flex items-center gap-1"><Calendar className="h-3 w-3" />{email.dataEmail}</p>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-2 shrink-0">
+                            <Badge variant="outline" className={`text-[10px] ${email.categoria ? emailCategoriaColors[email.categoria] : ''}`}>
+                              {email.categoria ? emailCategoriaLabels[email.categoria] : email.categoria}
+                            </Badge>
+                            {email.arquivoUrl && (
+                              <Badge variant="outline" className="text-[10px] border-[#4a5a3a]/30 text-[#4a5a3a]">
+                                <Download className="h-2.5 w-2.5 mr-1" />Arquivo
+                              </Badge>
+                            )}
+                            <Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-destructive hover:text-destructive"
+                              onClick={(e) => { e.stopPropagation(); if (confirm("Excluir este e-mail?")) deleteEmailMutation.mutate({ id: email.id }); }}>
+                              <Trash2 className="h-3.5 w-3.5" />
+                            </Button>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              );
+            })()}
+
+            {/* Visualizar e-mail */}
+            {viewingEmail && (
+              <Dialog open={!!viewingEmail} onOpenChange={(open) => !open && setViewingEmail(null)}>
+                <DialogContent className="max-w-2xl">
+                  <DialogHeader>
+                    <DialogTitle className="font-serif flex items-center gap-2">
+                      <Mail className="h-5 w-5 text-[#4a5a3a]" />{viewingEmail.assunto}
+                    </DialogTitle>
+                  </DialogHeader>
+                  <div className="space-y-4">
+                    <div className="flex flex-wrap gap-4 text-sm">
+                      <span className="text-muted-foreground">De: <span className="font-medium text-foreground">{viewingEmail.remetente}</span></span>
+                      <span className="text-muted-foreground">Para: <span className="font-medium text-foreground">{viewingEmail.destinatario}</span></span>
+                      <span className="text-muted-foreground flex items-center gap-1"><Calendar className="h-3.5 w-3.5" />{viewingEmail.dataEmail}</span>
+                      <Badge variant="outline" className={`text-[10px] ${emailCategoriaColors[viewingEmail.categoria] || ''}`}>
+                        {emailCategoriaLabels[viewingEmail.categoria] || viewingEmail.categoria}
+                      </Badge>
+                    </div>
+                    <div className="border-t pt-4">
+                      <div className="bg-muted/50 p-4 rounded-lg whitespace-pre-wrap text-sm leading-relaxed">{viewingEmail.conteudo}</div>
+                    </div>
+                    {viewingEmail.arquivoUrl && (
+                      <div className="border-t pt-4">
+                        <Button variant="outline" size="sm" onClick={() => window.open(viewingEmail.arquivoUrl, "_blank")} className="gap-2">
+                          <Download className="h-4 w-4" />{viewingEmail.arquivoKey?.split("/").pop() || "Baixar Arquivo"}
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+                </DialogContent>
+              </Dialog>
+            )}
+          </div>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }

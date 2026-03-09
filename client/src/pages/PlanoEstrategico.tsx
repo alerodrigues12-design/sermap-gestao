@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { autenticar, getAbasVisiveis, type PerfilAcesso } from "@/lib/auth-profiles";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -954,16 +955,8 @@ function PlanoHoffmann() {
 
 // ─── Component ──────────────────────────────────────────────────────────────
 
-// Senhas do Plano Estratégico
-// Visitante: apenas abas institucionais (3 Pilares, Cronograma)
-// Completo: acesso total
-const SENHA_VISITANTE = "sermap2026";
-const SENHA_COMPLETA = "sermap@estrategia";
-
-// Abas liberadas para visitante (sem dados financeiros sensíveis)
-const ABAS_VISITANTE = ["pilares", "cronograma"];
-
-function TelaAcesso({ onAcesso }: { onAcesso: (nivel: "visitante" | "completo") => void }) {
+function TelaAcesso({ onAcesso }: { onAcesso: (perfil: PerfilAcesso) => void }) {
+  const [login, setLogin] = useState("");
   const [senha, setSenha] = useState("");
   const [mostrarSenha, setMostrarSenha] = useState(false);
   const [erro, setErro] = useState("");
@@ -974,12 +967,11 @@ function TelaAcesso({ onAcesso }: { onAcesso: (nivel: "visitante" | "completo") 
     setCarregando(true);
     setErro("");
     setTimeout(() => {
-      if (senha === SENHA_COMPLETA) {
-        onAcesso("completo");
-      } else if (senha === SENHA_VISITANTE) {
-        onAcesso("visitante");
+      const perfil = autenticar(login, senha);
+      if (perfil) {
+        onAcesso(perfil);
       } else {
-        setErro("Senha incorreta. Verifique e tente novamente.");
+        setErro("Login ou senha incorretos. Verifique e tente novamente.");
       }
       setCarregando(false);
     }, 400);
@@ -988,7 +980,6 @@ function TelaAcesso({ onAcesso }: { onAcesso: (nivel: "visitante" | "completo") 
   return (
     <div className="min-h-screen bg-[#0F1923] flex items-center justify-center p-4">
       <div className="w-full max-w-md">
-        {/* Logo + título */}
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl mb-4" style={{ background: "rgba(201,168,76,0.15)", border: "1px solid rgba(201,168,76,0.4)" }}>
             <Lock className="h-7 w-7" style={{ color: "#C9A84C" }} />
@@ -997,54 +988,56 @@ function TelaAcesso({ onAcesso }: { onAcesso: (nivel: "visitante" | "completo") 
           <p className="text-sm text-white/50">SERMAP Engenharia · Acesso Restrito</p>
         </div>
 
-        {/* Card de login */}
         <div className="rounded-2xl p-6" style={{ background: "#1A2535", border: "1px solid #2A3A4A" }}>
           <form onSubmit={handleEntrar} className="space-y-4">
             <div>
-              <label className="block text-xs font-semibold text-white/60 uppercase tracking-wider mb-2">Senha de Acesso</label>
+              <label className="block text-xs font-semibold text-white/60 uppercase tracking-wider mb-2">Login</label>
+              <input
+                type="text"
+                value={login}
+                onChange={(e) => { setLogin(e.target.value); setErro(""); }}
+                placeholder="Seu login..."
+                className="w-full px-4 py-3 rounded-xl text-white placeholder-white/30 text-sm focus:outline-none"
+                style={{ background: "#0F1923", border: erro ? "1px solid #E05252" : "1px solid #2A3A4A" }}
+                autoFocus
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-semibold text-white/60 uppercase tracking-wider mb-2">Senha</label>
               <div className="relative">
                 <input
                   type={mostrarSenha ? "text" : "password"}
                   value={senha}
                   onChange={(e) => { setSenha(e.target.value); setErro(""); }}
-                  placeholder="Digite a senha..."
-                  className="w-full px-4 py-3 pr-12 rounded-xl text-white placeholder-white/30 text-sm focus:outline-none focus:ring-2"
+                  placeholder="Sua senha..."
+                  className="w-full px-4 py-3 pr-12 rounded-xl text-white placeholder-white/30 text-sm focus:outline-none"
                   style={{ background: "#0F1923", border: erro ? "1px solid #E05252" : "1px solid #2A3A4A" }}
-                  autoFocus
                 />
-                <button
-                  type="button"
-                  onClick={() => setMostrarSenha(!mostrarSenha)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 hover:text-white/70 transition-colors"
-                >
+                <button type="button" onClick={() => setMostrarSenha(!mostrarSenha)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 hover:text-white/70 transition-colors">
                   {mostrarSenha ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </button>
               </div>
               {erro && <p className="text-xs text-red-400 mt-2 flex items-center gap-1"><AlertCircle className="h-3 w-3" />{erro}</p>}
             </div>
 
-            <button
-              type="submit"
-              disabled={!senha || carregando}
+            <button type="submit" disabled={!login || !senha || carregando}
               className="w-full py-3 rounded-xl font-bold text-sm uppercase tracking-wider transition-all disabled:opacity-40 disabled:cursor-not-allowed"
-              style={{ background: senha && !carregando ? "#C9A84C" : "rgba(201,168,76,0.3)", color: "#0F1923" }}
-            >
+              style={{ background: login && senha && !carregando ? "#C9A84C" : "rgba(201,168,76,0.3)", color: "#0F1923" }}>
               {carregando ? "Verificando..." : "Acessar"}
             </button>
           </form>
 
           <div className="mt-5 pt-4" style={{ borderTop: "1px solid #2A3A4A" }}>
             <p className="text-[11px] text-white/30 text-center leading-relaxed">
-              Este documento é confidencial e de uso restrito.<br />
-              O acesso não autorizado é proibido.
+              Documento confidencial · Uso restrito · Acesso não autorizado é proibido.
             </p>
           </div>
         </div>
 
-        {/* Dica de acesso */}
         <div className="mt-4 p-3 rounded-xl text-center" style={{ background: "rgba(107,143,113,0.08)", border: "1px solid rgba(107,143,113,0.2)" }}>
           <p className="text-[11px] text-white/40">
-            Possui acesso de visitante? Use a senha fornecida pela equipe SERMAP.
+            Use as credenciais fornecidas pela equipe SERMAP para acessar.
           </p>
         </div>
       </div>
@@ -1053,7 +1046,7 @@ function TelaAcesso({ onAcesso }: { onAcesso: (nivel: "visitante" | "completo") 
 }
 
 export default function PlanoEstrategico() {
-  const [nivelAcesso, setNivelAcesso] = useState<"nenhum" | "visitante" | "completo">("nenhum");
+  const [perfilAtivo, setPerfilAtivo] = useState<PerfilAcesso | null>(null);
   const [expandedMes, setExpandedMes] = useState<string | null>("Mar/26");
   const [expandedGap, setExpandedGap] = useState<number | null>(null);
 
@@ -1061,23 +1054,11 @@ export default function PlanoEstrategico() {
   const totalMeta = 3.0;
   const reducao = Math.round(((totalAtual - totalMeta) / totalAtual) * 100);
 
-  // Mostrar tela de acesso se não autenticado
-  if (nivelAcesso === "nenhum") {
-    return <TelaAcesso onAcesso={setNivelAcesso} />;
+  if (!perfilAtivo) {
+    return <TelaAcesso onAcesso={setPerfilAtivo} />;
   }
 
-  // Abas disponíveis conforme nível
-  const todasAbas = [
-    { value: "diagnostico", label: "Diagnóstico", restrita: true },
-    { value: "riscos", label: "Mapa de Riscos", restrita: true },
-    { value: "pilares", label: "3 Pilares", restrita: false },
-    { value: "contencao", label: "Plano de Contenção", restrita: true },
-    { value: "blindagem", label: "Blindagem Patrimonial", restrita: true },
-    { value: "cronograma", label: "Cronograma", restrita: false },
-    { value: "gaps", label: "Gaps", restrita: true },
-    { value: "hoffmann", label: "Plano Hoffmann", restrita: true },
-  ];
-  const abasVisiveis = nivelAcesso === "completo" ? todasAbas : todasAbas.filter(a => !a.restrita);
+  const abasVisiveis = getAbasVisiveis(perfilAtivo);
   const defaultTab = abasVisiveis[0]?.value ?? "pilares";
 
   return (
@@ -1090,17 +1071,17 @@ export default function PlanoEstrategico() {
             <p className="text-sm text-[#8899AA]">SERMAP Engenharia · Horizonte 12 Meses · Mar/2026 – Dez/2026</p>
           </div>
           <div className="flex items-center gap-3">
-            {nivelAcesso === "visitante" ? (
-              <span className="text-xs bg-green-500/20 text-green-400 border border-green-500/40 px-3 py-1 rounded-full font-semibold uppercase tracking-wider flex items-center gap-1">
-                <Eye className="h-3 w-3" /> Visitante
-              </span>
-            ) : (
+            {perfilAtivo.acessoCompleto ? (
               <span className="text-xs bg-red-500/20 text-red-400 border border-red-500/40 px-3 py-1 rounded-full font-semibold uppercase tracking-wider">
                 Confidencial
               </span>
+            ) : (
+              <span className="text-xs bg-green-500/20 text-green-400 border border-green-500/40 px-3 py-1 rounded-full font-semibold uppercase tracking-wider flex items-center gap-1">
+                <Eye className="h-3 w-3" /> {perfilAtivo.nome}
+              </span>
             )}
             <button
-              onClick={() => setNivelAcesso("nenhum")}
+              onClick={() => setPerfilAtivo(null)}
               className="text-xs text-white/40 hover:text-white/70 flex items-center gap-1 transition-colors"
               title="Sair"
             >
@@ -1113,7 +1094,7 @@ export default function PlanoEstrategico() {
       <div className="max-w-6xl mx-auto px-6 py-8 space-y-10">
 
         {/* ── KPIs ── */}
-        {nivelAcesso === "completo" ? (
+        {perfilAtivo.verPassivosFinanceiros ? (
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {[
               { label: "Passivo Tributário", value: "R$ 3,8M", sub: "→ Meta: R$ 1,5M (−61%)", cor: "#E05252", border: "border-t-red-500" },
