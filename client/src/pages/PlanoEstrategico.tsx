@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { trpc } from "@/lib/trpc";
 import { autenticar, getAbasVisiveis, type PerfilAcesso } from "@/lib/auth-profiles";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -961,6 +962,7 @@ function TelaAcesso({ onAcesso }: { onAcesso: (perfil: PerfilAcesso) => void }) 
   const [mostrarSenha, setMostrarSenha] = useState(false);
   const [erro, setErro] = useState("");
   const [carregando, setCarregando] = useState(false);
+  const registrarAcesso = trpc.accessLog.registrar.useMutation();
 
   function handleEntrar(e: React.FormEvent) {
     e.preventDefault();
@@ -969,6 +971,12 @@ function TelaAcesso({ onAcesso }: { onAcesso: (perfil: PerfilAcesso) => void }) 
     setTimeout(() => {
       const perfil = autenticar(login, senha);
       if (perfil) {
+        // Registrar log de acesso
+        registrarAcesso.mutate({
+          perfil: perfil.nome,
+          nivelAcesso: perfil.perfil,
+          userAgent: navigator.userAgent,
+        });
         onAcesso(perfil);
       } else {
         setErro("Login ou senha incorretos. Verifique e tente novamente.");

@@ -549,11 +549,13 @@ export default function Documentos() {
         </div>
       </div>
 
-      {/* Tabs: Documentos + E-mails */}
+      {/* Tabs: Documentos + E-mails + Log + Guia */}
       <Tabs defaultValue="documentos">
-        <TabsList className="mb-4">
+        <TabsList className="mb-4 flex-wrap h-auto gap-1">
           <TabsTrigger value="documentos" className="gap-2"><FileText className="h-4 w-4" />Documentos</TabsTrigger>
           <TabsTrigger value="emails" className="gap-2"><Mail className="h-4 w-4" />E-mails Importantes</TabsTrigger>
+          <TabsTrigger value="logs" className="gap-2"><Eye className="h-4 w-4" />Log de Acessos</TabsTrigger>
+          <TabsTrigger value="senhas" className="gap-2"><KeyRound className="h-4 w-4" />Guia de Senhas</TabsTrigger>
         </TabsList>
 
         {/* ── Aba Documentos ── */}
@@ -786,7 +788,193 @@ export default function Documentos() {
             )}
           </div>
         </TabsContent>
+
+        {/* ── Aba Log de Acessos ── */}
+        <TabsContent value="logs">
+          <LogAcessos senhaUnlock={docPassword} />
+        </TabsContent>
+
+        {/* ── Aba Guia de Senhas ── */}
+        <TabsContent value="senhas">
+          <div className="space-y-6">
+            <div className="p-4 rounded-lg bg-amber-50 border border-amber-200 flex items-start gap-3">
+              <Lock className="h-5 w-5 text-amber-600 shrink-0 mt-0.5" />
+              <div>
+                <p className="text-sm font-medium text-amber-800">Guia Confidencial de Acessos</p>
+                <p className="text-sm text-amber-700 mt-1">Mantenha estas credenciais em local seguro. Compartilhe apenas com as pessoas autorizadas.</p>
+              </div>
+            </div>
+
+            <Card>
+              <CardContent className="p-6">
+                <h3 className="text-base font-semibold font-serif mb-4 flex items-center gap-2">
+                  <Shield className="h-5 w-5 text-[#4a5a3a]" />
+                  Plano Estratégico — Acessos por Perfil
+                </h3>
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="border-b">
+                        <th className="text-left py-2 pr-4 font-semibold text-muted-foreground">Perfil</th>
+                        <th className="text-left py-2 pr-4 font-semibold text-muted-foreground">Login</th>
+                        <th className="text-left py-2 pr-4 font-semibold text-muted-foreground">Senha</th>
+                        <th className="text-left py-2 font-semibold text-muted-foreground">Acesso</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y">
+                      {[
+                        { perfil: "Alessandra", login: "Ale", senha: "Ale2026", acesso: "Completo — todas as abas", cor: "text-[#4a5a3a]" },
+                        { perfil: "Sheila (SERMAP)", login: "Sheila", senha: "Sermap26", acesso: "Completo — todas as abas", cor: "text-[#4a5a3a]" },
+                        { perfil: "Conselho", login: "Conselho", senha: "Conselho26", acesso: "Diagnóstico, Riscos, Pilares, Contenção, Blindagem, Cronograma, Gaps", cor: "text-blue-600" },
+                        { perfil: "Visitante", login: "Visitante", senha: "Visitante2026", acesso: "Apenas 3 Pilares e Cronograma", cor: "text-gray-500" },
+                        { perfil: "Jurídico", login: "Juridico", senha: "Jurid2026@", acesso: "Diagnóstico, Riscos, Pilares, Contenção, Blindagem, Cronograma, Gaps", cor: "text-purple-600" },
+                      ].map((row) => (
+                        <tr key={row.login} className="hover:bg-muted/30">
+                          <td className={`py-3 pr-4 font-medium ${row.cor}`}>{row.perfil}</td>
+                          <td className="py-3 pr-4"><code className="bg-muted px-2 py-0.5 rounded text-xs">{row.login}</code></td>
+                          <td className="py-3 pr-4"><code className="bg-muted px-2 py-0.5 rounded text-xs">{row.senha}</code></td>
+                          <td className="py-3 text-xs text-muted-foreground">{row.acesso}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardContent className="p-6">
+                <h3 className="text-base font-semibold font-serif mb-4 flex items-center gap-2">
+                  <Lock className="h-5 w-5 text-[#4a5a3a]" />
+                  Outras Áreas Protegidas
+                </h3>
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between p-3 rounded-lg bg-muted/40 border">
+                    <div>
+                      <p className="text-sm font-medium">Documentos Confidenciais + E-mails + Log de Acessos</p>
+                      <p className="text-xs text-muted-foreground mt-0.5">Esta área (incluindo este guia)</p>
+                    </div>
+                    <code className="bg-background border px-3 py-1.5 rounded text-sm font-mono">docs2026@</code>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
       </Tabs>
+    </div>
+  );
+}
+
+// ─── Componente Log de Acessos ────────────────────────────────────────────────────────
+function LogAcessos({ senhaUnlock }: { senhaUnlock: string }) {
+  const { data: logs, isLoading, error } = trpc.accessLog.listar.useQuery(
+    { senha: senhaUnlock },
+    { enabled: !!senhaUnlock, retry: false }
+  );
+
+  const nivelBadge: Record<string, string> = {
+    ale: "bg-[#4a5a3a]/10 text-[#4a5a3a] border-[#4a5a3a]/30",
+    sheila: "bg-[#4a5a3a]/10 text-[#4a5a3a] border-[#4a5a3a]/30",
+    conselho: "bg-blue-50 text-blue-700 border-blue-200",
+    visitante: "bg-gray-50 text-gray-600 border-gray-200",
+    juridico: "bg-purple-50 text-purple-700 border-purple-200",
+  };
+
+  const nivelLabel: Record<string, string> = {
+    ale: "Alessandra",
+    sheila: "Sheila",
+    conselho: "Conselho",
+    visitante: "Visitante",
+    juridico: "Jurídico",
+  };
+
+  if (isLoading) return (
+    <div className="space-y-3">{[1,2,3,4].map(i => <div key={i} className="h-14 rounded-lg bg-muted animate-pulse" />)}</div>
+  );
+
+  if (error) return (
+    <Card className="text-center p-8">
+      <AlertCircle className="h-12 w-12 text-destructive/50 mx-auto mb-3" />
+      <p className="text-sm text-muted-foreground">Erro ao carregar logs: {error.message}</p>
+    </Card>
+  );
+
+  if (!logs || logs.length === 0) return (
+    <Card className="text-center p-12">
+      <Eye className="h-16 w-16 text-muted-foreground/30 mx-auto mb-4" />
+      <h3 className="text-lg font-medium">Nenhum acesso registrado ainda</h3>
+      <p className="text-sm text-muted-foreground mt-1">Os acessos ao Plano Estratégico aparecerão aqui.</p>
+    </Card>
+  );
+
+  // Contagem por perfil
+  const contagem = logs.reduce((acc: Record<string, number>, log) => {
+    acc[log.nivelAcesso] = (acc[log.nivelAcesso] || 0) + 1;
+    return acc;
+  }, {});
+
+  return (
+    <div className="space-y-6">
+      {/* KPIs */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        {Object.entries(contagem).map(([nivel, qtd]) => (
+          <Card key={nivel} className="p-4">
+            <p className="text-xs text-muted-foreground">{nivelLabel[nivel] || nivel}</p>
+            <p className="text-2xl font-bold mt-1">{qtd}</p>
+            <p className="text-xs text-muted-foreground">acesso{qtd !== 1 ? "s" : ""}</p>
+          </Card>
+        ))}
+        <Card className="p-4 bg-[#4a5a3a]/5 border-[#4a5a3a]/20">
+          <p className="text-xs text-muted-foreground">Total</p>
+          <p className="text-2xl font-bold mt-1 text-[#4a5a3a]">{logs.length}</p>
+          <p className="text-xs text-muted-foreground">registros</p>
+        </Card>
+      </div>
+
+      {/* Tabela de logs */}
+      <Card>
+        <CardContent className="p-0">
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b bg-muted/30">
+                  <th className="text-left px-4 py-3 font-semibold text-muted-foreground">Data / Hora</th>
+                  <th className="text-left px-4 py-3 font-semibold text-muted-foreground">Perfil</th>
+                  <th className="text-left px-4 py-3 font-semibold text-muted-foreground">Nível</th>
+                  <th className="text-left px-4 py-3 font-semibold text-muted-foreground">IP</th>
+                  <th className="text-left px-4 py-3 font-semibold text-muted-foreground hidden md:table-cell">Dispositivo</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y">
+                {logs.map((log) => (
+                  <tr key={log.id} className="hover:bg-muted/20">
+                    <td className="px-4 py-3 text-xs text-muted-foreground whitespace-nowrap">
+                      {new Date(log.createdAt).toLocaleString("pt-BR", { dateStyle: "short", timeStyle: "short" })}
+                    </td>
+                    <td className="px-4 py-3 font-medium">{log.perfil}</td>
+                    <td className="px-4 py-3">
+                      <Badge variant="outline" className={`text-[10px] ${nivelBadge[log.nivelAcesso] || ""}`}>
+                        {nivelLabel[log.nivelAcesso] || log.nivelAcesso}
+                      </Badge>
+                    </td>
+                    <td className="px-4 py-3 text-xs font-mono text-muted-foreground">{log.ip || "—"}</td>
+                    <td className="px-4 py-3 text-xs text-muted-foreground hidden md:table-cell max-w-[200px] truncate">
+                      {log.userAgent
+                        ? log.userAgent.includes("Mobile") ? "📱 Mobile"
+                          : log.userAgent.includes("Chrome") ? "🖥️ Chrome"
+                          : log.userAgent.includes("Firefox") ? "🦊 Firefox"
+                          : log.userAgent.includes("Safari") ? "🧡 Safari"
+                          : "🖥️ Desktop"
+                        : "—"}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }

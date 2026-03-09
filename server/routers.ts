@@ -46,7 +46,7 @@ import {
   deletePlanoAcao,
 } from "./db";
 import { createHash } from "crypto";
-import { processos, movimentacoes, notificacoes, emails, planoAcao } from "../drizzle/schema";
+import { processos, movimentacoes, notificacoes, emails, planoAcao, accessLog } from "../drizzle/schema";
 import type { InsertEmail } from "../drizzle/schema";
 import { eq, desc, sql } from "drizzle-orm";
 import { storagePut } from "./storage";
@@ -335,5 +335,51 @@ export const appRouter = router({
   }),
   // Governança Corporativa
   governanca: governancaRouter,
+
+  // Log de Acessos ao Plano Estratégico
+  accessLog: router({
+    registrar: publicProcedure
+      .input(z.object({
+        perfil: z.string(),
+        nivelAcesso: z.string(),
+        userAgent: z.string().optional(),
+      }))
+      .mutation(async ({ input, ctx }) => {
+        const db = await getDb();
+        if (!db) return { ok: false };
+        const ip = (ctx.req.headers["x-forwarded-for"] as string)?.split(",")[0]?.trim()
+          || (ctx.req.socket as any)?.remoteAddress
+          || "desconhecido";
+        await db.insert(accessLog).values({
+          perfil: input.perfil,
+          nivelAcesso: input.nivelAcesso,
+          ip,
+          userAgent: input.userAgent || null,
+          pagina: "plano-estrategico",
+        });
+        return { ok: true };
+      }),
+
+    listar: publicProcedure
+      .input(z.object({
+        senha: z.string(),
+      }))
+      .query(async ({ input }) => {
+        // Apenas quem tem a senha de documentos pode ver os logs
+        const SENHA_HASH = createHash("sha256").update("docs2026@").digest("hex");
+        const inputHash = createHash("sha256").update(input.senha).digest("hex");
+        if (inputHash !== SENHA_HASH) {
+          throw new Error("Senha incorreta.");
+        }
+        const db = await getDb();
+        if (!db) return [];
+        const logs = await db
+          .select()
+          .from(accessLog)
+          .orderBy(desc(accessLog.createdAt))
+          .limit(200);
+        return logs;
+      }),
+  }),
 });
 export type AppRouter = typeof appRouter;

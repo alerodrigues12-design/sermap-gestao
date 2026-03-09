@@ -308,3 +308,17 @@ export const governancaAssinaturas = mysqlTable("governancaAssinaturas", {
 });
 export type GovernancaAssinatura = typeof governancaAssinaturas.$inferSelect;
 export type InsertGovernancaAssinatura = typeof governancaAssinaturas.$inferInsert;
+
+// Log de acessos ao Plano Estratégico
+export const accessLog = mysqlTable("accessLog", {
+  id: int("id").autoincrement().primaryKey(),
+  perfil: varchar("perfil", { length: 50 }).notNull(),       // ex: "Ale", "Sheila", "Conselho"
+  nivelAcesso: varchar("nivelAcesso", { length: 50 }).notNull(), // ex: "completo", "visitante"
+  ip: varchar("ip", { length: 100 }),
+  userAgent: text("userAgent"),
+  pagina: varchar("pagina", { length: 100 }).default("plano-estrategico"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type AccessLog = typeof accessLog.$inferSelect;
+export type InsertAccessLog = typeof accessLog.$inferInsert;

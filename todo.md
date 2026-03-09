@@ -292,3 +292,12 @@
 - [x] Atualizar Documentos Confidenciais com senha docs2026@
 - [x] Mover E-mails Importantes para dentro de Documentos Confidenciais
 - [x] Remover E-mails Importantes do menu lateral (ou redirecionar)
+
+## Log de Acessos - Plano Estratégico
+- [x] Criar tabela accessLog no schema Drizzle (perfil, login, dataHora, ip, userAgent)
+- [x] Migrar banco com pnpm db:push
+- [x] Criar procedure tRPC: accessLog.registrar (público, chamado no login)
+- [x] Criar procedure tRPC: accessLog.listar (protegido por senha docs2026@)
+- [x] Integrar chamada de registro no componente de login do Plano Estratégico
+- [x] Criar painel de monitoramento na aba Log de Acessos em Documentos Confidenciais
+- [x] Adicionar aba "Guia de Senhas" em Documentos Confidenciais com todas as credenciais
