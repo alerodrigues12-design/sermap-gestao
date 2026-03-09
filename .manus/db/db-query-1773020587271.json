@@ -1,0 +1,9 @@
+{
+  "query": "\nINSERT INTO documentos (titulo, descricao, categoria, confidencial, fileUrl, fileKey, createdAt, updatedAt)\nVALUES (\n  'NDA — Alessandra Hoffmann e Sheila',\n  'Acordo de Não Divulgação e Confidencialidade entre Alessandra Hoffmann (Hoffmann & Fioretto Consultoria) e Sheila (SERMAP Engenharia). Documento para assinatura eletrônica via Autentique.',\n  'contrato',\n  1,\n  'https://files.manuscdn.com/user_upload_by_module/session_file/310519663297073580/ozNBGmxUzIzZenIo.pdf',\n  'user_upload_by_module/session_file/310519663297073580/ozNBGmxUzIzZenIo.pdf',\n  NOW(),\n  NOW()\n);\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3wxDEv3kxBHyGJz.fa19c0ca9e29 --database NW4am7ZA3rszie9rtuCceh --execute \nINSERT INTO documentos (titulo, descricao, categoria, confidencial, fileUrl, fileKey, createdAt, updatedAt)\nVALUES (\n  'NDA — Alessandra Hoffmann e Sheila',\n  'Acordo de Não Divulgação e Confidencialidade entre Alessandra Hoffmann (Hoffmann & Fioretto Consultoria) e Sheila (SERMAP Engenharia). Documento para assinatura eletrônica via Autentique.',\n  'contrato',\n  1,\n  'https://files.manuscdn.com/user_upload_by_module/session_file/310519663297073580/ozNBGmxUzIzZenIo.pdf',\n  'user_upload_by_module/session_file/310519663297073580/ozNBGmxUzIzZenIo.pdf',\n  NOW(),\n  NOW()\n);\n",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 70
+}

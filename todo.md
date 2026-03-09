@@ -236,3 +236,8 @@
 - [x] Adicionar info: execução fiscal União → petição de nulidade → aguardar decisão antes de negociar PGFN
 - [x] Atualizar estratégia bancária: aguardar recursos em caixa para quitar com o mínimo possível (maior poder de barganha)
 - [x] Destacar que o Centro de Operações é ativo suficiente para quitar o passivo total (fator de tranquilidade para Sheila)
+
+## NDA nos Documentos Confidenciais
+- [x] Fazer upload do NDA (NDAALESSANDRAESHEILA.pdf) para o CDN
+- [x] Adicionar NDA na lista de documentos confidenciais com visualizador PDF
+- [x] Integrar botão 'Assinar' via Autentique nos cards e na visualização de documentos PDF

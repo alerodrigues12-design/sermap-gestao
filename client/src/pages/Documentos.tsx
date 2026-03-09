@@ -4,7 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Shield, FileText, Trash2, Download, Lock, Plus, Eye, EyeOff, KeyRound, AlertCircle, X, Maximize2, Printer, Mail } from "lucide-react";
+import { Shield, FileText, Trash2, Download, Lock, Plus, Eye, EyeOff, KeyRound, AlertCircle, X, Maximize2, Printer, Mail, PenLine, CheckCircle2, Loader2, UserPlus } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter, DialogClose } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -51,6 +51,21 @@ export default function Documentos() {
   const [confidencial, setConfidencial] = useState(true);
   const [file, setFile] = useState<File | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
+
+  // Autentique
+  const [autentiqueDialog, setAutentiqueDialog] = useState(false);
+  const [autentiqueDoc, setAutentiqueDoc] = useState<any>(null);
+  const [signatarios, setSignatarios] = useState([{ nome: "", email: "", acao: "SIGN" as const }]);
+  const enviarAutentiqueMutation = trpc.governanca.enviarNdaAutentique.useMutation({
+    onSuccess: () => {
+      toast.success("Documento enviado para assinatura via Autentique! Os signatários receberão o link por e-mail.");
+      setAutentiqueDialog(false);
+      setSignatarios([{ nome: "", email: "", acao: "SIGN" }]);
+    },
+    onError: (err: any) => {
+      toast.error("Erro ao enviar para Autentique: " + err.message);
+    },
+  });
 
   const resetForm = () => {
     setTitulo("");
@@ -245,9 +260,23 @@ export default function Documentos() {
               </Button>
             )}
             {viewingDoc.fileUrl && (
-              <Button variant="outline" size="sm" onClick={() => window.open(viewingDoc.fileUrl, "_blank")} className="gap-2">
+              <Button variant="outline" size="sm" onClick={() => window.open(viewingDoc.fileUrl!, "_blank")} className="gap-2">
                 <Download className="h-4 w-4" />
                 Baixar Arquivo
+              </Button>
+            )}
+            {(viewingDoc.fileUrl || viewingDoc.htmlContent) && (
+              <Button
+                size="sm"
+                className="gap-2 bg-[#4a5a3a] hover:bg-[#3d4d2f]"
+                onClick={() => {
+                  setAutentiqueDoc(viewingDoc);
+                  setSignatarios([{ nome: "", email: "", acao: "SIGN" }]);
+                  setAutentiqueDialog(true);
+                }}
+              >
+                <PenLine className="h-4 w-4" />
+                Enviar para Assinatura
               </Button>
             )}
           </div>
@@ -293,8 +322,96 @@ export default function Documentos() {
     );
   }
 
+  const handleEnviarAutentique = () => {
+    if (!autentiqueDoc) return;
+    const signatariosValidos = signatarios.filter(s => s.nome && s.email);
+    if (signatariosValidos.length === 0) {
+      toast.error("Adicione pelo menos um signatário com nome e e-mail.");
+      return;
+    }
+    enviarAutentiqueMutation.mutate({
+      nomeDocumento: autentiqueDoc.titulo,
+      pdfUrl: autentiqueDoc.fileUrl || "",
+      signatarios: signatariosValidos,
+      mensagem: `Por favor, assine o documento "${autentiqueDoc.titulo}" enviado pela SERMAP Engenharia / Hoffmann & Fioretto Consultoria.`,
+    });
+  };
+
   return (
     <div className="space-y-6">
+      {/* Dialog Autentique */}
+      <Dialog open={autentiqueDialog} onOpenChange={setAutentiqueDialog}>
+        <DialogContent className="max-w-lg">
+          <DialogHeader>
+            <DialogTitle className="font-serif flex items-center gap-2">
+              <PenLine className="h-5 w-5 text-[#4a5a3a]" />
+              Enviar para Assinatura Eletrônica
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="p-3 bg-[#4a5a3a]/10 border border-[#4a5a3a]/20 rounded-lg">
+              <p className="text-sm font-medium text-[#4a5a3a]">{autentiqueDoc?.titulo}</p>
+              <p className="text-xs text-muted-foreground mt-0.5">Será enviado via Autentique para assinatura eletrônica com validade jurídica (MP 2.200-2/2001)</p>
+            </div>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <Label className="text-sm font-semibold">Signatários</Label>
+                <Button variant="outline" size="sm" className="gap-1 h-7 text-xs" onClick={() => setSignatarios(s => [...s, { nome: "", email: "", acao: "SIGN" }])}>
+                  <UserPlus className="h-3 w-3" />
+                  Adicionar
+                </Button>
+              </div>
+              {signatarios.map((sig, idx) => (
+                <div key={idx} className="grid grid-cols-2 gap-2 p-3 border border-border rounded-lg">
+                  <div>
+                    <Label className="text-xs text-muted-foreground">Nome</Label>
+                    <Input
+                      value={sig.nome}
+                      onChange={e => setSignatarios(s => s.map((x, i) => i === idx ? { ...x, nome: e.target.value } : x))}
+                      placeholder="Nome completo"
+                      className="h-8 text-sm mt-1"
+                    />
+                  </div>
+                  <div>
+                    <Label className="text-xs text-muted-foreground">E-mail</Label>
+                    <Input
+                      type="email"
+                      value={sig.email}
+                      onChange={e => setSignatarios(s => s.map((x, i) => i === idx ? { ...x, email: e.target.value } : x))}
+                      placeholder="email@exemplo.com"
+                      className="h-8 text-sm mt-1"
+                    />
+                  </div>
+                  {signatarios.length > 1 && (
+                    <div className="col-span-2 flex justify-end">
+                      <Button variant="ghost" size="sm" className="h-6 text-xs text-destructive" onClick={() => setSignatarios(s => s.filter((_, i) => i !== idx))}>
+                        Remover
+                      </Button>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button variant="outline">Cancelar</Button>
+            </DialogClose>
+            <Button
+              onClick={handleEnviarAutentique}
+              disabled={enviarAutentiqueMutation.isPending}
+              className="bg-[#4a5a3a] hover:bg-[#3d4d2f] gap-2"
+            >
+              {enviarAutentiqueMutation.isPending ? (
+                <><Loader2 className="h-4 w-4 animate-spin" />Enviando...</>
+              ) : (
+                <><CheckCircle2 className="h-4 w-4" />Enviar para Assinatura</>
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
           <h1 className="text-2xl md:text-3xl font-bold font-serif flex items-center gap-2">
@@ -426,9 +543,24 @@ export default function Documentos() {
                   </div>
                   <div className="flex items-center gap-1" onClick={(e) => e.stopPropagation()}>
                     {doc.fileUrl && (
-                      <Button variant="ghost" size="sm" className="h-8 w-8 p-0" onClick={() => window.open(doc.fileUrl!, "_blank")}>
-                        <Download className="h-3.5 w-3.5" />
-                      </Button>
+                      <>
+                        <Button
+                          variant="ghost" size="sm"
+                          className="h-8 px-2 gap-1 text-[10px] text-[#4a5a3a] hover:text-[#4a5a3a] hover:bg-[#4a5a3a]/10"
+                          title="Enviar para assinatura via Autentique"
+                          onClick={() => {
+                            setAutentiqueDoc(doc);
+                            setSignatarios([{ nome: "", email: "", acao: "SIGN" }]);
+                            setAutentiqueDialog(true);
+                          }}
+                        >
+                          <PenLine className="h-3 w-3" />
+                          Assinar
+                        </Button>
+                        <Button variant="ghost" size="sm" className="h-8 w-8 p-0" onClick={() => window.open(doc.fileUrl!, "_blank")}>
+                          <Download className="h-3.5 w-3.5" />
+                        </Button>
+                      </>
                     )}
                     <Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-destructive hover:text-destructive" onClick={() => {
                       if (confirm("Tem certeza que deseja excluir este documento?")) {
