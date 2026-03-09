@@ -11,7 +11,8 @@ import {
   Shield, TrendingDown, Building2, AlertTriangle, CheckCircle2,
   Clock, Target, ChevronDown, ChevronUp, AlertCircle, Info,
   Landmark, Scale, FileText, Users, Home, ArrowRight,
-  Star, Award, MapPin, TrendingUp, Briefcase, Globe, DollarSign, Zap
+  Star, Award, MapPin, TrendingUp, Briefcase, Globe, DollarSign, Zap,
+  Lock, Eye, EyeOff, LogOut
 } from "lucide-react";
 
 // ─── Data ───────────────────────────────────────────────────────────────────
@@ -953,13 +954,131 @@ function PlanoHoffmann() {
 
 // ─── Component ──────────────────────────────────────────────────────────────
 
+// Senhas do Plano Estratégico
+// Visitante: apenas abas institucionais (3 Pilares, Cronograma)
+// Completo: acesso total
+const SENHA_VISITANTE = "sermap2026";
+const SENHA_COMPLETA = "sermap@estrategia";
+
+// Abas liberadas para visitante (sem dados financeiros sensíveis)
+const ABAS_VISITANTE = ["pilares", "cronograma"];
+
+function TelaAcesso({ onAcesso }: { onAcesso: (nivel: "visitante" | "completo") => void }) {
+  const [senha, setSenha] = useState("");
+  const [mostrarSenha, setMostrarSenha] = useState(false);
+  const [erro, setErro] = useState("");
+  const [carregando, setCarregando] = useState(false);
+
+  function handleEntrar(e: React.FormEvent) {
+    e.preventDefault();
+    setCarregando(true);
+    setErro("");
+    setTimeout(() => {
+      if (senha === SENHA_COMPLETA) {
+        onAcesso("completo");
+      } else if (senha === SENHA_VISITANTE) {
+        onAcesso("visitante");
+      } else {
+        setErro("Senha incorreta. Verifique e tente novamente.");
+      }
+      setCarregando(false);
+    }, 400);
+  }
+
+  return (
+    <div className="min-h-screen bg-[#0F1923] flex items-center justify-center p-4">
+      <div className="w-full max-w-md">
+        {/* Logo + título */}
+        <div className="text-center mb-8">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl mb-4" style={{ background: "rgba(201,168,76,0.15)", border: "1px solid rgba(201,168,76,0.4)" }}>
+            <Lock className="h-7 w-7" style={{ color: "#C9A84C" }} />
+          </div>
+          <h1 className="text-2xl font-extrabold text-white mb-1">Plano Estratégico</h1>
+          <p className="text-sm text-white/50">SERMAP Engenharia · Acesso Restrito</p>
+        </div>
+
+        {/* Card de login */}
+        <div className="rounded-2xl p-6" style={{ background: "#1A2535", border: "1px solid #2A3A4A" }}>
+          <form onSubmit={handleEntrar} className="space-y-4">
+            <div>
+              <label className="block text-xs font-semibold text-white/60 uppercase tracking-wider mb-2">Senha de Acesso</label>
+              <div className="relative">
+                <input
+                  type={mostrarSenha ? "text" : "password"}
+                  value={senha}
+                  onChange={(e) => { setSenha(e.target.value); setErro(""); }}
+                  placeholder="Digite a senha..."
+                  className="w-full px-4 py-3 pr-12 rounded-xl text-white placeholder-white/30 text-sm focus:outline-none focus:ring-2"
+                  style={{ background: "#0F1923", border: erro ? "1px solid #E05252" : "1px solid #2A3A4A" }}
+                  autoFocus
+                />
+                <button
+                  type="button"
+                  onClick={() => setMostrarSenha(!mostrarSenha)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 hover:text-white/70 transition-colors"
+                >
+                  {mostrarSenha ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </button>
+              </div>
+              {erro && <p className="text-xs text-red-400 mt-2 flex items-center gap-1"><AlertCircle className="h-3 w-3" />{erro}</p>}
+            </div>
+
+            <button
+              type="submit"
+              disabled={!senha || carregando}
+              className="w-full py-3 rounded-xl font-bold text-sm uppercase tracking-wider transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+              style={{ background: senha && !carregando ? "#C9A84C" : "rgba(201,168,76,0.3)", color: "#0F1923" }}
+            >
+              {carregando ? "Verificando..." : "Acessar"}
+            </button>
+          </form>
+
+          <div className="mt-5 pt-4" style={{ borderTop: "1px solid #2A3A4A" }}>
+            <p className="text-[11px] text-white/30 text-center leading-relaxed">
+              Este documento é confidencial e de uso restrito.<br />
+              O acesso não autorizado é proibido.
+            </p>
+          </div>
+        </div>
+
+        {/* Dica de acesso */}
+        <div className="mt-4 p-3 rounded-xl text-center" style={{ background: "rgba(107,143,113,0.08)", border: "1px solid rgba(107,143,113,0.2)" }}>
+          <p className="text-[11px] text-white/40">
+            Possui acesso de visitante? Use a senha fornecida pela equipe SERMAP.
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function PlanoEstrategico() {
+  const [nivelAcesso, setNivelAcesso] = useState<"nenhum" | "visitante" | "completo">("nenhum");
   const [expandedMes, setExpandedMes] = useState<string | null>("Mar/26");
   const [expandedGap, setExpandedGap] = useState<number | null>(null);
 
   const totalAtual = 7.4;
   const totalMeta = 3.0;
   const reducao = Math.round(((totalAtual - totalMeta) / totalAtual) * 100);
+
+  // Mostrar tela de acesso se não autenticado
+  if (nivelAcesso === "nenhum") {
+    return <TelaAcesso onAcesso={setNivelAcesso} />;
+  }
+
+  // Abas disponíveis conforme nível
+  const todasAbas = [
+    { value: "diagnostico", label: "Diagnóstico", restrita: true },
+    { value: "riscos", label: "Mapa de Riscos", restrita: true },
+    { value: "pilares", label: "3 Pilares", restrita: false },
+    { value: "contencao", label: "Plano de Contenção", restrita: true },
+    { value: "blindagem", label: "Blindagem Patrimonial", restrita: true },
+    { value: "cronograma", label: "Cronograma", restrita: false },
+    { value: "gaps", label: "Gaps", restrita: true },
+    { value: "hoffmann", label: "Plano Hoffmann", restrita: true },
+  ];
+  const abasVisiveis = nivelAcesso === "completo" ? todasAbas : todasAbas.filter(a => !a.restrita);
+  const defaultTab = abasVisiveis[0]?.value ?? "pilares";
 
   return (
     <div className="min-h-screen bg-[#0F1923] text-white">
@@ -970,10 +1089,23 @@ export default function PlanoEstrategico() {
             <h1 className="text-xl font-bold text-white">Plano Estratégico</h1>
             <p className="text-sm text-[#8899AA]">SERMAP Engenharia · Horizonte 12 Meses · Mar/2026 – Dez/2026</p>
           </div>
-          <div className="flex items-center gap-2">
-            <span className="text-xs bg-red-500/20 text-red-400 border border-red-500/40 px-3 py-1 rounded-full font-semibold uppercase tracking-wider">
-              Confidencial
-            </span>
+          <div className="flex items-center gap-3">
+            {nivelAcesso === "visitante" ? (
+              <span className="text-xs bg-green-500/20 text-green-400 border border-green-500/40 px-3 py-1 rounded-full font-semibold uppercase tracking-wider flex items-center gap-1">
+                <Eye className="h-3 w-3" /> Visitante
+              </span>
+            ) : (
+              <span className="text-xs bg-red-500/20 text-red-400 border border-red-500/40 px-3 py-1 rounded-full font-semibold uppercase tracking-wider">
+                Confidencial
+              </span>
+            )}
+            <button
+              onClick={() => setNivelAcesso("nenhum")}
+              className="text-xs text-white/40 hover:text-white/70 flex items-center gap-1 transition-colors"
+              title="Sair"
+            >
+              <LogOut className="h-4 w-4" />
+            </button>
           </div>
         </div>
       </div>
@@ -981,36 +1113,35 @@ export default function PlanoEstrategico() {
       <div className="max-w-6xl mx-auto px-6 py-8 space-y-10">
 
         {/* ── KPIs ── */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {[
-            { label: "Passivo Tributário", value: "R$ 3,8M", sub: "→ Meta: R$ 1,5M (−61%)", cor: "#E05252", border: "border-t-red-500" },
-            { label: "Passivo Trabalhista", value: "R$ 2,4M", sub: "→ Meta: R$ 1,1M (−54%)", cor: "#E07B30", border: "border-t-orange-500" },
-            { label: "Passivo Bancário", value: "R$ 1,2M", sub: "→ Meta: R$ 400k (−67%)", cor: "#D4B830", border: "border-t-yellow-500" },
-            { label: "Total em 12 meses", value: `≈ R$ ${totalMeta}M`, sub: `Redução de ${reducao}% (R$ ${totalAtual - totalMeta}M)`, cor: "#4CAF7D", border: "border-t-green-500" },
-          ].map((k) => (
-            <Card key={k.label} className={`bg-[#1A2535] border-[#2A3A4A] border-t-2 ${k.border} text-center`}>
-              <CardContent className="pt-5 pb-4">
-                <p className="text-[10px] text-[#8899AA] uppercase tracking-widest mb-2">{k.label}</p>
-                <p className="text-2xl font-extrabold" style={{ color: k.cor }}>{k.value}</p>
-                <p className="text-[11px] text-[#8899AA] mt-1">{k.sub}</p>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+        {nivelAcesso === "completo" ? (
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {[
+              { label: "Passivo Tributário", value: "R$ 3,8M", sub: "→ Meta: R$ 1,5M (−61%)", cor: "#E05252", border: "border-t-red-500" },
+              { label: "Passivo Trabalhista", value: "R$ 2,4M", sub: "→ Meta: R$ 1,1M (−54%)", cor: "#E07B30", border: "border-t-orange-500" },
+              { label: "Passivo Bancário", value: "R$ 1,2M", sub: "→ Meta: R$ 400k (−67%)", cor: "#D4B830", border: "border-t-yellow-500" },
+              { label: "Total em 12 meses", value: `≈ R$ ${totalMeta}M`, sub: `Redução de ${reducao}% (R$ ${totalAtual - totalMeta}M)`, cor: "#4CAF7D", border: "border-t-green-500" },
+            ].map((k) => (
+              <Card key={k.label} className={`bg-[#1A2535] border-[#2A3A4A] border-t-2 ${k.border} text-center`}>
+                <CardContent className="pt-5 pb-4">
+                  <p className="text-[10px] text-[#8899AA] uppercase tracking-widest mb-2">{k.label}</p>
+                  <p className="text-2xl font-extrabold" style={{ color: k.cor }}>{k.value}</p>
+                  <p className="text-[11px] text-[#8899AA] mt-1">{k.sub}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        ) : (
+          <div className="p-4 rounded-xl text-center" style={{ background: "rgba(107,143,113,0.08)", border: "1px solid rgba(107,143,113,0.2)" }}>
+            <Shield className="h-6 w-6 mx-auto mb-2" style={{ color: "#6B8F71" }} />
+            <p className="text-sm font-semibold text-white mb-1">Acesso de Visitante</p>
+            <p className="text-xs text-white/50">Você está visualizando o conteúdo institucional do Plano Estratégico SERMAP. Dados financeiros e operacionais estão disponíveis apenas para a equipe interna.</p>
+          </div>
+        )}
 
         {/* ── Tabs ── */}
-        <Tabs defaultValue="diagnostico" className="w-full">
+        <Tabs defaultValue={defaultTab} className="w-full">
           <TabsList className="bg-[#1A2535] border border-[#2A3A4A] flex-wrap h-auto gap-1 p-1">
-            {[
-              { value: "diagnostico", label: "Diagnóstico" },
-              { value: "riscos", label: "Mapa de Riscos" },
-              { value: "pilares", label: "3 Pilares" },
-              { value: "contencao", label: "Plano de Contenção" },
-              { value: "blindagem", label: "Blindagem Patrimonial" },
-              { value: "cronograma", label: "Cronograma" },
-              { value: "gaps", label: "Gaps" },
-              { value: "hoffmann", label: "Plano Hoffmann" },
-            ].map((t) => (
+            {abasVisiveis.map((t) => (
               <TabsTrigger
                 key={t.value}
                 value={t.value}

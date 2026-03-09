@@ -273,3 +273,10 @@
 - [x] 1º escritório M&A para indústrias e nichos especializados
 - [x] Gatilhos digitais e eventos nacionais/internacionais
 - [x] Modelo de divisão de espaço e responsabilidades
+
+## Proteção por Senha - Plano Estratégico
+- [x] Implementar tela de senha ao acessar /plano-estrategico
+- [x] Nível visitante: acesso a abas institucionais (3 Pilares, Cronograma macro)
+- [x] Nível completo: acesso total (passivos, Hoffmann, Expansão Bahia, Gaps)
+- [x] Bloquear abas sensíveis para visitante (Diagnóstico, Mapa de Riscos, Plano de Contenção, Blindagem, Gaps, Plano Hoffmann)
+- [x] Listar todas as senhas do sistema para a Ale
