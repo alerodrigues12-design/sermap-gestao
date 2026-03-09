@@ -2,7 +2,7 @@ import { trpc } from "@/lib/trpc";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Scale, FileText, Landmark, AlertTriangle, TrendingDown, Bell, ArrowRight } from "lucide-react";
+import { Scale, FileText, Landmark, AlertTriangle, TrendingDown, Bell, ArrowRight, CheckCircle2 } from "lucide-react";
 import { useLocation } from "wouter";
 import { PieChart, Pie, Cell, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, Legend } from "recharts";
 
@@ -122,16 +122,16 @@ export default function Home() {
           </CardContent>
         </Card>
 
-        <Card className="stat-card border-l-4 border-l-destructive">
+        <Card className="stat-card border-l-4 border-l-green-500">
           <CardContent className="p-5">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Perda de Prazo</p>
-                <p className="text-2xl font-bold mt-1 text-destructive">{summary?.perdaPrazo ?? 0}</p>
-                <p className="text-xs text-destructive/70 mt-1">Atenção imediata</p>
+                <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Prazos Anteriores</p>
+                <p className="text-2xl font-bold mt-1 text-green-600">{summary?.perdaPrazo ?? 0}</p>
+                <p className="text-xs text-green-600/80 mt-1">Sob controle — providências tomadas</p>
               </div>
-              <div className="h-12 w-12 rounded-xl bg-destructive/10 flex items-center justify-center">
-                <AlertTriangle className="h-6 w-6 text-destructive" />
+              <div className="h-12 w-12 rounded-xl bg-green-500/10 flex items-center justify-center">
+                <CheckCircle2 className="h-6 w-6 text-green-600" />
               </div>
             </div>
           </CardContent>
@@ -203,31 +203,29 @@ export default function Home() {
         </Card>
       </div>
 
-      {/* Processos com Perda de Prazo */}
+      {/* Nota sobre Prazos Anteriores - Sob Controle */}
       {perdaPrazo && perdaPrazo.length > 0 && (
-        <Card className="border-destructive/30">
+        <Card className="border-green-500/30 bg-green-500/5">
           <CardHeader className="pb-3">
             <div className="flex items-center gap-2">
-              <AlertTriangle className="h-5 w-5 text-destructive" />
-              <CardTitle className="text-lg font-serif text-destructive">
-                Processos com Perda de Prazo
+              <CheckCircle2 className="h-5 w-5 text-green-600" />
+              <CardTitle className="text-lg font-serif text-green-700 dark:text-green-400">
+                Prazos Anteriores — Providências Tomadas
               </CardTitle>
             </div>
           </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              {perdaPrazo.map((p) => (
-                <div key={p.id} className="flex items-center justify-between p-3 rounded-lg bg-destructive/5 border border-destructive/20">
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium truncate">{p.numero}</p>
-                    <p className="text-xs text-muted-foreground truncate">{p.assunto}</p>
-                  </div>
-                  <div className="flex items-center gap-2 ml-4">
-                    <Badge variant="destructive" className="text-[10px]">PERDA DE PRAZO</Badge>
-                    <Badge variant="outline" className="text-[10px]">{p.tipo === "trabalhista" ? "Trabalhista" : "Cível"}</Badge>
-                  </div>
-                </div>
-              ))}
+          <CardContent className="space-y-4">
+            <div className="p-4 rounded-lg bg-green-500/10 border border-green-500/20">
+              <p className="text-sm font-semibold text-green-700 dark:text-green-400 mb-1">Processos Trabalhistas</p>
+              <p className="text-sm text-muted-foreground">Petições apresentadas e aguardando decisão. Não haverá prejuízo em razão da suspensão do leilão determinada nos autos. Situação monitorada e sob controle.</p>
+            </div>
+            <div className="p-4 rounded-lg bg-green-500/10 border border-green-500/20">
+              <p className="text-sm font-semibold text-green-700 dark:text-green-400 mb-1">Processos Cíveis</p>
+              <p className="text-sm text-muted-foreground">Petições já apresentadas em todos os feitos. O processo de maior risco envolvia o Banco do Brasil, para o qual foi apresentada tese de nulidade de citação visando ganhar tempo processual para estruturação da defesa.</p>
+            </div>
+            <div className="p-4 rounded-lg bg-green-500/10 border border-green-500/20">
+              <p className="text-sm font-semibold text-green-700 dark:text-green-400 mb-1">Execução Fiscal Federal (União)</p>
+              <p className="text-sm text-muted-foreground">A empresa não possuía procurador constituído nos autos, o que gerou a perda de prazo. Foi peticionada tese jurídica inédita que deverá proporcionar ganho substancial de tempo processual para estruturação da defesa.</p>
             </div>
           </CardContent>
         </Card>

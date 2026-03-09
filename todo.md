@@ -304,3 +304,10 @@
 
 ## Correção Senha Inventário
 - [x] Atualizar senha do Inventário para docs2026@ (mesma dos Documentos Confidenciais)
+
+## Alterações Perda de Prazo - Reunião Sheila
+- [x] Remover card "Perda de Prazo" do dashboard principal (Home.tsx)
+- [x] Adicionar nota explicativa nos processos trabalhistas: peticionamos, aguardando, sem prejuízo por suspensão do leilão
+- [x] Adicionar nota nos processos cíveis: petições apresentadas, maior risco era BB, tese de nulidade de citação para ganhar tempo
+- [x] Adicionar nota nos processos da União: empresa sem procurador constituído, nova tese peticionada, deve ganhar bom tempo
+- [x] Manter info de perda de prazo apenas como nota interna nos processos (não no dashboard)
