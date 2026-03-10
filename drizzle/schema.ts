@@ -322,3 +322,20 @@ export const accessLog = mysqlTable("accessLog", {
 
 export type AccessLog = typeof accessLog.$inferSelect;
 export type InsertAccessLog = typeof accessLog.$inferInsert;
+
+// Processos Pessoa Física — Sheila Soares
+export const processosPF = mysqlTable("processosPF", {
+  id: int("id").autoincrement().primaryKey(),
+  numero: varchar("numero", { length: 60 }).notNull(),
+  tribunal: varchar("tribunal", { length: 300 }).notNull(),
+  assunto: text("assunto"),
+  valor: varchar("valor", { length: 50 }),
+  partes: text("partes"),
+  status: mysqlEnum("status", ["ativo", "arquivado", "extinto", "a_verificar"]).default("a_verificar").notNull(),
+  observacoes: text("observacoes"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type ProcessoPF = typeof processosPF.$inferSelect;
+export type InsertProcessoPF = typeof processosPF.$inferInsert;

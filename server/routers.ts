@@ -46,7 +46,7 @@ import {
   deletePlanoAcao,
 } from "./db";
 import { createHash } from "crypto";
-import { processos, movimentacoes, notificacoes, emails, planoAcao, accessLog } from "../drizzle/schema";
+import { processos, movimentacoes, notificacoes, emails, planoAcao, accessLog, processosPF } from "../drizzle/schema";
 import type { InsertEmail } from "../drizzle/schema";
 import { eq, desc, sql } from "drizzle-orm";
 import { storagePut } from "./storage";
@@ -379,6 +379,28 @@ export const appRouter = router({
           .orderBy(desc(accessLog.createdAt))
           .limit(200);
         return logs;
+      }),
+  }),
+
+  processosPF: router({
+    listar: publicProcedure.query(async () => {
+      const db = await getDb();
+      if (!db) return [];
+      return db.select().from(processosPF).orderBy(processosPF.id);
+    }),
+    atualizar: publicProcedure
+      .input(z.object({
+        id: z.number(),
+        status: z.enum(["ativo", "arquivado", "extinto", "a_verificar"]),
+        observacoes: z.string().optional(),
+      }))
+      .mutation(async ({ input }) => {
+        const db = await getDb();
+        if (!db) return { ok: false };
+        await db.update(processosPF)
+          .set({ status: input.status, observacoes: input.observacoes || null })
+          .where(eq(processosPF.id, input.id));
+        return { ok: true };
       }),
   }),
 });

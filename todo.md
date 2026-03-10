@@ -317,3 +317,9 @@
 - [x] Incluir: Sheila tem 30% do imóvel = R$ 6.000/mês de participação
 - [x] Incluir: Sheila solicitou a cobrança e aguarda o valor a ser cobrado
 - [x] Incluir: após assinatura do contrato, serviço absorvido na consultoria mensal (sem cobrança adicional)
+
+## Processos Pessoa Física Sheila
+- [x] Criar tabela processosPF no schema Drizzle e migrar banco
+- [x] Inserir 39 processos únicos extraídos dos 51 PDFs (consolidados, sem duplicatas)
+- [x] Criar página ProcessosPF.tsx com tabela, filtros e totalizadores
+- [x] Adicionar item no menu lateral
