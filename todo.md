@@ -323,3 +323,6 @@
 - [x] Inserir 39 processos únicos extraídos dos 51 PDFs (consolidados, sem duplicatas)
 - [x] Criar página ProcessosPF.tsx com tabela, filtros e totalizadores
 - [x] Adicionar item no menu lateral
+
+## Ata Reunião 10/03/2026
+- [x] Inserir Ata Executiva da reunião de 10/03/2026 nos Documentos Confidenciais

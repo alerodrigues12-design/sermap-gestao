@@ -1,0 +1,50 @@
+{
+  "query": "SELECT COLUMN_NAME, DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'documentos' ORDER BY ORDINAL_POSITION;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3wxDEv3kxBHyGJz.fa19c0ca9e29 --database NW4am7ZA3rszie9rtuCceh --execute SELECT COLUMN_NAME, DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'documentos' ORDER BY ORDINAL_POSITION;",
+  "rows": [
+    {
+      "COLUMN_NAME": "id",
+      "DATA_TYPE": "int"
+    },
+    {
+      "COLUMN_NAME": "titulo",
+      "DATA_TYPE": "varchar"
+    },
+    {
+      "COLUMN_NAME": "descricao",
+      "DATA_TYPE": "text"
+    },
+    {
+      "COLUMN_NAME": "categoria",
+      "DATA_TYPE": "enum"
+    },
+    {
+      "COLUMN_NAME": "fileUrl",
+      "DATA_TYPE": "text"
+    },
+    {
+      "COLUMN_NAME": "fileKey",
+      "DATA_TYPE": "varchar"
+    },
+    {
+      "COLUMN_NAME": "confidencial",
+      "DATA_TYPE": "tinyint"
+    },
+    {
+      "COLUMN_NAME": "createdAt",
+      "DATA_TYPE": "timestamp"
+    },
+    {
+      "COLUMN_NAME": "updatedAt",
+      "DATA_TYPE": "timestamp"
+    },
+    {
+      "COLUMN_NAME": "htmlContent",
+      "DATA_TYPE": "text"
+    }
+  ],
+  "messages": [],
+  "stdout": "COLUMN_NAME\tDATA_TYPE\nid\tint\ntitulo\tvarchar\ndescricao\ttext\ncategoria\tenum\nfileUrl\ttext\nfileKey\tvarchar\nconfidencial\ttinyint\ncreatedAt\ttimestamp\nupdatedAt\ttimestamp\nhtmlContent\ttext\n",
+  "stderr": "",
+  "execution_time_ms": 49
+}
