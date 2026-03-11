@@ -46,7 +46,8 @@ import {
   deletePlanoAcao,
 } from "./db";
 import { createHash } from "crypto";
-import { processos, movimentacoes, notificacoes, emails, planoAcao, accessLog, processosPF } from "../drizzle/schema";
+import { processos, movimentacoes, notificacoes, emails, planoAcao, accessLog, processosPF, processoAnexos } from "../drizzle/schema";
+import { invokeLLM } from "./_core/llm";
 import type { InsertEmail } from "../drizzle/schema";
 import { eq, desc, sql } from "drizzle-orm";
 import { storagePut } from "./storage";
@@ -379,6 +380,104 @@ export const appRouter = router({
           .orderBy(desc(accessLog.createdAt))
           .limit(200);
         return logs;
+      }),
+  }),
+
+  // Upload e análise jurídica IA de processos
+  processoAnexos: router({
+    // Listar anexos de um processo
+    listar: publicProcedure
+      .input(z.object({ processoId: z.number(), tipoProcesso: z.enum(["trabalhista", "civel", "pf"]) }))
+      .query(async ({ input }) => {
+        const db = await getDb();
+        if (!db) return [];
+        return db.select().from(processoAnexos)
+          .where(eq(processoAnexos.processoId, input.processoId))
+          .orderBy(desc(processoAnexos.createdAt));
+      }),
+
+    // Upload de PDF para S3 e registro no banco
+    upload: publicProcedure
+      .input(z.object({
+        processoId: z.number(),
+        tipoProcesso: z.enum(["trabalhista", "civel", "pf"]),
+        nomeArquivo: z.string(),
+        fileBase64: z.string(),
+        tamanho: z.number().optional(),
+      }))
+      .mutation(async ({ input }) => {
+        const db = await getDb();
+        if (!db) throw new Error("DB indisponível");
+        const fileBuffer = Buffer.from(input.fileBase64, "base64");
+        const suffix = nanoid(8);
+        const fileKey = `processos/${input.tipoProcesso}/${input.processoId}/${suffix}-${input.nomeArquivo}`;
+        const { url } = await storagePut(fileKey, fileBuffer, "application/pdf");
+        const [result] = await db.insert(processoAnexos).values({
+          processoId: input.processoId,
+          tipoProcesso: input.tipoProcesso,
+          nomeArquivo: input.nomeArquivo,
+          fileKey,
+          fileUrl: url,
+          tamanho: input.tamanho ?? fileBuffer.length,
+          analiseStatus: "pendente",
+        });
+        const insertId = (result as any).insertId;
+        return { ok: true, id: insertId, url };
+      }),
+
+    // Análise jurídica com IA
+    analisar: publicProcedure
+      .input(z.object({ anexoId: z.number() }))
+      .mutation(async ({ input }) => {
+        const db = await getDb();
+        if (!db) throw new Error("DB indisponível");
+        // Buscar o anexo
+        const [anexo] = await db.select().from(processoAnexos).where(eq(processoAnexos.id, input.anexoId));
+        if (!anexo) throw new Error("Anexo não encontrado");
+        // Marcar como processando
+        await db.update(processoAnexos).set({ analiseStatus: "processando" }).where(eq(processoAnexos.id, input.anexoId));
+        try {
+          const response = await invokeLLM({
+            messages: [
+              {
+                role: "system",
+                content: `Você é um especialista jurídico brasileiro com foco em direito tributário, trabalhista e cível. Analise o processo judicial anexado e forneça uma análise jurídica completa e estratégica em formato JSON. Seja detalhado e técnico. Identifique TODAS as possibilidades de defesa, nulidades processuais e estratégias.`,
+              },
+              {
+                role: "user",
+                content: [
+                  {
+                    type: "file_url",
+                    file_url: { url: anexo.fileUrl, mime_type: "application/pdf" },
+                  },
+                  {
+                    type: "text",
+                    text: `Analise este processo judicial e retorne um JSON com a seguinte estrutura:\n{\n  "resumo": "resumo executivo do processo em 2-3 parágrafos",\n  "partes": { "autor": "nome", "reu": "nome", "advogados": [] },\n  "tipo": "tipo do processo",\n  "valor": "valor da causa",\n  "tribunal": "tribunal e vara",\n  "linhaDoTempo": [{ "data": "DD/MM/AAAA", "evento": "descrição do evento", "tipo": "citacao|decisao|recurso|audiencia|sentenca|outro" }],\n  "nulidades": [{ "tipo": "nome da nulidade", "descricao": "descrição detalhada", "fundamentoLegal": "artigo/lei", "probabilidadeExito": "alta|media|baixa" }],\n  "estrategiasDefesa": [{ "nome": "nome da estratégia", "descricao": "como aplicar", "fundamentoLegal": "base legal", "prioridade": "urgente|alta|media|baixa", "probabilidadeExito": "alta|media|baixa" }],\n  "riscos": [{ "descricao": "descrição do risco", "nivel": "alto|medio|baixo", "impacto": "impacto financeiro ou processual" }],\n  "recomendacoes": ["recomendação 1", "recomendação 2"],\n  "excecaoPreExecutividade": { "cabivel": true/false, "argumentos": ["argumento 1", "argumento 2"], "urgencia": "imediata|breve|pode aguardar" },\n  "avaliacaoGeral": { "risco": "alto|medio|baixo", "chancesDefesa": "alta|media|baixa", "prioridade": "urgente|alta|media|baixa" }\n}`,
+                  },
+                ],
+              },
+            ],
+            response_format: { type: "json_object" },
+          });
+          const analise = response.choices[0].message.content as string;
+          await db.update(processoAnexos)
+            .set({ analiseStatus: "concluida", analiseResultado: analise })
+            .where(eq(processoAnexos.id, input.anexoId));
+          return { ok: true, analise: JSON.parse(analise) };
+        } catch (err) {
+          await db.update(processoAnexos).set({ analiseStatus: "erro" }).where(eq(processoAnexos.id, input.anexoId));
+          throw err;
+        }
+      }),
+
+    // Excluir anexo
+    excluir: publicProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ input }) => {
+        const db = await getDb();
+        if (!db) return { ok: false };
+        await db.delete(processoAnexos).where(eq(processoAnexos.id, input.id));
+        return { ok: true };
       }),
   }),
 

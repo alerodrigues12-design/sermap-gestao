@@ -339,3 +339,20 @@ export const processosPF = mysqlTable("processosPF", {
 
 export type ProcessoPF = typeof processosPF.$inferSelect;
 export type InsertProcessoPF = typeof processosPF.$inferInsert;
+
+// Anexos de processos (PDF completo) + análise jurídica IA
+export const processoAnexos = mysqlTable("processoAnexos", {
+  id: int("id").autoincrement().primaryKey(),
+  processoId: int("processoId").notNull(),
+  tipoProcesso: mysqlEnum("tipoProcesso", ["trabalhista", "civel", "pf"]).notNull(),
+  nomeArquivo: varchar("nomeArquivo", { length: 255 }).notNull(),
+  fileKey: text("fileKey").notNull(),
+  fileUrl: text("fileUrl").notNull(),
+  tamanho: int("tamanho"),
+  analiseStatus: mysqlEnum("analiseStatus", ["pendente", "processando", "concluida", "erro"]).default("pendente").notNull(),
+  analiseResultado: text("analiseResultado"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type ProcessoAnexo = typeof processoAnexos.$inferSelect;
+export type InsertProcessoAnexo = typeof processoAnexos.$inferInsert;

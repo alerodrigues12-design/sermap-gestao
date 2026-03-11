@@ -8,8 +8,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { Search, User, AlertCircle, CheckCircle2, Clock, FileText, Building2, Scale, RefreshCw } from "lucide-react";
 import { toast } from "sonner";
+import { ProcessoAnexoIA } from "@/components/ProcessoAnexoIA";
 
 const STATUS_LABELS: Record<string, { label: string; color: string; icon: React.ReactNode }> = {
   ativo: { label: "Ativo", color: "bg-red-500/20 text-red-400 border-red-500/30", icon: <AlertCircle className="w-3 h-3" /> },
@@ -287,7 +289,7 @@ export default function ProcessosPF() {
 
       {/* Dialog de atualização */}
       <Dialog open={editandoObs} onOpenChange={setEditandoObs}>
-        <DialogContent className="max-w-lg">
+        <DialogContent className="max-w-2xl max-h-[85vh]">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <Scale className="w-4 h-4 text-purple-400" />
@@ -295,7 +297,8 @@ export default function ProcessosPF() {
             </DialogTitle>
           </DialogHeader>
           {processoSelecionado && (
-            <div className="space-y-4">
+            <ScrollArea className="max-h-[70vh]">
+            <div className="space-y-4 pr-2">
               <div className="p-3 rounded-lg bg-muted/30 border border-border/50">
                 <p className="text-xs text-muted-foreground mb-1">Número do Processo</p>
                 <p className="font-mono text-sm font-medium">{processoSelecionado.numero}</p>
@@ -335,7 +338,13 @@ export default function ProcessosPF() {
                   {atualizarMutation.isPending ? "Salvando..." : "Salvar"}
                 </Button>
               </div>
+              <ProcessoAnexoIA
+                processoId={processoSelecionado.id}
+                tipoProcesso="pf"
+                numeroProcesso={processoSelecionado.numero}
+              />
             </div>
+            </ScrollArea>
           )}
         </DialogContent>
       </Dialog>

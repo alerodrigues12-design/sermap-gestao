@@ -8,6 +8,7 @@ import { AlertTriangle, Search, FileText, ExternalLink, CheckCircle2 } from "luc
 import { useState, useMemo } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { ProcessoAnexoIA } from "@/components/ProcessoAnexoIA";
 
 function formatCurrency(value: number) {
   return new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(value);
@@ -252,6 +253,11 @@ export default function Civeis() {
                   <p className="text-xs text-muted-foreground mb-1">Observações</p>
                   <p className="text-sm leading-relaxed bg-muted/50 p-3 rounded-lg">{selectedProcesso.observacoes || "Sem observações."}</p>
                 </div>
+                <ProcessoAnexoIA
+                  processoId={selectedProcesso.id}
+                  tipoProcesso="civel"
+                  numeroProcesso={selectedProcesso.numero}
+                />
               </div>
             </ScrollArea>
           )}

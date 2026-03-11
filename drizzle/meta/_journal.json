@@ -71,6 +71,13 @@
       "when": 1773149210268,
       "tag": "0009_new_vindicator",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "5",
+      "when": 1773258191414,
+      "tag": "0010_chief_jetstream",
+      "breakpoints": true
     }
   ]
 }

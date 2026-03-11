@@ -326,3 +326,12 @@
 
 ## Ata Reunião 10/03/2026
 - [x] Inserir Ata Executiva da reunião de 10/03/2026 nos Documentos Confidenciais
+
+## Upload de Processos + Análise Jurídica IA
+- [x] Criar tabela processoAnexos no schema Drizzle (processoId, tipo, url, fileKey, nomeArquivo, analiseIA, createdAt)
+- [x] Migrar banco com pnpm db:push
+- [x] Criar procedure tRPC: processoAnexos.upload (upload para S3)
+- [x] Criar procedure tRPC: processoAnexos.analisar (envia PDF para LLM e retorna análise jurídica)
+- [x] Criar componente ProcessoAnexoIA.tsx com: upload PDF, linha do tempo, nulidades, estratégias de defesa
+- [x] Integrar componente nos módulos Trabalhistas, Cíveis e PF Sheila
+- [x] Análise IA deve retornar: resumo, linha do tempo, nulidades encontradas, estratégias de defesa, risco estimado
