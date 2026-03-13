@@ -20,17 +20,28 @@ interface Props {
 
 interface AnaliseIA {
   resumo?: string;
-  partes?: { autor?: string; reu?: string; advogados?: string[] };
+  partes?: { autor?: string; reu?: string; advogadoAutor?: string; advogadoReu?: string; advogados?: string[] };
   tipo?: string;
   valor?: string;
   tribunal?: string;
-  linhaDoTempo?: Array<{ data: string; evento: string; tipo: string }>;
-  nulidades?: Array<{ tipo: string; descricao: string; fundamentoLegal: string; probabilidadeExito: string }>;
-  estrategiasDefesa?: Array<{ nome: string; descricao: string; fundamentoLegal: string; prioridade: string; probabilidadeExito: string }>;
+  numeroProcesso?: string;
+  dataDistribuicao?: string;
+  situacaoAtual?: string;
+  linhaDoTempo?: Array<{
+    data: string;
+    evento: string;
+    tipo: string;
+    importancia?: string;
+    prazoVencido?: boolean;
+    observacao?: string;
+  }>;
+  nulidades?: Array<{ tipo: string; descricao: string; fundamentoLegal: string; probabilidadeExito: string; observacao?: string }>;
+  estrategiasDefesa?: Array<{ nome: string; descricao: string; fundamentoLegal: string; prioridade: string; probabilidadeExito: string; prazoParaAcao?: string }>;
   riscos?: Array<{ descricao: string; nivel: string; impacto: string }>;
   recomendacoes?: string[];
-  excecaoPreExecutividade?: { cabivel: boolean; argumentos: string[]; urgencia: string };
-  avaliacaoGeral?: { risco: string; chancesDefesa: string; prioridade: string };
+  excecaoPreExecutividade?: { cabivel: boolean; argumentos: string[]; urgencia: string; fundamentacao?: string };
+  prescricao?: { ocorreu: boolean; dataOcorrencia?: string; observacao?: string };
+  avaliacaoGeral?: { risco: string; chancesDefesa: string; prioridade: string; resumoEstrategico?: string };
 }
 
 const corProbabilidade = (p: string) => {
@@ -53,12 +64,41 @@ const corPrioridade = (p: string) => {
 };
 
 const iconeTipoEvento = (tipo: string) => {
-  if (tipo === "citacao") return "📬";
-  if (tipo === "decisao") return "⚖️";
-  if (tipo === "recurso") return "📋";
-  if (tipo === "audiencia") return "🎤";
-  if (tipo === "sentenca") return "🔨";
-  return "📌";
+  const mapa: Record<string, string> = {
+    distribuicao: "📁",
+    citacao: "📬",
+    contestacao: "📝",
+    audiencia: "🎤",
+    pericia: "🔬",
+    decisao: "⚖️",
+    sentenca: "🔨",
+    recurso: "📋",
+    acordao: "📜",
+    penhora: "🔒",
+    leilao: "🏛️",
+    intimacao: "📩",
+    peticao: "📄",
+    despacho: "✍️",
+    prazo: "⏰",
+    outro: "📌",
+  };
+  return mapa[tipo] ?? "📌";
+};
+
+const corImportancia = (imp?: string, prazoVencido?: boolean) => {
+  if (prazoVencido) return "border-red-500/60 bg-red-500/10";
+  if (imp === "critica") return "border-red-500/40 bg-red-500/5";
+  if (imp === "alta") return "border-orange-500/40 bg-orange-500/5";
+  if (imp === "media") return "border-amber-500/30 bg-amber-500/5";
+  return "border-slate-700/30 bg-slate-800/30";
+};
+
+const corDotImportancia = (imp?: string, prazoVencido?: boolean) => {
+  if (prazoVencido) return "bg-red-500 border-red-400";
+  if (imp === "critica") return "bg-red-500 border-red-400";
+  if (imp === "alta") return "bg-orange-500 border-orange-400";
+  if (imp === "media") return "bg-amber-500 border-amber-400";
+  return "bg-slate-600 border-slate-500";
 };
 
 export function ProcessoAnexoIA({ processoId, tipoProcesso, numeroProcesso }: Props) {
@@ -190,8 +230,43 @@ export function ProcessoAnexoIA({ processoId, tipoProcesso, numeroProcesso }: Pr
       {/* Resumo */}
       {secaoAberta === "resumo" && (
         <div className="space-y-3">
+          {/* Dados do processo */}
+          <div className="grid grid-cols-2 gap-2">
+            {analise.numeroProcesso && (
+              <div className="bg-slate-800/30 rounded-lg p-2.5 border border-slate-700/30 col-span-2">
+                <div className="text-xs text-slate-400 mb-0.5">Número do Processo</div>
+                <div className="text-sm text-amber-400 font-mono">{analise.numeroProcesso}</div>
+              </div>
+            )}
+            {analise.tribunal && (
+              <div className="bg-slate-800/30 rounded-lg p-2.5 border border-slate-700/30">
+                <div className="text-xs text-slate-400 mb-0.5">Tribunal / Vara</div>
+                <div className="text-xs text-slate-200">{analise.tribunal}</div>
+              </div>
+            )}
+            {analise.dataDistribuicao && (
+              <div className="bg-slate-800/30 rounded-lg p-2.5 border border-slate-700/30">
+                <div className="text-xs text-slate-400 mb-0.5">Distribuído em</div>
+                <div className="text-sm text-slate-200">{analise.dataDistribuicao}</div>
+              </div>
+            )}
+            {analise.valor && (
+              <div className="bg-slate-800/30 rounded-lg p-2.5 border border-slate-700/30">
+                <div className="text-xs text-slate-400 mb-0.5">Valor da Causa</div>
+                <div className="text-sm text-slate-200">{analise.valor}</div>
+              </div>
+            )}
+            {analise.tipo && (
+              <div className="bg-slate-800/30 rounded-lg p-2.5 border border-slate-700/30">
+                <div className="text-xs text-slate-400 mb-0.5">Tipo</div>
+                <div className="text-xs text-slate-200">{analise.tipo}</div>
+              </div>
+            )}
+          </div>
+
           {analise.resumo && (
             <div className="bg-slate-800/30 rounded-lg p-3 border border-slate-700/30">
+              <div className="text-xs text-slate-400 font-semibold mb-1.5">RESUMO EXECUTIVO</div>
               <p className="text-sm text-slate-300 leading-relaxed">{analise.resumo}</p>
             </div>
           )}
@@ -200,10 +275,16 @@ export function ProcessoAnexoIA({ processoId, tipoProcesso, numeroProcesso }: Pr
               <div className="bg-slate-800/30 rounded-lg p-3 border border-slate-700/30">
                 <div className="text-xs text-slate-400 mb-1">Autor / Reclamante</div>
                 <div className="text-sm text-slate-200">{analise.partes.autor || "—"}</div>
+                {analise.partes.advogadoAutor && (
+                  <div className="text-xs text-slate-500 mt-0.5">{analise.partes.advogadoAutor}</div>
+                )}
               </div>
               <div className="bg-slate-800/30 rounded-lg p-3 border border-slate-700/30">
                 <div className="text-xs text-slate-400 mb-1">Réu / Reclamado</div>
                 <div className="text-sm text-slate-200">{analise.partes.reu || "—"}</div>
+                {analise.partes.advogadoReu && (
+                  <div className="text-xs text-slate-500 mt-0.5">{analise.partes.advogadoReu}</div>
+                )}
               </div>
             </div>
           )}
@@ -227,22 +308,83 @@ export function ProcessoAnexoIA({ processoId, tipoProcesso, numeroProcesso }: Pr
       {/* Linha do Tempo */}
       {secaoAberta === "timeline" && (
         <div className="space-y-2">
+          {/* Situação atual */}
+          {analise.situacaoAtual && (
+            <div className="bg-blue-500/10 rounded-lg p-3 border border-blue-500/20 mb-3">
+              <div className="text-xs text-blue-400 font-semibold mb-1 flex items-center gap-1">
+                <Clock className="h-3 w-3" /> SITUAÇÃO ATUAL
+              </div>
+              <p className="text-sm text-slate-200">{analise.situacaoAtual}</p>
+            </div>
+          )}
+
+          {/* Legenda */}
+          <div className="flex flex-wrap gap-2 text-xs mb-2">
+            <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-red-500 inline-block" /> Prazo vencido / Crítico</span>
+            <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-orange-500 inline-block" /> Alta importância</span>
+            <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-amber-500 inline-block" /> Média importância</span>
+            <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-slate-600 inline-block" /> Rotineiro</span>
+          </div>
+
           {(analise.linhaDoTempo ?? []).length === 0 ? (
             <p className="text-sm text-slate-400 text-center py-4">Nenhum evento identificado.</p>
           ) : (
-            <div className="relative pl-6">
-              <div className="absolute left-2 top-0 bottom-0 w-0.5 bg-slate-700" />
+            <div className="relative pl-8">
+              <div className="absolute left-3 top-0 bottom-0 w-0.5 bg-gradient-to-b from-amber-500/50 via-slate-600 to-slate-700" />
               {analise.linhaDoTempo!.map((ev, i) => (
                 <div key={i} className="relative mb-3">
-                  <div className="absolute -left-4 top-1 w-3 h-3 rounded-full bg-slate-600 border border-slate-500 flex items-center justify-center text-[8px]">
+                  {/* Dot na linha */}
+                  <div className={`absolute -left-5 top-2 w-4 h-4 rounded-full border-2 flex items-center justify-center text-[9px] shadow-lg ${corDotImportancia(ev.importancia, ev.prazoVencido)}`}>
                     {iconeTipoEvento(ev.tipo)}
                   </div>
-                  <div className="bg-slate-800/30 rounded-lg p-2.5 border border-slate-700/30 ml-2">
-                    <div className="text-xs text-amber-400 font-mono mb-0.5">{ev.data}</div>
-                    <div className="text-sm text-slate-200">{ev.evento}</div>
+                  {/* Card do evento */}
+                  <div className={`rounded-lg p-3 border ml-1 ${corImportancia(ev.importancia, ev.prazoVencido)}`}>
+                    <div className="flex items-start justify-between gap-2 mb-1">
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs font-mono font-bold text-amber-400">{ev.data}</span>
+                        <Badge className={`text-[10px] px-1.5 py-0 h-4 ${
+                          ev.prazoVencido ? "bg-red-500/20 text-red-400 border-red-500/30" :
+                          ev.importancia === "critica" ? "bg-red-500/20 text-red-400 border-red-500/30" :
+                          ev.importancia === "alta" ? "bg-orange-500/20 text-orange-400 border-orange-500/30" :
+                          ev.importancia === "media" ? "bg-amber-500/20 text-amber-400 border-amber-500/30" :
+                          "bg-slate-700/50 text-slate-500 border-slate-600/30"
+                        }`}>
+                          {ev.prazoVencido ? "⚠ PRAZO VENCIDO" : ev.importancia?.toUpperCase() ?? "ROTINEIRO"}
+                        </Badge>
+                      </div>
+                      <span className="text-[10px] text-slate-500 shrink-0 capitalize">{ev.tipo}</span>
+                    </div>
+                    <p className="text-sm text-slate-200 leading-relaxed">{ev.evento}</p>
+                    {ev.observacao && (
+                      <div className="mt-1.5 text-xs text-slate-400 italic border-t border-slate-700/30 pt-1.5">
+                        💡 {ev.observacao}
+                      </div>
+                    )}
                   </div>
                 </div>
               ))}
+            </div>
+          )}
+
+          {/* Prescrição */}
+          {analise.prescricao && (
+            <div className={`rounded-lg p-3 border mt-2 ${
+              analise.prescricao.ocorreu
+                ? "bg-green-500/10 border-green-500/30"
+                : "bg-slate-800/30 border-slate-700/30"
+            }`}>
+              <div className="text-xs font-semibold mb-1 flex items-center gap-1">
+                <Clock className="h-3 w-3" />
+                <span className={analise.prescricao.ocorreu ? "text-green-400" : "text-slate-400"}>
+                  PRESCRIÇÃO: {analise.prescricao.ocorreu ? "IDENTIFICADA ✓" : "NÃO IDENTIFICADA"}
+                </span>
+                {analise.prescricao.dataOcorrencia && (
+                  <span className="text-slate-400 font-normal ml-1">({analise.prescricao.dataOcorrencia})</span>
+                )}
+              </div>
+              {analise.prescricao.observacao && (
+                <p className="text-xs text-slate-300">{analise.prescricao.observacao}</p>
+              )}
             </div>
           )}
         </div>

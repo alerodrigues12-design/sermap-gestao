@@ -335,3 +335,11 @@
 - [x] Criar componente ProcessoAnexoIA.tsx com: upload PDF, linha do tempo, nulidades, estratégias de defesa
 - [x] Integrar componente nos módulos Trabalhistas, Cíveis e PF Sheila
 - [x] Análise IA deve retornar: resumo, linha do tempo, nulidades encontradas, estratégias de defesa, risco estimado
+
+## Linha do Tempo Detalhada de Processos
+- [ ] Atualizar prompt da IA para extrair todas as movimentações cronológicas do PDF
+- [ ] Retornar timeline estruturada em JSON (data, tipo, descrição, importância, prazo)
+- [ ] Criar componente visual TimelineProcesso.tsx com linha do tempo vertical interativa
+- [ ] Destacar eventos críticos (prazos, citações, decisões, leilões) em cores diferentes
+- [ ] Integrar nos módulos Trabalhistas, Cíveis e PF Sheila
+- [ ] Adicionar botão de impressão/exportação da linha do tempo
