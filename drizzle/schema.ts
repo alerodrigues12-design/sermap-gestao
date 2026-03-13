@@ -356,3 +356,32 @@ export const processoAnexos = mysqlTable("processoAnexos", {
 });
 export type ProcessoAnexo = typeof processoAnexos.$inferSelect;
 export type InsertProcessoAnexo = typeof processoAnexos.$inferInsert;
+
+// Petições geradas por IA
+export const peticoes = mysqlTable("peticoes", {
+  id: int("id").autoincrement().primaryKey(),
+  processoId: int("processoId").notNull(),
+  tipoProcesso: mysqlEnum("tipoProcesso", ["trabalhista", "civel", "pf"]).notNull(),
+  numeroProceso: varchar("numeroProceso", { length: 60 }),
+  tipoPeticao: mysqlEnum("tipoPeticao", [
+    "excecao_pre_executividade",
+    "embargos_execucao",
+    "impugnacao",
+    "recurso_ordinario",
+    "agravo_peticao",
+    "contestacao",
+    "peticao_generica",
+    "excecao_incompetencia",
+    "nulidade_citacao",
+    "prescricao_decadencia"
+  ]).notNull(),
+  titulo: varchar("titulo", { length: 255 }).notNull(),
+  conteudo: text("conteudo").notNull(),
+  urgencia: mysqlEnum("urgencia", ["critica", "alta", "media", "baixa"]).default("media").notNull(),
+  status: mysqlEnum("status", ["rascunho", "revisada", "finalizada"]).default("rascunho").notNull(),
+  observacoes: text("observacoes"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type Peticao = typeof peticoes.$inferSelect;
+export type InsertPeticao = typeof peticoes.$inferInsert;

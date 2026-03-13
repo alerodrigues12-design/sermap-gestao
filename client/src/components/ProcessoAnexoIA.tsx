@@ -1,4 +1,5 @@
 import { useState, useRef } from "react";
+import { GeradorPeticao } from "./GeradorPeticao";
 import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -149,15 +150,21 @@ export function ProcessoAnexoIA({ processoId, tipoProcesso, numeroProcesso }: Pr
       toast.error("Apenas arquivos PDF são aceitos.");
       return;
     }
-    if (file.size > 16 * 1024 * 1024) {
-      toast.error("Arquivo muito grande. Limite: 16MB.");
+    if (file.size > 100 * 1024 * 1024) {
+      toast.error("Arquivo muito grande. Limite: 100MB.");
       return;
     }
     setUploading(true);
     try {
       const arrayBuffer = await file.arrayBuffer();
       const uint8 = new Uint8Array(arrayBuffer);
-      const base64 = btoa(Array.from(uint8, (b) => String.fromCharCode(b)).join(""));
+      // Conversão em chunks para suportar PDFs grandes (até 100MB) sem travar o navegador
+      let base64 = "";
+      const chunkSize = 8192;
+      for (let i = 0; i < uint8.length; i += chunkSize) {
+        const chunk = uint8.subarray(i, i + chunkSize);
+        base64 += btoa(Array.from(chunk, (b) => String.fromCharCode(b)).join(""));
+      }
       await uploadMutation.mutateAsync({
         processoId,
         tipoProcesso,
@@ -526,6 +533,7 @@ export function ProcessoAnexoIA({ processoId, tipoProcesso, numeroProcesso }: Pr
       {!isLoading && anexos.length === 0 && (
         <div className="text-xs text-slate-500 text-center py-4 border border-dashed border-slate-700/50 rounded-lg">
           Nenhum PDF anexado. Faça upload do processo completo para análise com IA.
+          <br/><span className="text-slate-600">Limite: 100MB por arquivo (processos integrais aceitos)</span>
         </div>
       )}
 
@@ -624,6 +632,24 @@ export function ProcessoAnexoIA({ processoId, tipoProcesso, numeroProcesso }: Pr
             {estaAberto && analise && (
               <CardContent className="p-3 pt-0">
                 {renderAnalise(analise)}
+                {/* Gerador de Petições integrado à análise */}
+                <GeradorPeticao
+                  processoId={processoId}
+                  tipoProcesso={tipoProcesso}
+                  numeroProcesso={numeroProcesso || analise.numeroProcesso}
+                  contextoAnalise={
+                    analise.resumo
+                      ? `${analise.resumo}\n\nNulidades identificadas: ${(analise.nulidades ?? []).map(n => n.tipo + ": " + n.descricao).join("; ")}\n\nEstratégias de defesa: ${(analise.estrategiasDefesa ?? []).map(e => e.nome + ": " + e.descricao).join("; ")}\n\nAvaliação geral: Risco ${analise.avaliacaoGeral?.risco}, Chances de defesa ${analise.avaliacaoGeral?.chancesDefesa}. ${analise.avaliacaoGeral?.resumoEstrategico || ""}`
+                      : undefined
+                  }
+                  urgencias={
+                    [
+                      ...(analise.excecaoPreExecutividade?.cabivel ? ["Exceção de Pré-Executividade"] : []),
+                      ...(analise.prescricao?.ocorreu ? ["Prescrição/Decadência"] : []),
+                      ...(analise.nulidades?.filter(n => n.probabilidadeExito === "alta").map(n => n.tipo) ?? []),
+                    ]
+                  }
+                />
               </CardContent>
             )}
           </Card>

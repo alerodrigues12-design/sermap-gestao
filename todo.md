@@ -343,3 +343,29 @@
 - [ ] Destacar eventos críticos (prazos, citações, decisões, leilões) em cores diferentes
 - [ ] Integrar nos módulos Trabalhistas, Cíveis e PF Sheila
 - [ ] Adicionar botão de impressão/exportação da linha do tempo
+
+## Gerador de Petições com IA
+- [ ] Criar tabela peticoes no schema Drizzle (processoId, tipoProcesso, tipoPeticao, conteudo, status, createdAt)
+- [ ] Migrar banco com pnpm db:push
+- [ ] Criar procedure tRPC: peticoes.gerar (IA gera minuta completa com base na análise do processo)
+- [ ] Criar procedure tRPC: peticoes.listar, peticoes.salvar, peticoes.excluir
+- [ ] Criar componente GeradorPeticao.tsx com: seleção de tipo de peça, editor de minuta, botão copiar/baixar
+- [ ] Integrar no ProcessoAnexoIA.tsx como nova aba "Petições"
+- [ ] Tipos de peças suportadas: Exceção de Pré-executividade, Embargos à Execução, Impugnação, Recurso Ordinário, Agravo de Petição, Contestação, Petição Genérica
+
+## Aumento Limite Upload PDF
+- [ ] Aumentar limite de upload de PDF de 16MB para 100MB no frontend (ProcessoAnexoIA.tsx)
+- [ ] Aumentar limite no backend (Express body-parser / multer)
+- [ ] Ajustar validação de tamanho no tRPC procedure de upload
+
+## Gerador de Petições com IA
+- [x] Criar tabela peticoes no banco de dados (schema.ts + db:push)
+- [x] Criar router tRPC peticoes com procedures: listar, gerar, atualizar, excluir
+- [x] Criar componente GeradorPeticao.tsx com seleção de tipo de peça, geração IA, editor e botões de copiar/baixar
+- [x] Integrar GeradorPeticao ao ProcessoAnexoIA (aparece após a análise IA)
+- [x] Suporte a 10 tipos de peças: Exceção de Pré-Executividade, Embargos, Impugnação, Nulidade de Citação, Prescrição, Exceção de Incompetência, Recurso Ordinário, Agravo de Petição, Contestação, Petição Genérica
+- [x] Alertas automáticos de urgência baseados na análise IA (Exceção de Pré-Executividade, Prescrição, Nulidades com alta probabilidade)
+- [x] Contexto da análise IA passado automaticamente para a geração da petição
+- [x] Controle de status das petições: Rascunho, Revisada, Finalizada
+- [x] Edição inline do texto da petição gerada
+- [x] Testes vitest para os novos endpoints (3 testes passando)

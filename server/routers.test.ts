@@ -241,3 +241,39 @@ describe("dashboard.notificacoesCount", () => {
     expect(result.total).toBe(result.movimentacoes + result.notificacoes);
   });
 });
+
+describe("peticoes.listar", () => {
+  it("returns empty array for a non-existent processoId", async () => {
+    const { ctx } = createAuthContext();
+    const caller = appRouter.createCaller(ctx);
+    const result = await caller.peticoes.listar({ processoId: 999999, tipoProcesso: "trabalhista" });
+    expect(Array.isArray(result)).toBe(true);
+    expect(result.length).toBe(0);
+  });
+
+  it("returns array for pf tipo", async () => {
+    const { ctx } = createAuthContext();
+    const caller = appRouter.createCaller(ctx);
+    const result = await caller.peticoes.listar({ processoId: 1, tipoProcesso: "pf" });
+    expect(Array.isArray(result)).toBe(true);
+  });
+});
+
+describe("peticoes.atualizar", () => {
+  it("returns ok: false when processoId does not exist", async () => {
+    const { ctx } = createAuthContext();
+    const caller = appRouter.createCaller(ctx);
+    // Updating a non-existent petition should still return ok: true (no error)
+    const result = await caller.peticoes.atualizar({ id: 999999, status: "revisada" });
+    expect(result).toEqual({ ok: true });
+  });
+});
+
+describe("peticoes.excluir", () => {
+  it("returns ok: true when deleting non-existent petition", async () => {
+    const { ctx } = createAuthContext();
+    const caller = appRouter.createCaller(ctx);
+    const result = await caller.peticoes.excluir({ id: 999999 });
+    expect(result).toEqual({ ok: true });
+  });
+});

@@ -46,7 +46,7 @@ import {
   deletePlanoAcao,
 } from "./db";
 import { createHash } from "crypto";
-import { processos, movimentacoes, notificacoes, emails, planoAcao, accessLog, processosPF, processoAnexos } from "../drizzle/schema";
+import { processos, movimentacoes, notificacoes, emails, planoAcao, accessLog, processosPF, processoAnexos, peticoes } from "../drizzle/schema";
 import { invokeLLM } from "./_core/llm";
 import type { InsertEmail } from "../drizzle/schema";
 import { eq, desc, sql } from "drizzle-orm";
@@ -481,6 +481,115 @@ export const appRouter = router({
       }),
   }),
 
+  // Gerador de petições com IA
+  peticoes: router({
+    listar: publicProcedure
+      .input(z.object({ processoId: z.number(), tipoProcesso: z.enum(["trabalhista", "civel", "pf"]) }))
+      .query(async ({ input }) => {
+        const db = await getDb();
+        if (!db) return [];
+        return db.select().from(peticoes)
+          .where(eq(peticoes.processoId, input.processoId))
+          .orderBy(desc(peticoes.createdAt));
+      }),
+    gerar: publicProcedure
+      .input(z.object({
+        processoId: z.number(),
+        tipoProcesso: z.enum(["trabalhista", "civel", "pf"]),
+        numeroProceso: z.string().optional(),
+        tipoPeticao: z.enum([
+          "excecao_pre_executividade",
+          "embargos_execucao",
+          "impugnacao",
+          "recurso_ordinario",
+          "agravo_peticao",
+          "contestacao",
+          "peticao_generica",
+          "excecao_incompetencia",
+          "nulidade_citacao",
+          "prescricao_decadencia"
+        ]),
+        contexto: z.string().optional(), // resumo da análise IA para contextualizar
+        instrucoes: z.string().optional(), // instruções adicionais da advogada
+      }))
+      .mutation(async ({ input }) => {
+        const db = await getDb();
+        if (!db) throw new Error("DB indisponível");
+        const nomesP: Record<string, string> = {
+          excecao_pre_executividade: "Exceção de Pré-Executividade",
+          embargos_execucao: "Embargos à Execução",
+          impugnacao: "Impugnação",
+          recurso_ordinario: "Recurso Ordinário",
+          agravo_peticao: "Agravo de Petição",
+          contestacao: "Contestação",
+          peticao_generica: "Petição Genérica",
+          excecao_incompetencia: "Exceção de Incompetência",
+          nulidade_citacao: "Arguição de Nulidade de Citação",
+          prescricao_decadencia: "Arguição de Prescrição/Decadência",
+        };
+        const nomePeticao = nomesP[input.tipoPeticao] || input.tipoPeticao;
+        const systemPrompt = `Você é um advogado especialista em direito tributário, trabalhista e processual civil brasileiro, com vasta experiência em petições processuais. Redija petições completas, tecnicamente precisas, com fundamentos legais sólidos e linguagem jurídica formal.
+
+Diretrizes importantes:
+- Quando for Exceção de Pré-Executividade: argua que, embora o processo esteja em andamento, a empresa contratou recentemente assessoria tributária e empresarial para analisar o passivo e identificar as nulidades. Deixe claro que nulidades podem ser arguidas a qualquer tempo.
+- Inclua todos os fundamentos legais cabíveis (CPC, CLT, CTN, CF/88, jurisprudência do STJ/TST/STF).
+- Estruture a petição com: cabeçalho, qualificação das partes, dos fatos, do direito, dos pedidos e fecho.
+- Use linguagem formal e técnica jurídica.
+- Deixe espaços para preenchimento de dados específicos entre colchetes [DADO A PREENCHER] quando não souber o valor exato.`;
+        const userPrompt = `Redija uma ${nomePeticao} completa para o processo número ${input.numeroProceso || "[Número do Processo]"}.
+
+Contexto do processo (extraído da análise jurídica):
+${input.contexto || "Processo judicial em andamento. Analise as informações disponíveis e elabore a petição com os argumentos mais sólidos possíveis."}
+
+${input.instrucoes ? `Instruções adicionais da advogada: ${input.instrucoes}` : ""}
+
+Redija a petição completa, pronta para revisão e protocolo.`;
+        const response = await invokeLLM({
+          messages: [
+            { role: "system", content: systemPrompt },
+            { role: "user", content: userPrompt },
+          ],
+        });
+        const conteudo = response.choices[0].message.content as string;
+        const [result] = await db.insert(peticoes).values({
+          processoId: input.processoId,
+          tipoProcesso: input.tipoProcesso,
+          numeroProceso: input.numeroProceso,
+          tipoPeticao: input.tipoPeticao,
+          titulo: `${nomePeticao} — Processo ${input.numeroProceso || "s/n"}`,
+          conteudo,
+          urgencia: "media",
+          status: "rascunho",
+        });
+        const insertId = (result as any).insertId;
+        return { ok: true, id: insertId, conteudo, titulo: `${nomePeticao} — Processo ${input.numeroProceso || "s/n"}` };
+      }),
+    atualizar: publicProcedure
+      .input(z.object({
+        id: z.number(),
+        conteudo: z.string().optional(),
+        status: z.enum(["rascunho", "revisada", "finalizada"]).optional(),
+        observacoes: z.string().optional(),
+      }))
+      .mutation(async ({ input }) => {
+        const db = await getDb();
+        if (!db) return { ok: false };
+        await db.update(peticoes).set({
+          ...(input.conteudo !== undefined && { conteudo: input.conteudo }),
+          ...(input.status !== undefined && { status: input.status }),
+          ...(input.observacoes !== undefined && { observacoes: input.observacoes }),
+        }).where(eq(peticoes.id, input.id));
+        return { ok: true };
+      }),
+    excluir: publicProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ input }) => {
+        const db = await getDb();
+        if (!db) return { ok: false };
+        await db.delete(peticoes).where(eq(peticoes.id, input.id));
+        return { ok: true };
+      }),
+  }),
   processosPF: router({
     listar: publicProcedure.query(async () => {
       const db = await getDb();
