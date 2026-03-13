@@ -369,3 +369,9 @@
 - [x] Controle de status das petições: Rascunho, Revisada, Finalizada
 - [x] Edição inline do texto da petição gerada
 - [x] Testes vitest para os novos endpoints (3 testes passando)
+
+## Bug - Análise IA: "Cannot read properties of undefined (reading '0')"
+- [x] Corrigir erro quando LLM retorna resposta vazia/malformada na procedure processoAnexos.analisar
+- [x] Adicionar tratamento robusto de erros: verificar choices[0] antes de acessar
+- [x] Adicionar retry automático quando a resposta da IA for inválida
+- [x] Melhorar mensagem de erro exibida ao usuário

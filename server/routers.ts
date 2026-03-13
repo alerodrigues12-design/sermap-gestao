@@ -436,34 +436,56 @@ export const appRouter = router({
         if (!anexo) throw new Error("Anexo não encontrado");
         // Marcar como processando
         await db.update(processoAnexos).set({ analiseStatus: "processando" }).where(eq(processoAnexos.id, input.anexoId));
-        try {
-          const response = await invokeLLM({
-            messages: [
+        const llmMessages = [
               {
-                role: "system",
+                role: "system" as const,
                 content: `Você é um especialista jurídico brasileiro sênior com profundo conhecimento em direito tributário, trabalhista, cível e processual. Sua missão é analisar processos judiciais com máximo rigor técnico e extrair TODAS as informações relevantes para uma advogada tributarista que precisa tomar decisões estratégicas sem ler o processo inteiro. Seja extremamente detalhado na linha do tempo — extraia CADA movimentação, petição, despacho, decisão, intimação, recurso, audiência e prazo que encontrar no documento. A linha do tempo é a parte mais importante da análise.`,
               },
               {
-                role: "user",
+                role: "user" as const,
                 content: [
                   {
-                    type: "file_url",
-                    file_url: { url: anexo.fileUrl, mime_type: "application/pdf" },
+                    type: "file_url" as const,
+                    file_url: { url: anexo.fileUrl, mime_type: "application/pdf" as const },
                   },
                   {
-                    type: "text",
-                    text: `Analise este processo judicial COMPLETO e retorne um JSON com a seguinte estrutura. A linha do tempo deve conter TODAS as movimentações encontradas no documento, sem exceção:\n{\n  "resumo": "resumo executivo detalhado do processo em 3-4 parágrafos: origem, pedidos, situação atual e perspectiva",\n  "partes": { "autor": "nome completo", "reu": "nome completo", "advogadoAutor": "nome e OAB", "advogadoReu": "nome e OAB" },\n  "tipo": "tipo e subtipo do processo (ex: Reclamação Trabalhista - Vínculo Empregatício)",\n  "valor": "valor da causa em reais",\n  "tribunal": "tribunal, vara e cidade",\n  "numeroProcesso": "número CNJ do processo",\n  "dataDistribuicao": "DD/MM/AAAA",\n  "situacaoAtual": "descrição da situação processual atual",\n  "linhaDoTempo": [\n    {\n      "data": "DD/MM/AAAA",\n      "evento": "descrição COMPLETA e detalhada do evento/movimentação",\n      "tipo": "distribuicao|citacao|contestacao|audiencia|pericia|decisao|sentenca|recurso|acordao|penhora|leilao|intimacao|peticao|despacho|prazo|outro",\n      "importancia": "critica|alta|media|baixa",\n      "prazoVencido": true/false,\n      "observacao": "observação técnica sobre este evento se relevante"\n    }\n  ],\n  "nulidades": [{ "tipo": "nome da nulidade", "descricao": "descrição técnica detalhada", "fundamentoLegal": "artigo/lei/súmula", "probabilidadeExito": "alta|media|baixa", "observacao": "como arguir" }],\n  "estrategiasDefesa": [{ "nome": "nome da estratégia", "descricao": "como aplicar na prática", "fundamentoLegal": "base legal completa", "prioridade": "urgente|alta|media|baixa", "probabilidadeExito": "alta|media|baixa", "prazoParaAcao": "imediato|curto prazo|médio prazo" }],\n  "riscos": [{ "descricao": "descrição do risco", "nivel": "alto|medio|baixo", "impacto": "impacto financeiro ou processual estimado" }],\n  "recomendacoes": ["recomendação estratégica detalhada 1", "recomendação 2"],\n  "excecaoPreExecutividade": { "cabivel": true/false, "argumentos": ["argumento técnico 1", "argumento 2"], "urgencia": "imediata|breve|pode aguardar", "fundamentacao": "fundamentação legal" },\n  "prescricao": { "ocorreu": true/false, "dataOcorrencia": "DD/MM/AAAA ou null", "observacao": "análise da prescrição" },\n  "avaliacaoGeral": { "risco": "alto|medio|baixo", "chancesDefesa": "alta|media|baixa", "prioridade": "urgente|alta|media|baixa", "resumoEstrategico": "parágrafo com a avaliação estratégica geral" }\n}`,
+                    type: "text" as const,
+                    text: `Analise este processo judicial COMPLETO e retorne um JSON com a seguinte estrutura. A linha do tempo deve conter TODAS as movimentações encontradas no documento, sem exceção:\n{\n  "resumo": "resumo executivo detalhado do processo em 3-4 parágrafos: origem, pedidos, situação atual e perspectiva",\n  "partes": { "autor": "nome completo", "reu": "nome completo", "advogadoAutor": "nome e OAB", "advogadoReu": "nome e OAB" },\n  "tipo": "tipo e subtipo do processo (ex: Reclamação Trabalhista - Vínculo Empregatício)",\n  "valor": "valor da causa em reais",\n  "tribunal": "tribunal, vara e cidade",\n  "numeroProcesso": "número CNJ do processo",\n  "dataDistribuicao": "DD/MM/AAAA",\n  "situacaoAtual": "descrição da situação processual atual",\n  "linhaDoTempo": [\n    {\n      "data": "DD/MM/AAAA",\n      "evento": "descrição COMPLETA e detalhada do evento/movimentação",\n      "tipo": "distribuicao|citacao|contestacao|audiencia|pericia|decisao|sentenca|recurso|acordao|penhora|leilao|intimacao|peticao|despacho|prazo|outro",\n      "importancia": "critica|alta|media|baixa",\n      "prazoVencido": true,\n      "observacao": "observação técnica sobre este evento se relevante"\n    }\n  ],\n  "nulidades": [{ "tipo": "nome da nulidade", "descricao": "descrição técnica detalhada", "fundamentoLegal": "artigo/lei/súmula", "probabilidadeExito": "alta|media|baixa", "observacao": "como arguir" }],\n  "estrategiasDefesa": [{ "nome": "nome da estratégia", "descricao": "como aplicar na prática", "fundamentoLegal": "base legal completa", "prioridade": "urgente|alta|media|baixa", "probabilidadeExito": "alta|media|baixa", "prazoParaAcao": "imediato|curto prazo|médio prazo" }],\n  "riscos": [{ "descricao": "descrição do risco", "nivel": "alto|medio|baixo", "impacto": "impacto financeiro ou processual estimado" }],\n  "recomendacoes": ["recomendação estratégica detalhada 1", "recomendação 2"],\n  "excecaoPreExecutividade": { "cabivel": true, "argumentos": ["argumento técnico 1", "argumento 2"], "urgencia": "imediata|breve|pode aguardar", "fundamentacao": "fundamentação legal" },\n  "prescricao": { "ocorreu": true, "dataOcorrencia": "DD/MM/AAAA ou null", "observacao": "análise da prescrição" },\n  "avaliacaoGeral": { "risco": "alto|medio|baixo", "chancesDefesa": "alta|media|baixa", "prioridade": "urgente|alta|media|baixa", "resumoEstrategico": "parágrafo com a avaliação estratégica geral" }\n}`,
                   },
                 ],
               },
-            ],
+            ];
+        // Tenta até 2 vezes em caso de resposta vazia da IA
+        const tentarAnalise = async (tentativa: number): Promise<string> => {
+          const response = await invokeLLM({
+            messages: llmMessages,
             response_format: { type: "json_object" },
           });
-          const analise = response.choices[0].message.content as string;
+          const content = response?.choices?.[0]?.message?.content;
+          const contentStr = typeof content === "string" ? content : null;
+          if (!contentStr || contentStr.trim() === "") {
+            if (tentativa < 2) {
+              console.warn(`[AnaliseIA] Resposta vazia na tentativa ${tentativa}, retentando...`);
+              await new Promise(r => setTimeout(r, 2000));
+              return tentarAnalise(tentativa + 1);
+            }
+            throw new Error("A IA não retornou conteúdo após 2 tentativas. O arquivo PDF pode ser muito grande, estar corrompido ou em formato não suportado.");
+          }
+          return contentStr;
+        };
+        try {
+          const analise = await tentarAnalise(1);
+          // Validar que é JSON válido antes de salvar
+          let analiseObj: unknown;
+          try {
+            analiseObj = JSON.parse(analise);
+          } catch {
+            throw new Error("A IA retornou resposta em formato inválido (não é JSON). Tente novamente.");
+          }
           await db.update(processoAnexos)
             .set({ analiseStatus: "concluida", analiseResultado: analise })
             .where(eq(processoAnexos.id, input.anexoId));
-          return { ok: true, analise: JSON.parse(analise) };
+          return { ok: true, analise: analiseObj };
         } catch (err) {
           await db.update(processoAnexos).set({ analiseStatus: "erro" }).where(eq(processoAnexos.id, input.anexoId));
           throw err;
@@ -550,7 +572,11 @@ Redija a petição completa, pronta para revisão e protocolo.`;
             { role: "user", content: userPrompt },
           ],
         });
-        const conteudo = response.choices[0].message.content as string;
+        const rawConteudo = response?.choices?.[0]?.message?.content;
+        const conteudo = typeof rawConteudo === "string" ? rawConteudo : null;
+        if (!conteudo || conteudo.trim() === "") {
+          throw new Error("A IA não retornou conteúdo para a petição. Tente novamente.");
+        }
         const [result] = await db.insert(peticoes).values({
           processoId: input.processoId,
           tipoProcesso: input.tipoProcesso,
