@@ -375,3 +375,10 @@
 - [x] Adicionar tratamento robusto de erros: verificar choices[0] antes de acessar
 - [x] Adicionar retry automático quando a resposta da IA for inválida
 - [x] Melhorar mensagem de erro exibida ao usuário
+
+## Prestação de Contas
+- [x] Criar tabela prestacaoContas no schema (id, tipo: entrada/saída, descricao, valor, data, criadoEm)
+- [x] Criar routers tRPC: listar, criar, excluir
+- [x] Criar página PrestacaoContas.tsx com tabela de lançamentos, totais e saldo
+- [x] Adicionar rota /prestacao-contas no App.tsx
+- [x] Adicionar item no menu lateral

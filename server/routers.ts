@@ -46,7 +46,7 @@ import {
   deletePlanoAcao,
 } from "./db";
 import { createHash } from "crypto";
-import { processos, movimentacoes, notificacoes, emails, planoAcao, accessLog, processosPF, processoAnexos, peticoes } from "../drizzle/schema";
+import { processos, movimentacoes, notificacoes, emails, planoAcao, accessLog, processosPF, processoAnexos, peticoes, prestacaoContas } from "../drizzle/schema";
 import { invokeLLM } from "./_core/llm";
 import type { InsertEmail } from "../drizzle/schema";
 import { eq, desc, sql } from "drizzle-orm";
@@ -634,6 +634,42 @@ Redija a petição completa, pronta para revisão e protocolo.`;
         await db.update(processosPF)
           .set({ status: input.status, observacoes: input.observacoes || null })
           .where(eq(processosPF.id, input.id));
+        return { ok: true };
+      }),
+  }),
+
+  prestacaoContas: router({
+    listar: protectedProcedure.query(async () => {
+      const db = await getDb();
+      if (!db) return [];
+      return db.select().from(prestacaoContas).orderBy(desc(prestacaoContas.createdAt));
+    }),
+    criar: protectedProcedure
+      .input(z.object({
+        tipo: z.enum(["entrada", "saida"]),
+        descricao: z.string().min(1),
+        valor: z.number().positive(),
+        data: z.string().min(1),
+        observacoes: z.string().optional(),
+      }))
+      .mutation(async ({ input }) => {
+        const db = await getDb();
+        if (!db) return { ok: false };
+        await db.insert(prestacaoContas).values({
+          tipo: input.tipo,
+          descricao: input.descricao,
+          valor: String(input.valor),
+          data: input.data,
+          observacoes: input.observacoes || null,
+        });
+        return { ok: true };
+      }),
+    excluir: protectedProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ input }) => {
+        const db = await getDb();
+        if (!db) return { ok: false };
+        await db.delete(prestacaoContas).where(eq(prestacaoContas.id, input.id));
         return { ok: true };
       }),
   }),

@@ -385,3 +385,16 @@ export const peticoes = mysqlTable("peticoes", {
 });
 export type Peticao = typeof peticoes.$inferSelect;
 export type InsertPeticao = typeof peticoes.$inferInsert;
+
+// Prestação de Contas — Alessandra Hoffmann
+export const prestacaoContas = mysqlTable("prestacaoContas", {
+  id: int("id").autoincrement().primaryKey(),
+  tipo: mysqlEnum("tipo", ["entrada", "saida"]).notNull(),
+  descricao: varchar("descricao", { length: 255 }).notNull(),
+  valor: decimal("valor", { precision: 15, scale: 2 }).notNull(),
+  data: varchar("data", { length: 20 }).notNull(), // DD/MM/AAAA
+  observacoes: text("observacoes"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+export type PrestacaoConta = typeof prestacaoContas.$inferSelect;
+export type InsertPrestacaoConta = typeof prestacaoContas.$inferInsert;

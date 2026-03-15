@@ -21,6 +21,7 @@ import Inventario from "./pages/Inventario";
 import GovernancaCorporativa from "./pages/GovernancaCorporativa";
 import PlanoEstrategico from "./pages/PlanoEstrategico";
 import ProcessosPF from "./pages/ProcessosPF";
+import PrestacaoContas from "./pages/PrestacaoContas";
 import Login from "./pages/Login";
 import { useAuth } from "./_core/hooks/useAuth";
 import { Loader2 } from "lucide-react";
@@ -45,6 +46,7 @@ function AuthenticatedRouter() {
         <Route path="/governanca" component={GovernancaCorporativa} />
         <Route path="/plano-estrategico" component={PlanoEstrategico} />
         <Route path="/processos-pf" component={ProcessosPF} />
+        <Route path="/prestacao-contas" component={PrestacaoContas} />
         <Route path="/404" component={NotFound} />
         <Route component={NotFound} />
       </Switch>
