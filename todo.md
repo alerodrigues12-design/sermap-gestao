@@ -382,3 +382,10 @@
 - [x] Criar página PrestacaoContas.tsx com tabela de lançamentos, totais e saldo
 - [x] Adicionar rota /prestacao-contas no App.tsx
 - [x] Adicionar item no menu lateral
+
+## Relatórios de Débitos e Liquidação
+- [x] Fazer upload dos PDFs para S3
+- [x] Criar página Relatórios.tsx com gráficos interativos (Recharts)
+- [x] Integrar ao menu lateral (ícone PieChart)
+- [x] Adicionar rota /relatorios no App.tsx
+- [x] Testar downloads dos PDFs

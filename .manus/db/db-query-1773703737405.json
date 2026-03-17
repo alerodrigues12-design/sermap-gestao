@@ -1,0 +1,44 @@
+{
+  "query": "SELECT * FROM passivoTributario LIMIT 100;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway03.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3wxDEv3kxBHyGJz.fa19c0ca9e29 --database NW4am7ZA3rszie9rtuCceh --execute SELECT * FROM passivoTributario LIMIT 100;",
+  "rows": [
+    {
+      "id": "1",
+      "inscricao": "50 6 20 017185-30",
+      "tipo": "Contribuição Social",
+      "natureza": "TRIBUTÁRIA",
+      "situacao": "ATIVA AJUIZADA",
+      "dataInscricao": "08/05/2020",
+      "orgao": "RFB - Receita Federal do Brasil",
+      "receita": "1804 - DIV.ATIVA-CONTRIBUICAO SOCIAL",
+      "processoJudicial": "1056834-34.2020.4.01.3300",
+      "valorTotal": "998932.17",
+      "valorPrincipal": "183310.15",
+      "valorMulta": "137482.62",
+      "valorJuros": "511650.71",
+      "valorEncargo": "166488.69",
+      "createdAt": "2026-02-20 16:37:14"
+    },
+    {
+      "id": "2",
+      "inscricao": "50 2 20 005103-09",
+      "tipo": "IRPJ",
+      "natureza": "TRIBUTÁRIA",
+      "situacao": "ATIVA AJUIZADA",
+      "dataInscricao": "08/05/2020",
+      "orgao": "RFB - Receita Federal do Brasil",
+      "receita": "3551 - DIV.ATIVA-IRPJ",
+      "processoJudicial": "1056834-34.2020.4.01.3300",
+      "valorTotal": "2828867.52",
+      "valorPrincipal": "519088.14",
+      "valorMulta": "389316.11",
+      "valorJuros": "1448985.35",
+      "valorEncargo": "471477.92",
+      "createdAt": "2026-02-20 16:37:14"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tinscricao\ttipo\tnatureza\tsituacao\tdataInscricao\torgao\treceita\tprocessoJudicial\tvalorTotal\tvalorPrincipal\tvalorMulta\tvalorJuros\tvalorEncargo\tcreatedAt\n1\t50 6 20 017185-30\tContribuição Social\tTRIBUTÁRIA\tATIVA AJUIZADA\t08/05/2020\tRFB - Receita Federal do Brasil\t1804 - DIV.ATIVA-CONTRIBUICAO SOCIAL\t1056834-34.2020.4.01.3300\t998932.17\t183310.15\t137482.62\t511650.71\t166488.69\t2026-02-20 16:37:14\n2\t50 2 20 005103-09\tIRPJ\tTRIBUTÁRIA\tATIVA AJUIZADA\t08/05/2020\tRFB - Receita Federal do Brasil\t3551 - DIV.ATIVA-IRPJ\t1056834-34.2020.4.01.3300\t2828867.52\t519088.14\t389316.11\t1448985.35\t471477.92\t2026-02-20 16:37:14\n",
+  "stderr": "",
+  "execution_time_ms": 58
+}
