@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { trpc } from "../utils/trpc";
+import { trpc } from "../lib/trpc";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Textarea } from "../components/ui/textarea";
