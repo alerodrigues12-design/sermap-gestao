@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/sidebar";
 import { getLoginUrl } from "@/const";
 import { useIsMobile } from "@/hooks/useMobile";
-import { LayoutDashboard, Scale, Landmark, FileText, Shield, Bell, TrendingUp, LogOut, PanelLeft, Clock, MessageSquarePlus, CheckSquare, FileSignature, Briefcase, Building2, BarChart3, User, Receipt, PieChart } from "lucide-react";
+import { LayoutDashboard, Scale, Landmark, FileText, Shield, Bell, TrendingUp, LogOut, PanelLeft, Clock, MessageSquarePlus, CheckSquare, FileSignature, Briefcase, Building2, BarChart3, User, Receipt, PieChart, Video } from "lucide-react";
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
 import { DashboardLayoutSkeleton } from "./DashboardLayoutSkeleton";
@@ -48,6 +48,7 @@ const menuItems = [
   { icon: User, label: "Processos PF — Sheila", path: "/processos-pf" },
   { icon: Receipt, label: "Prestação de Contas", path: "/prestacao-contas" },
   { icon: PieChart, label: "Relatórios", path: "/relatorios" },
+  { icon: Video, label: "Reuniões", path: "/reunioes" },
 ];
 
 const SIDEBAR_WIDTH_KEY = "sidebar-width";

@@ -23,6 +23,7 @@ import PlanoEstrategico from "./pages/PlanoEstrategico";
 import ProcessosPF from "./pages/ProcessosPF";
 import PrestacaoContas from "./pages/PrestacaoContas";
 import Relatorios from "./pages/Relatorios";
+import Reunioes from "./pages/Reunioes";
 import Login from "./pages/Login";
 import { useAuth } from "./_core/hooks/useAuth";
 import { Loader2 } from "lucide-react";
@@ -49,6 +50,7 @@ function AuthenticatedRouter() {
         <Route path="/processos-pf" component={ProcessosPF} />
         <Route path="/prestacao-contas" component={PrestacaoContas} />
         <Route path="/relatorios" component={Relatorios} />
+        <Route path="/reunioes" component={Reunioes} />
         <Route path="/404" component={NotFound} />
         <Route component={NotFound} />
       </Switch>

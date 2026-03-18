@@ -56,6 +56,7 @@ import { executarMonitoramento } from "./datajudMonitor";
 import { shouldChunkPDF, generateChunkAnalysisPrompt, mergeChunkAnalyses } from "./_core/pdfProcessor";
 import { extractTextFromPDF, createPageChunks, generateChunkPrompt } from "./_core/pdfExtractor";
 import { analisarProcessoPDF } from "./analiseChunked";
+import { reunioesRouter } from "./routers/reunioes";
 
 // Admin-only procedure
 const adminProcedure = protectedProcedure.use(({ ctx, next }) => {
@@ -265,6 +266,9 @@ export const appRouter = router({
 
   // E-mails Importantes
   emails: emailsRouter,
+
+  // Reuniões com Geração de Ata
+  reunioes: reunioesRouter,
 
   // Timeline
   timeline: router({

@@ -1,7 +1,7 @@
 import { eq, desc, and, sql, like, or, asc } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, processos, movimentacoes, passivoTributario, simulacoes, documentos, notificacoes, timelineItems, systemConfig, recados, emails, planoAcao, governancaDocumentos, governancaReunioes, governancaParticipantes, governancaAtas, governancaGravacoes, governancaAssinaturas } from "../drizzle/schema";
-import type { InsertRecado, InsertPlanoAcao, InsertGovernancaDocumento, InsertGovernancaReuniao, InsertGovernancaParticipante, InsertGovernancaAta, InsertGovernancaGravacao, InsertGovernancaAssinatura } from "../drizzle/schema";
+import { InsertUser, users, processos, movimentacoes, passivoTributario, simulacoes, documentos, notificacoes, timelineItems, systemConfig, recados, emails, planoAcao, governancaDocumentos, governancaReunioes, governancaParticipantes, governancaAtas, governancaGravacoes, governancaAssinaturas, reunioes } from "../drizzle/schema";
+import type { InsertRecado, InsertPlanoAcao, InsertGovernancaDocumento, InsertGovernancaReuniao, InsertGovernancaParticipante, InsertGovernancaAta, InsertGovernancaGravacao, InsertGovernancaAssinatura, InsertReuniao } from "../drizzle/schema";
 import type { InsertProcesso, InsertMovimentacao } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
@@ -499,4 +499,43 @@ export async function deleteGovernancaAssinatura(id: number) {
   const db = await getDb();
   if (!db) return;
   await db.delete(governancaAssinaturas).where(eq(governancaAssinaturas.id, id));
+}
+
+
+// Reuniões
+export async function criarReuniao(data: InsertReuniao) {
+  const db = await getDb();
+  if (!db) throw new Error("DB indisponível");
+  return db.insert(reunioes).values(data);
+}
+
+export async function listarReunioes() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(reunioes).orderBy(desc(reunioes.createdAt));
+}
+
+export async function obterReuniaoPorId(id: number) {
+  const db = await getDb();
+  if (!db) return null;
+  const [reuniao] = await db.select().from(reunioes).where(eq(reunioes.id, id));
+  return reuniao || null;
+}
+
+export async function atualizarReuniao(id: number, data: Partial<InsertReuniao>) {
+  const db = await getDb();
+  if (!db) throw new Error("DB indisponível");
+  return db.update(reunioes).set(data).where(eq(reunioes.id, id));
+}
+
+export async function deletarReuniao(id: number) {
+  const db = await getDb();
+  if (!db) throw new Error("DB indisponível");
+  return db.delete(reunioes).where(eq(reunioes.id, id));
+}
+
+export async function obterReunioesPorStatus(status: string) {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(reunioes).where(eq(reunioes.status, status as any));
 }

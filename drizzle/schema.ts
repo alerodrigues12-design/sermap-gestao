@@ -398,3 +398,32 @@ export const prestacaoContas = mysqlTable("prestacaoContas", {
 });
 export type PrestacaoConta = typeof prestacaoContas.$inferSelect;
 export type InsertPrestacaoConta = typeof prestacaoContas.$inferInsert;
+
+// Reuniões com Geração de Ata
+export const reunioes = mysqlTable("reunioes", {
+  id: int("id").autoincrement().primaryKey(),
+  titulo: varchar("titulo", { length: 255 }).notNull(),
+  descricao: text("descricao"),
+  dataReuniao: varchar("dataReuniao", { length: 20 }).notNull(), // DD/MM/AAAA
+  horaInicio: varchar("horaInicio", { length: 10 }), // HH:MM
+  horaFim: varchar("horaFim", { length: 10 }), // HH:MM
+  local: varchar("local", { length: 255 }),
+  jitsiRoomId: varchar("jitsiRoomId", { length: 255 }).unique(), // ID da sala Jitsi
+  jitsiLink: text("jitsiLink"), // Link da sala Jitsi
+  status: mysqlEnum("status", ["agendada", "em_andamento", "concluida", "cancelada"]).default("agendada").notNull(),
+  gravacaoUrl: text("gravacaoUrl"), // URL da gravacao
+  gravacaoKey: varchar("gravacaoKey", { length: 500 }), // Chave S3 da gravacao
+  transcricao: text("transcricao"), // Texto transcrito da reuniao
+  ataGerada: text("ataGerada"), // Ata gerada em JSON
+  ataHtml: text("ataHtml"), // Ata em HTML
+  ataUrl: text("ataUrl"), // URL da ata em PDF
+  ataKey: varchar("ataKey", { length: 500 }), // Chave S3 da ata
+  emailsEnviados: text("emailsEnviados"), // JSON com lista de emails enviados
+  assinaturasAutentique: text("assinaturasAutentique"), // JSON com IDs de assinatura Autentique
+  participantes: text("participantes"), // JSON com lista de participantes
+  responsavel: varchar("responsavel", { length: 255 }).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type Reuniao = typeof reunioes.$inferSelect;
+export type InsertReuniao = typeof reunioes.$inferInsert;
