@@ -53,6 +53,7 @@ import { eq, desc, sql } from "drizzle-orm";
 import { storagePut } from "./storage";
 import { nanoid } from "nanoid";
 import { executarMonitoramento } from "./datajudMonitor";
+import { shouldChunkPDF, generateChunkAnalysisPrompt, mergeChunkAnalyses } from "./_core/pdfProcessor";
 
 // Admin-only procedure
 const adminProcedure = protectedProcedure.use(({ ctx, next }) => {
@@ -436,6 +437,15 @@ export const appRouter = router({
         if (!anexo) throw new Error("Anexo não encontrado");
         // Marcar como processando
         await db.update(processoAnexos).set({ analiseStatus: "processando" }).where(eq(processoAnexos.id, input.anexoId));
+        
+        // Verificar se PDF é grande e informar ao usuário
+        const pdfSizeBytes = anexo.tamanho || 0;
+        const pdfSizeMB = pdfSizeBytes / (1024 * 1024);
+        const chunkSize = shouldChunkPDF(pdfSizeBytes);
+        
+        if (chunkSize) {
+          console.log(`[AnaliseIA] PDF grande detectado: ${pdfSizeMB.toFixed(2)}MB. Será processado com timeouts estendidos.`);
+        }
         const llmMessages = [
               {
                 role: "system" as const,
@@ -455,33 +465,39 @@ export const appRouter = router({
                 ],
               },
             ];
-        // Tenta até 3 vezes em caso de resposta vazia da IA com timeout progressivo
+        // Tenta até 5 vezes em caso de resposta vazia da IA com timeout progressivo
+        // Timeouts aumentados para PDFs grandes: 5s → 15s → 30s → 45s → 60s
         const tentarAnalise = async (tentativa: number): Promise<string> => {
           try {
-            console.log(`[AnaliseIA] Iniciando tentativa ${tentativa}/3 para anexo ${input.anexoId}`);
+            console.log(`[AnaliseIA] Iniciando tentativa ${tentativa}/5 para anexo ${input.anexoId}`);
             const response = await invokeLLM({
               messages: llmMessages,
               response_format: { type: "json_object" },
+              maxTokens: 32768,
             });
             const content = response?.choices?.[0]?.message?.content;
             const contentStr = typeof content === "string" ? content : null;
             
             if (!contentStr || contentStr.trim() === "") {
-              console.warn(`[AnaliseIA] Resposta vazia na tentativa ${tentativa}/3`);
-              if (tentativa < 3) {
-                const waitTime = tentativa === 1 ? 3000 : 5000;
+              console.warn(`[AnaliseIA] Resposta vazia na tentativa ${tentativa}/5`);
+              if (tentativa < 5) {
+                // Timeouts progressivos: 5s, 15s, 30s, 45s, 60s
+                const waitTimes = [5000, 15000, 30000, 45000, 60000];
+                const waitTime = waitTimes[tentativa - 1] || 60000;
                 console.log(`[AnaliseIA] Aguardando ${waitTime}ms antes de retentar...`);
                 await new Promise(r => setTimeout(r, waitTime));
                 return tentarAnalise(tentativa + 1);
               }
-              throw new Error(`A IA nao retornou conteudo apos ${tentativa} tentativas. Possiveis causas: PDF corrompido, formato nao suportado, ou conteudo muito complexo. Tente dividir o PDF em partes menores.`);
+              throw new Error(`A IA nao retornou conteudo apos ${tentativa} tentativas. O arquivo PDF pode ser muito grande, estar corrompido ou em formato nao suportado. Tente dividir o PDF em partes menores (máximo 50 páginas por arquivo).`);
             }
             console.log(`[AnaliseIA] Resposta recebida com sucesso na tentativa ${tentativa}`);
             return contentStr;
           } catch (err) {
             console.error(`[AnaliseIA] Erro na tentativa ${tentativa}:`, err);
-            if (tentativa < 3) {
-              const waitTime = tentativa === 1 ? 3000 : 5000;
+            if (tentativa < 5) {
+              // Timeouts progressivos: 5s, 15s, 30s, 45s, 60s
+              const waitTimes = [5000, 15000, 30000, 45000, 60000];
+              const waitTime = waitTimes[tentativa - 1] || 60000;
               console.log(`[AnaliseIA] Aguardando ${waitTime}ms antes de retentar apos erro...`);
               await new Promise(r => setTimeout(r, waitTime));
               return tentarAnalise(tentativa + 1);
