@@ -54,6 +54,8 @@ import { storagePut } from "./storage";
 import { nanoid } from "nanoid";
 import { executarMonitoramento } from "./datajudMonitor";
 import { shouldChunkPDF, generateChunkAnalysisPrompt, mergeChunkAnalyses } from "./_core/pdfProcessor";
+import { extractTextFromPDF, createPageChunks, generateChunkPrompt } from "./_core/pdfExtractor";
+import { analisarProcessoPDF } from "./analiseChunked";
 
 // Admin-only procedure
 const adminProcedure = protectedProcedure.use(({ ctx, next }) => {
@@ -438,84 +440,15 @@ export const appRouter = router({
         // Marcar como processando
         await db.update(processoAnexos).set({ analiseStatus: "processando" }).where(eq(processoAnexos.id, input.anexoId));
         
-        // Verificar se PDF é grande e informar ao usuário
+        // Usar função de análise com suporte a chunking
         const pdfSizeBytes = anexo.tamanho || 0;
-        const pdfSizeMB = pdfSizeBytes / (1024 * 1024);
-        const chunkSize = shouldChunkPDF(pdfSizeBytes);
-        
-        if (chunkSize) {
-          console.log(`[AnaliseIA] PDF grande detectado: ${pdfSizeMB.toFixed(2)}MB. Será processado com timeouts estendidos.`);
-        }
-        const llmMessages = [
-              {
-                role: "system" as const,
-                content: `Você é um especialista jurídico brasileiro sênior com profundo conhecimento em direito tributário, trabalhista, cível e processual. Sua missão é analisar processos judiciais com máximo rigor técnico e extrair TODAS as informações relevantes para uma advogada tributarista que precisa tomar decisões estratégicas sem ler o processo inteiro. Seja extremamente detalhado na linha do tempo — extraia CADA movimentação, petição, despacho, decisão, intimação, recurso, audiência e prazo que encontrar no documento. A linha do tempo é a parte mais importante da análise.`,
-              },
-              {
-                role: "user" as const,
-                content: [
-                  {
-                    type: "file_url" as const,
-                    file_url: { url: anexo.fileUrl, mime_type: "application/pdf" as const },
-                  },
-                  {
-                    type: "text" as const,
-                    text: `Analise este processo judicial COMPLETO e retorne um JSON com a seguinte estrutura. A linha do tempo deve conter TODAS as movimentações encontradas no documento, sem exceção:\n{\n  "resumo": "resumo executivo detalhado do processo em 3-4 parágrafos: origem, pedidos, situação atual e perspectiva",\n  "partes": { "autor": "nome completo", "reu": "nome completo", "advogadoAutor": "nome e OAB", "advogadoReu": "nome e OAB" },\n  "tipo": "tipo e subtipo do processo (ex: Reclamação Trabalhista - Vínculo Empregatício)",\n  "valor": "valor da causa em reais",\n  "tribunal": "tribunal, vara e cidade",\n  "numeroProcesso": "número CNJ do processo",\n  "dataDistribuicao": "DD/MM/AAAA",\n  "situacaoAtual": "descrição da situação processual atual",\n  "linhaDoTempo": [\n    {\n      "data": "DD/MM/AAAA",\n      "evento": "descrição COMPLETA e detalhada do evento/movimentação",\n      "tipo": "distribuicao|citacao|contestacao|audiencia|pericia|decisao|sentenca|recurso|acordao|penhora|leilao|intimacao|peticao|despacho|prazo|outro",\n      "importancia": "critica|alta|media|baixa",\n      "prazoVencido": true,\n      "observacao": "observação técnica sobre este evento se relevante"\n    }\n  ],\n  "nulidades": [{ "tipo": "nome da nulidade", "descricao": "descrição técnica detalhada", "fundamentoLegal": "artigo/lei/súmula", "probabilidadeExito": "alta|media|baixa", "observacao": "como arguir" }],\n  "estrategiasDefesa": [{ "nome": "nome da estratégia", "descricao": "como aplicar na prática", "fundamentoLegal": "base legal completa", "prioridade": "urgente|alta|media|baixa", "probabilidadeExito": "alta|media|baixa", "prazoParaAcao": "imediato|curto prazo|médio prazo" }],\n  "riscos": [{ "descricao": "descrição do risco", "nivel": "alto|medio|baixo", "impacto": "impacto financeiro ou processual estimado" }],\n  "recomendacoes": ["recomendação estratégica detalhada 1", "recomendação 2"],\n  "excecaoPreExecutividade": { "cabivel": true, "argumentos": ["argumento técnico 1", "argumento 2"], "urgencia": "imediata|breve|pode aguardar", "fundamentacao": "fundamentação legal" },\n  "prescricao": { "ocorreu": true, "dataOcorrencia": "DD/MM/AAAA ou null", "observacao": "análise da prescrição" },\n  "avaliacaoGeral": { "risco": "alto|medio|baixo", "chancesDefesa": "alta|media|baixa", "prioridade": "urgente|alta|media|baixa", "resumoEstrategico": "parágrafo com a avaliação estratégica geral" }\n}`,
-                  },
-                ],
-              },
-            ];
-        // Tenta até 5 vezes em caso de resposta vazia da IA com timeout progressivo
-        // Timeouts aumentados para PDFs grandes: 5s → 15s → 30s → 45s → 60s
-        const tentarAnalise = async (tentativa: number): Promise<string> => {
-          try {
-            console.log(`[AnaliseIA] Iniciando tentativa ${tentativa}/5 para anexo ${input.anexoId}`);
-            const response = await invokeLLM({
-              messages: llmMessages,
-              response_format: { type: "json_object" },
-              maxTokens: 32768,
-            });
-            const content = response?.choices?.[0]?.message?.content;
-            const contentStr = typeof content === "string" ? content : null;
-            
-            if (!contentStr || contentStr.trim() === "") {
-              console.warn(`[AnaliseIA] Resposta vazia na tentativa ${tentativa}/5`);
-              if (tentativa < 5) {
-                // Timeouts progressivos: 5s, 15s, 30s, 45s, 60s
-                const waitTimes = [5000, 15000, 30000, 45000, 60000];
-                const waitTime = waitTimes[tentativa - 1] || 60000;
-                console.log(`[AnaliseIA] Aguardando ${waitTime}ms antes de retentar...`);
-                await new Promise(r => setTimeout(r, waitTime));
-                return tentarAnalise(tentativa + 1);
-              }
-              throw new Error(`A IA nao retornou conteudo apos ${tentativa} tentativas. O arquivo PDF pode ser muito grande, estar corrompido ou em formato nao suportado. Tente dividir o PDF em partes menores (máximo 50 páginas por arquivo).`);
-            }
-            console.log(`[AnaliseIA] Resposta recebida com sucesso na tentativa ${tentativa}`);
-            return contentStr;
-          } catch (err) {
-            console.error(`[AnaliseIA] Erro na tentativa ${tentativa}:`, err);
-            if (tentativa < 5) {
-              // Timeouts progressivos: 5s, 15s, 30s, 45s, 60s
-              const waitTimes = [5000, 15000, 30000, 45000, 60000];
-              const waitTime = waitTimes[tentativa - 1] || 60000;
-              console.log(`[AnaliseIA] Aguardando ${waitTime}ms antes de retentar apos erro...`);
-              await new Promise(r => setTimeout(r, waitTime));
-              return tentarAnalise(tentativa + 1);
-            }
-            throw err;
-          }
-        };
         try {
-          const analise = await tentarAnalise(1);
-          // Validar que é JSON válido antes de salvar
-          let analiseObj: unknown;
-          try {
-            analiseObj = JSON.parse(analise);
-          } catch {
-            throw new Error("A IA retornou resposta em formato inválido (não é JSON). Tente novamente.");
-          }
+          const analiseObj = await analisarProcessoPDF(anexo.fileUrl, pdfSizeBytes, input.anexoId);
+          
+          // Salvar resultado
+          const analiseStr = JSON.stringify(analiseObj);
           await db.update(processoAnexos)
-            .set({ analiseStatus: "concluida", analiseResultado: analise })
+            .set({ analiseStatus: "concluida", analiseResultado: analiseStr })
             .where(eq(processoAnexos.id, input.anexoId));
           return { ok: true, analise: analiseObj };
         } catch (err) {
