@@ -455,23 +455,39 @@ export const appRouter = router({
                 ],
               },
             ];
-        // Tenta até 2 vezes em caso de resposta vazia da IA
+        // Tenta até 3 vezes em caso de resposta vazia da IA com timeout progressivo
         const tentarAnalise = async (tentativa: number): Promise<string> => {
-          const response = await invokeLLM({
-            messages: llmMessages,
-            response_format: { type: "json_object" },
-          });
-          const content = response?.choices?.[0]?.message?.content;
-          const contentStr = typeof content === "string" ? content : null;
-          if (!contentStr || contentStr.trim() === "") {
-            if (tentativa < 2) {
-              console.warn(`[AnaliseIA] Resposta vazia na tentativa ${tentativa}, retentando...`);
-              await new Promise(r => setTimeout(r, 2000));
+          try {
+            console.log(`[AnaliseIA] Iniciando tentativa ${tentativa}/3 para anexo ${input.anexoId}`);
+            const response = await invokeLLM({
+              messages: llmMessages,
+              response_format: { type: "json_object" },
+            });
+            const content = response?.choices?.[0]?.message?.content;
+            const contentStr = typeof content === "string" ? content : null;
+            
+            if (!contentStr || contentStr.trim() === "") {
+              console.warn(`[AnaliseIA] Resposta vazia na tentativa ${tentativa}/3`);
+              if (tentativa < 3) {
+                const waitTime = tentativa === 1 ? 3000 : 5000;
+                console.log(`[AnaliseIA] Aguardando ${waitTime}ms antes de retentar...`);
+                await new Promise(r => setTimeout(r, waitTime));
+                return tentarAnalise(tentativa + 1);
+              }
+              throw new Error(`A IA nao retornou conteudo apos ${tentativa} tentativas. Possiveis causas: PDF corrompido, formato nao suportado, ou conteudo muito complexo. Tente dividir o PDF em partes menores.`);
+            }
+            console.log(`[AnaliseIA] Resposta recebida com sucesso na tentativa ${tentativa}`);
+            return contentStr;
+          } catch (err) {
+            console.error(`[AnaliseIA] Erro na tentativa ${tentativa}:`, err);
+            if (tentativa < 3) {
+              const waitTime = tentativa === 1 ? 3000 : 5000;
+              console.log(`[AnaliseIA] Aguardando ${waitTime}ms antes de retentar apos erro...`);
+              await new Promise(r => setTimeout(r, waitTime));
               return tentarAnalise(tentativa + 1);
             }
-            throw new Error("A IA não retornou conteúdo após 2 tentativas. O arquivo PDF pode ser muito grande, estar corrompido ou em formato não suportado.");
+            throw err;
           }
-          return contentStr;
         };
         try {
           const analise = await tentarAnalise(1);

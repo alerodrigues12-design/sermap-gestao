@@ -389,3 +389,11 @@
 - [x] Integrar ao menu lateral (ícone PieChart)
 - [x] Adicionar rota /relatorios no App.tsx
 - [x] Testar downloads dos PDFs
+
+
+## Bug - Análise IA: Erro "diagnóstico" em PDFs
+- [x] Aumentar retry de 2 para 3 tentativas
+- [x] Aumentar timeout entre tentativas (3s na 1ª, 5s na 2ª)
+- [x] Adicionar try-catch para capturar erros da IA
+- [x] Melhorar logging para diagnosticar problemas
+- [ ] Testar com PDFs problemáticos
